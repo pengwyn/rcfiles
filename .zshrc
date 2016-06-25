@@ -83,7 +83,7 @@ setopt auto_list
 setopt list_packed list_types
 setopt noauto_remove_slash
 setopt autocd extendedglob notify
-setopt completealiases
+#setopt completealiases
 setopt longlistjobs
 setopt auto_pushd pushd_ignore_dups
 setopt noglobdots
