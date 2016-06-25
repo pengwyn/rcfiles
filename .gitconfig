@@ -1,0 +1,9 @@
+[user]
+	email = pengwyn@pengix
+	name = TFPengix
+[color]
+	ui = true
+[push]
+	default = simple
+[pull]
+	ff = only

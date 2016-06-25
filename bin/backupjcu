@@ -1,0 +1,30 @@
+#!/bin/zsh
+
+source backupjcu_filelist
+
+if [[ -z "$JUSTCOPY" ]] 
+then
+	#print Going to tar the following objects:
+	#du -shc $FILELIST | sort -h
+	#sleep 5
+
+	# TODO:
+	#if [ -f $dirloc/backupjcu_$datestr.snar ]
+	#then
+	#	echo "Snapshot for this date already exists! Aborting"
+	#	exit 1
+	#fi
+
+	duplicity --no-encryption --include-filelist=/home/pengwyn/bin/backupjcu_duplicity_filelist / file://$dirloc/ || exit 1
+	#tar --no-check-device -cvz -g $dirloc/backupjcu.snar -f $dirloc/backupjcu_$datestr.tar.gz $FILELIST || exit 1
+	#cp $dirloc/backupjcu.snar $dirloc/backupjcu_$datestr.snar
+else
+	#if [[ ! -f $dirloc/backupjcu_$datestr.tar.gz ]]
+	#then
+	#	echo "Can't copy when there is no existing file"
+	#	exit 1
+	#fi
+	echo "No tests done here!"
+fi
+
+copytohdd

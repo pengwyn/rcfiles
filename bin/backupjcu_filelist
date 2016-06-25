@@ -1,0 +1,127 @@
+#!/bin/zsh
+
+cd $HOME
+
+if [[ $# -gt 0 && "$1" != "justcopy" ]]
+then
+	echo "Unknown input arguments!"
+	exit 1
+fi
+
+JUSTCOPY=$1
+
+datestr=$(date +%Y%m%d)
+dirloc=$HOME/MEGA/jcubackup
+#megadirloc=$HOME/MEGA
+
+#FILELIST=(work4 work_helium34 temp /srv/http/figwebsite)
+#FILELIST=(work4 /srv/http/figwebsite)
+# Removed temp because of the changes made down below
+#FILELIST=(/home/pengwyn/work4 /home/pengwyn/work_helium34 /srv/http/figwebsite)
+FILELIST=(/home/pengwyn/work4 /home/pengwyn/work_helium34 /home/pengwyn/temp /srv/http/figwebsite)
+EXCLUDE_FILELIST=('20150809_bubble_histo' '20150909_hpc_histotesting' '20150826_neonclusters' '20150824_validityRadp' 'backup_usb_stick')
+EXCLUDE_FILELIST=( /home/pengwyn/temp/${^EXCLUDE_FILELIST} )
+
+## Going to add on files in temp with a filter applied
+#tempfilelist=(/home/pengwyn/temp/*)
+## Filter it with a sequence of things
+#filterlist=('20150809_bubble_histo' '20150909_hpc_histotesting' '20150826_neonclusters' '20150824_validityRadp' 'backup_usb_stick')
+##outlist=($tempfilelist)
+#for filter in ${filterlist[@]}
+#do
+#	prevnum=${#tempfilelist}
+#	#tempfilelist=(${(@)tempfilelist:#temp/${filter}})
+#	prefixed="temp/$filter"
+#	removelist=(${~prefixed})
+#	#echo "removelist is" $removelist
+#	tempfilelist=(${tempfilelist:|removelist})
+#	newnum=${#tempfilelist}
+#	numfiltered=$((prevnum - newnum))
+#	echo "Filtered out" $((numfiltered)) "elements with filter '$filter'."
+#	if [[ $numfiltered == 0 ]]
+#	then
+#		echo "WARNING! Nothing filtered!"
+#		echo "WARNING! Nothing filtered!"
+#		echo "WARNING! Nothing filtered!"
+#		sleep 5
+#	fi
+#done
+#
+#FILELIST=($FILELIST $tempfilelist)
+#
+#CONSOLIDATE_DIR=$HOME/temp/consolidate
+
+function copytohdd ()
+{
+	foundadrive=0
+	prefix=/run/media/pengwyn
+	#for drive in "$prefix/"{"TOSHIBA EXT",ADATA_2TB}
+	for drive in "TOSHIBA EXT" "ADATA_2TB"
+	do
+		devpath="/dev/disk/by-label/${drive// /\\x20}"
+		driveinfo=$(udisksctl info -b $devpath)
+		if [[ $? == 1 ]]
+		then
+			echo "Drive $drive not listed in udiskctl"
+			continue
+		fi
+
+		if [[ -z $(echo $driveinfo | grep "$prefix") ]]
+		then
+			echo "Mounting drive $drive"
+			udisksctl mount -b $devpath
+		else
+			echo "Drive already mounted"
+		fi
+
+		if [ ! -d "$prefix/$drive" ]
+		then
+			echo "Drive not found in usual place! Problem! Fix it!"
+			exit 1
+		fi
+
+		#cp -aiv $dirloc/{backupjcu.snar,"backupjcu_$datestr.snar","backupjcu_$datestr.tar.gz"} $drive/
+		#cp -aivu $dirloc/backupjcu.snar $dirloc/backupjcu_* $drive/ || exit 1
+		rsync -avzu $dirloc "$prefix/$drive/" || exit 1
+		foundadrive=1
+	done
+
+	if (( $foundadrive == 0 ))
+	then
+		echo "Warning! No portable drives found!"
+		exit 1
+	fi
+
+	#if [[ -n "$JUSTCOPY" ]]
+	#then
+	#	if [[ ! -f $dirloc/backupjcu_$datestr.tar.gz ]]
+	#	then
+	#		echo "Can't copy when there is no existing file"
+	#		exit 1
+	#	fi
+	#fi
+
+	## Copy over to the Mega folder
+	##rsync -avu $dirloc/backupjcu.snar $dirloc/backupjcu_* $megadirloc/
+
+	## Copy over to portable harddrives if they are there
+	#foundadrive=0
+	#prefix=/var/run/media/pengwyn
+	#for drive in "$prefix/"{"TOSHIBA EXT",ADATA_2TB}
+	#do
+	#	if [ -d $drive ]
+	#	then
+	#		#cp -aiv $dirloc/{backupjcu.snar,"backupjcu_$datestr.snar","backupjcu_$datestr.tar.gz"} $drive/
+	#		cp -aivu $dirloc/backupjcu.snar $dirloc/backupjcu_* $drive/ || exit 1
+	#		foundadrive=1
+	#	else
+	#		echo "Drive '$drive' is not mounted"
+	#	fi
+	#done
+
+	#if (( $foundadrive == 0 ))
+	#then
+	#	echo "Warning! No portable drives found!"
+	#	exit 1
+	#fi
+}
