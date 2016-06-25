@@ -6,4 +6,5 @@
 colorscheme danny
 
 "set guifont=ProggyCleanTT\ 12
-set guifont=DejaVu\ Sans\ Mono\ 9
+"set guifont=DejaVu\ Sans\ Mono\ 9
+set guifont=GohuFont\ 11

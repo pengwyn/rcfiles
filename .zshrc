@@ -151,14 +151,14 @@ alias ipython2r='MPLCONFIGDIR=$HOME/.config/matplotlib/nodisplay ipython2'
 #alias netstat='netstat --numeric-hosts --inet -a'
 alias ..='cd ..'
 
-alias gs="git status" 
-alias gd="git diff" 
-alias gc="git commit" 
-alias gca="git commit -a" 
-alias ga="git add" 
-alias gpl="git pull" 
-alias gps="git push" 
-alias g="git" 
+alias gs="git status"
+alias gd="git diff"
+alias ga="git add"
+alias gc="git commit"
+alias gca="git commit -a"
+alias gpl="git pull"
+alias gps="git push"
+alias g="git"
 
 autoload -U colors && colors
 function precmd() {
@@ -190,7 +190,6 @@ export PATH="$PATH:$HOME/bin"
 
 export EDITOR="vim"
 
-
 export LESS=-R
 
 # Less colours for man pages
@@ -216,15 +215,20 @@ source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 
 . $HOME/z.sh
 
-
+#eval $(gpg-agent --daemon --enable-ssh-support --disable-scdaemon)
 # Doing this with manual setting because gpg-agent doesn't return the environment variables a second time.
 evalstr=$(gpg-agent --daemon --enable-ssh-support --disable-scdaemon --log-file="$HOME/.gnupg/logfile" 2>/dev/null)
-if [[ $? == 0 ]]
+gpgret=$?
+if [[ $gpgret == 0 ]]
 then
 	echo $evalstr > ~/.gnupg/evalstr
+fi
+if [[ ( $gpgret == 0 || $gpgret == 2 ) && -f ~/.gnupg/evalstr ]]
+then
 	eval $(cat ~/.gnupg/evalstr)
 fi
 #eval $(cat ~/.gnupg/evalstr)
+#export SSH_AUTH_SOCK="$HOME/.gnupg/S.gpg-agent.ssh"
 
 #export GPG_TTY=$(tty)
 #echo "UPDATESTARTUPTTY" | gpg-connect-agent

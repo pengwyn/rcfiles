@@ -7,6 +7,5 @@
 	default = simple
 [pull]
 	ff = only
-
 [diff]
 	tool = vimdiff

@@ -242,7 +242,7 @@ augroup END
 set completeopt=menuone,longest,preview
 
 "let g:jedi#completions_enabled = 0
-let g:jedi#auto_initialization = 0
+"let g:jedi#auto_initialization = 0
 
 let g:ycm_key_detailed_diagnostics = ''
 let g:ycm_semantic_triggers = { 'python' : ['.'] }
@@ -378,7 +378,7 @@ au FileType cpp map <C-k> :cnext<CR>
 
 autocmd FileType cpp setl formatoptions+=aw
 autocmd FileType cpp setl foldmethod=syntax
-autocmd FileType cpp setl list listchars=trail:·
+autocmd FileType cpp setl list listchars=tab:\ \ ,trail:·
 augroup END
 
 let OmniCpp_GlobalScopeSearch = 1
@@ -408,7 +408,8 @@ augroup END
 
 " Latex specific {{{
 augroup vimrcEx
-au FileType tex setlocal tw=80 fo+=aw
+"au FileType tex setlocal tw=80 fo+=aw
+au FileType tex setlocal indentkeys=
 augroup END
 " }}}
 
