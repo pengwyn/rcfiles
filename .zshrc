@@ -190,24 +190,6 @@ export PATH="$PATH:$HOME/bin"
 
 export EDITOR="vim"
 
-function cdjob() {
-# First try to serach for existing jobs in the queue
-temp=`scontrol show job "$1" | grep WorkDir | cut -f2 -d'='`
-temp=`qstat -f "$1" | pcregrep -oM '(?!PBS_O_WORKDIR=)(.|\R)*?(?=,)' | tr -d '[:space:]'`
-if [ -n "$temp" ] ; then
-	cd $temp
-	return
-fi
-
-echo "Couldn't find job in queue, looking for log file."
-
-temp=`find -name "*.o$1" -print -quit`
-if [ -z "$temp" ] ; then
-	echo "Cannot find job"
-	return
-fi
-cd `dirname $temp`
-}
 
 export LESS=-R
 
@@ -225,7 +207,7 @@ function qfind {
 	find -iname "*$1*"
 }
 
-alias qme='ssh zodiac bash -ic qme'
+#alias qme='ssh zodiac bash -ic qme'
 
 unalias run-help
 autoload run-help
@@ -233,6 +215,7 @@ autoload run-help
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 . $HOME/z.sh
+
 
 # Doing this with manual setting because gpg-agent doesn't return the environment variables a second time.
 evalstr=$(gpg-agent --daemon --enable-ssh-support --disable-scdaemon --log-file="$HOME/.gnupg/logfile" 2>/dev/null)
@@ -248,3 +231,32 @@ fi
 
 # Force an update for every ssh command
 alias ssh='gpg-connect-agent updatestartuptty /bye;ssh'
+
+if [[ $(hostname) == "mixologist" ]]
+then
+	alias sq=squeue -l
+
+	export PATH="$PATH:/cluster/admins/scripts"
+
+	function cdjob() {
+	# First try to serach for existing jobs in the queue
+	#temp=`scontrol show job "$1" | grep WorkDir | cut -f2 -d'='`
+	temp=`scontrol -o show job "$1" | pcregrep -o '(?<=WorkDir=)(.)*?(?= )'`
+	#temp=`qstat -f1 "$1" | pcregrep -o '(?<=PBS_O_WORKDIR=)(.)*?(?=,)'`
+	#temp=`qstat -f1 "$1" | grep PBS_O_WORKDIR | cut -d'PBS_O_WORKDIR=' -f2 | cut -d',' -f1`
+	if [ -n "$temp" ] ; then
+		cd $temp
+		return
+	fi
+
+	echo "Couldn't find job in queue, looking for log file."
+
+	temp=`find -name "$1.stdout" -print -quit`
+	if [ -z "$temp" ] ; then
+		echo "Cannot find job"
+		return
+	fi
+	cd `dirname $temp`
+	}
+fi
+

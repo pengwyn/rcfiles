@@ -291,7 +291,7 @@ let g:UltiSnipsEditSplit="vertical"
 " Python specific {{{
 
 augroup vimrcEx
-autocmd FileType python set list listchars=tab:»·,trail:·
+autocmd FileType python setl list listchars=tab:Â»Â·,trail:Â·
 
 " prefer expand and detect what the python file is using
 au FileType python let g:detectindent_preferred_expandtab = 1 | let g:detectindent_preferred_indent = 4 
@@ -376,8 +376,9 @@ augroup vimrcEx
 au FileType cpp map <C-F12> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q .<CR>
 au FileType cpp map <C-k> :cnext<CR>
 
-autocmd FileType cpp set formatoptions+=aw
+autocmd FileType cpp setl formatoptions+=aw
 autocmd FileType cpp setl foldmethod=syntax
+autocmd FileType cpp setl list listchars=trail:Â·
 augroup END
 
 let OmniCpp_GlobalScopeSearch = 1

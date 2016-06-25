@@ -1,9 +1,12 @@
 [user]
-	email = pengwyn@pengix
-	name = TFPengix
+	email = daniel.cocks@gmail.com
+	name = Daniel Cocks
 [color]
 	ui = true
 [push]
 	default = simple
 [pull]
 	ff = only
+
+[diff]
+	tool = vimdiff
