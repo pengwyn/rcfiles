@@ -157,7 +157,9 @@ alias ga="git add"
 alias gc="git commit"
 alias gca="git commit -a"
 alias gpl="git pull"
+alias gpla="git pull --all"
 alias gps="git push"
+alias gr="git remote"
 alias g="git"
 
 autoload -U colors && colors
