@@ -245,24 +245,31 @@ then
 	export PATH="$PATH:/cluster/admins/scripts"
 
 	function cdjob() {
-	# First try to serach for existing jobs in the queue
-	#temp=`scontrol show job "$1" | grep WorkDir | cut -f2 -d'='`
-	temp=`scontrol -o show job "$1" | pcregrep -o '(?<=WorkDir=)(.)*?(?= )'`
-	#temp=`qstat -f1 "$1" | pcregrep -o '(?<=PBS_O_WORKDIR=)(.)*?(?=,)'`
-	#temp=`qstat -f1 "$1" | grep PBS_O_WORKDIR | cut -d'PBS_O_WORKDIR=' -f2 | cut -d',' -f1`
-	if [ -n "$temp" ] ; then
-		cd $temp
-		return
-	fi
+		# First try to serach for existing jobs in the queue
+		#temp=`scontrol show job "$1" | grep WorkDir | cut -f2 -d'='`
+		temp=`scontrol -o show job "$1" | pcregrep -o '(?<=WorkDir=)(.)*?(?= )'`
+		#temp=`qstat -f1 "$1" | pcregrep -o '(?<=PBS_O_WORKDIR=)(.)*?(?=,)'`
+		#temp=`qstat -f1 "$1" | grep PBS_O_WORKDIR | cut -d'PBS_O_WORKDIR=' -f2 | cut -d',' -f1`
+		if [ -n "$temp" ] ; then
+			cd $temp
+			return
+		fi
 
-	echo "Couldn't find job in queue, looking for log file."
+		echo "Couldn't find job in queue, looking for log file."
 
-	temp=`find -name "$1.stdout" -print -quit`
-	if [ -z "$temp" ] ; then
-		echo "Cannot find job"
-		return
-	fi
-	cd `dirname $temp`
+		temp=`find -name "$1.stdout" -print -quit`
+		if [ -z "$temp" ] ; then
+			echo "Cannot find job"
+			return
+		fi
+		cd `dirname $temp`
+	}
+
+	function joblog() {
+		temp=$(scontrol -o show job "$1" | sed -e 's:^.*StdOut=\([^[:space:]]*\).*$:\1:')
+		echo $temp
 	}
 fi
 
+
+a test
