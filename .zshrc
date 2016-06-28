@@ -151,13 +151,34 @@ alias ipython2r='MPLCONFIGDIR=$HOME/.config/matplotlib/nodisplay ipython2'
 #alias netstat='netstat --numeric-hosts --inet -a'
 alias ..='cd ..'
 
+function gitpullall() {
+	if [[ $# > 0 && $1 != "--rebase" ]]
+	then
+		echo "Takes only --rebase as an argument"
+		return 2
+	fi
+	arg=$1
+
+	echo "Fetching..."
+	git fetch --all || return 1
+
+	curbranch=$(git rev-parse --abbrev-ref HEAD)
+	[[ -n "$curbranch" ]] || { echo "Problem with curbranch!"; return 1}
+
+	for name in $(git remote show)
+	do
+		echo "Pulling ($arg) from ${name}..."
+		git pull $arg $name $curbranch || return 1
+	done
+}
+
 alias gs="git status"
 alias gd="git diff"
 alias ga="git add"
 alias gc="git commit"
 alias gca="git commit -a"
 alias gpl="git pull"
-alias gpla="git pull --all"
+alias gpla="gitpullall"
 alias gps="git push"
 alias gr="git remote"
 alias g="git"
