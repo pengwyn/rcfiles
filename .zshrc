@@ -118,7 +118,7 @@ bindkey "^[3;5~" delete-char
 function add-sudo-in-front()
 {
 [[ -z $BUFFER ]] && zle up-history
-[[ $BUFFER != sudo\ * ]] && BUFFER="sudo $BUFFER"
+[[ $BUFFER != sudo\ * ]] && BUFFER="sudo -E $BUFFER"
 zle end-of-line
 }
 
