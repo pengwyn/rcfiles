@@ -286,8 +286,11 @@ then
 		cd `dirname $temp`
 	}
 
-	function joblog() {
+	function catjob() {
 		temp=$(scontrol -o show job "$1" | sed -e 's:^.*StdOut=\([^[:space:]]*\).*$:\1:')
-		echo $temp
+		if [[ -n "$temp" ]]
+		then
+			cat $temp
+		fi
 	}
 fi
