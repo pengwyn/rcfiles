@@ -160,7 +160,11 @@ function gitpullall() {
 	arg=$1
 
 	echo "Fetching..."
-	git fetch --all || return 1
+	git fetch --all # || return 1
+	if [[ $? != 0 ]]
+	then
+		echo "!!!!!! Errors in git fetch --all !!!!!!!!!"
+	fi
 
 	curbranch=$(git rev-parse --abbrev-ref HEAD)
 	[[ -n "$curbranch" ]] || { echo "Problem with curbranch!"; return 1}
