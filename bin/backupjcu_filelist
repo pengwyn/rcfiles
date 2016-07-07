@@ -125,3 +125,9 @@ function copytohdd ()
 	#	exit 1
 	#fi
 }
+
+function copytodropbox ()
+{
+	echo "Copying to dropbox"
+	rsync -avzu $dirloc/ "~/Dropbox/jcubackup/" || exit 1
+}
