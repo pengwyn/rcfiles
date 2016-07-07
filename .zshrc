@@ -152,12 +152,12 @@ alias ipython2r='MPLCONFIGDIR=$HOME/.config/matplotlib/nodisplay ipython2'
 alias ..='cd ..'
 
 function gitpullall() {
+	arg=$1
 	if [[ $# > 0 && $1 != "--rebase" ]]
 	then
 		echo "Takes only --rebase as an argument"
 		return 2
 	fi
-	arg=$1
 
 	echo "Fetching..."
 	git fetch --all # || return 1
@@ -172,7 +172,12 @@ function gitpullall() {
 	for name in $(git remote show)
 	do
 		echo "Pulling ($arg) from ${name}..."
-		git pull $arg $name $curbranch || return 1
+		#git pull $arg $name $curbranch || return 1
+		if [[ -z "$arg" ]]; then
+			git merge --ff-only $name/$curbranch || return 1
+		elif [[ "$arg" == "--rebase" ]]; then
+			git rebase $name/$curbranch || return 1
+		fi
 	done
 }
 
