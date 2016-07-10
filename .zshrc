@@ -262,7 +262,7 @@ fi
 #eval $(cat ~/.gnupg/evalstr)
 #export SSH_AUTH_SOCK="$HOME/.gnupg/S.gpg-agent.ssh"
 
-#export GPG_TTY=$(tty)
+export GPG_TTY=$(tty)
 #echo "UPDATESTARTUPTTY" | gpg-connect-agent
 
 # Force an update for every ssh command
@@ -303,3 +303,8 @@ then
 		fi
 	}
 fi
+
+function ssht () {
+	gpg-connect-agent updatestartuptty /bye
+	ssh -t $@ "tmux new -A main"
+}
