@@ -305,6 +305,7 @@ then
 fi
 
 function ssht () {
-	gpg-connect-agent updatestartuptty /bye
-	ssh -t $@ "tmux new -A main"
+	#gpg-connect-agent updatestartuptty /bye
+	ssh -t $@ "tmux new -A -s main"
 }
+compdef _ssh ssht=ssh
