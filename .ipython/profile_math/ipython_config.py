@@ -12,6 +12,7 @@ from pylab import *
 from numpy import *
 from std_imports import *
 """
+c.TerminalInteractiveShell.history_length = 1000000
 
 # You have to make sure that attributes that are containers already
 # exist before using them.  Simple assigning a new list will override
