@@ -152,6 +152,8 @@ alias ipython2r='MPLCONFIGDIR=$HOME/.config/matplotlib/nodisplay ipython2'
 alias ..='cd ..'
 
 function gitpullall() {
+	gpg-connect-agent updatestartuptty /bye
+
 	arg=$1
 	if [[ $# > 0 && $1 != "--rebase" ]]
 	then
@@ -190,6 +192,7 @@ alias gpl="git pull"
 alias gpla="gitpullall"
 alias gps="git push"
 alias gr="git remote"
+alias gl="git log --oneline --graph"
 alias g="git"
 
 autoload -U colors && colors
