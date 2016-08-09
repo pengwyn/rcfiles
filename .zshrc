@@ -272,7 +272,27 @@ alias ssh='gpg-connect-agent updatestartuptty /bye;ssh'
 
 if [[ $(hostname) == "mixologist" ]]
 then
-	alias sq=squeue -l
+	function sq () {
+		output=$(squeue -O jobid,username,partition,state,timeused,batchhost,reason,starttime $* )
+		print $output
+		jobnum=$(print $output | wc | awk '{print ($1 - 1)}')
+		myjobnum=$(print $output | grep pengwyn | wc | awk '{print $1}')
+		print "Number of jobs: $jobnum, number of my jobs: $myjobnum"
+	}
+
+	function requeueallon () {
+		if [[ $# != 1 ]] ; then
+			echo "Need one argument"
+			return 1
+		fi
+		joblist=( $(sq -u pengwyn -t running | grep $1 | awk '{print $1}') )
+		if [[ ${#joblist} == 0 ]] ; then
+			echo "No jobs running on $1 to requeue"
+			return 1
+		fi
+		echo "Requeueing $joblist"
+	   	scontrol requeue "$joblist"
+	}
 
 	export PATH="$PATH:/cluster/admins/scripts"
 
