@@ -70,8 +70,10 @@ function copytohdd ()
 		then
 			echo "Mounting drive $drive"
 			udisksctl mount -b $devpath
+			hadtomount=1
 		else
 			echo "Drive already mounted"
+			hadtomount=0
 		fi
 
 		if [ ! -d "$prefix/$drive" ]
@@ -84,6 +86,14 @@ function copytohdd ()
 		#cp -aivu $dirloc/backupjcu.snar $dirloc/backupjcu_* $drive/ || exit 1
 		rsync -avzu $dirloc "$prefix/$drive/" || exit 1
 		foundadrive=1
+
+		sync -f "$prefix/$drive"
+
+		if [[ "$hadtomount" == 1 ]]
+		then
+			echo "Unmounting drive $drive"
+			udisksctl unmount -b $devpath || echo "Failed!"
+		fi
 	done
 
 	if (( $foundadrive == 0 ))
@@ -129,5 +139,5 @@ function copytohdd ()
 function copytodropbox ()
 {
 	echo "Copying to dropbox"
-	rsync -avzu $dirloc/ "~/Dropbox/jcubackup/" || exit 1
+	rsync -avzu $dirloc/ "$HOME/Dropbox/jcubackup/" || exit 1
 }
