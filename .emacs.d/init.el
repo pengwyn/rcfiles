@@ -103,3 +103,8 @@ With negative prefix, apply to -N lines above."
   (back-to-indentation))
 
 (global-set-key (kbd "C-;") 'endless/comment-line)
+
+(define-key evil-normal-state-map (kbd "C-w C-l") 'evil-window-right)
+(define-key evil-normal-state-map (kbd "C-w C-h") 'evil-window-left)
+(define-key evil-normal-state-map (kbd "C-w C-k") 'evil-window-up)
+(define-key evil-normal-state-map (kbd "C-w C-j") 'evil-window-down)
