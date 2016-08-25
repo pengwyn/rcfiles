@@ -35,7 +35,7 @@
       myPackages)
 
 (elpy-enable)
-(elpy-use-ipython)
+;(elpy-use-ipython)
 (setq elpy-rpc-python-command "python2")
 (elpy-use-ipython "ipython2")
 
