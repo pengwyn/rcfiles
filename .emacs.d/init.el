@@ -108,3 +108,5 @@ With negative prefix, apply to -N lines above."
 (define-key evil-normal-state-map (kbd "C-w C-h") 'evil-window-left)
 (define-key evil-normal-state-map (kbd "C-w C-k") 'evil-window-up)
 (define-key evil-normal-state-map (kbd "C-w C-j") 'evil-window-down)
+
+(global-auto-revert-mode t)
