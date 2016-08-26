@@ -110,3 +110,8 @@ With negative prefix, apply to -N lines above."
 (define-key evil-normal-state-map (kbd "C-w C-j") 'evil-window-down)
 
 (global-auto-revert-mode t)
+
+(setq-default evil-symbol-word-search 'symbol)
+
+(with-eval-after-load 'evil
+    (defalias #'forward-evil-word #'forward-evil-symbol))
