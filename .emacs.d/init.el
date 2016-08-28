@@ -50,8 +50,9 @@
 ;(global-linum-mode t) ;; enable line numbers globally
 (global-relative-line-numbers-mode)
 
-(add-to-list 'default-frame-alist '(font . "GohuFont-11"))
-(set-face-attribute 'default t :font "GohuFont-11")
+;; (add-to-list 'default-frame-alist '(font . "GohuFont-11"))
+;; (set-face-attribute 'default t :font "GohuFont-11")
+(set-frame-font "GohuFont-11")
 
 (setq python-shell-interpreter "ipython2"
     python-shell-interpreter-args "--simple-prompt -i")
