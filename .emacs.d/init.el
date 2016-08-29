@@ -27,7 +27,8 @@
     evil-search-highlight-persist
     magit
     relative-line-numbers
-    helm))
+    helm
+	sr-speedbar))
 
 
 (mapc #'(lambda (package)
@@ -50,12 +51,38 @@
 ;(global-linum-mode t) ;; enable line numbers globally
 (global-relative-line-numbers-mode)
 
-;; (add-to-list 'default-frame-alist '(font . "GohuFont-11"))
-;; (set-face-attribute 'default t :font "GohuFont-11")
+;(setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
+(setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
+(setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
+(setq scroll-step 1) ;; keyboard scroll one line at a time
+(setq scroll-margin 3)
+
 (set-frame-font "GohuFont-11")
 
 (setq python-shell-interpreter "ipython2"
     python-shell-interpreter-args "--simple-prompt -i")
+
+(defun endless/comment-line (n)
+  "Comment or uncomment current line and leave point after it.
+With positive prefix, apply to N lines including current one.
+With negative prefix, apply to -N lines above."
+  (interactive "p")
+  (let ((range (list (line-beginning-position)
+                     (goto-char (line-end-position n)))))
+    (comment-or-uncomment-region
+     (apply #'min range)
+     (apply #'max range)))
+  ;; (forward-line 1)
+  (back-to-indentation))
+
+(global-set-key (kbd "C-;") 'endless/comment-line)
+
+(global-set-key (kbd "<f5>") 'compile)
+(setq-default compilation-read-command nil)
+(setq-default compile-command "make")
+(global-set-key (kbd "C-j") 'next-error)
+
+(global-set-key (kbd "<f6>") 'magit-status)
 
 (require 'ein)
 
@@ -80,28 +107,13 @@
 (setq evil-search-highlight-string-min-len 3)
 
 
- (defun evil-toggle-input-method ()
-      "when toggle on input method, switch to evil-insert-state if possible.
-    when toggle off input method, switch to evil-normal-state if current state is evil-insert-state"
-      (interactive)
-      (if (not evil-mode) (turn-on-evil-mode) (turn-off-evil-mode)))
+;;  (defun evil-toggle-input-method ()
+;;       "when toggle on input method, switch to evil-insert-state if possible.
+;;     when toggle off input method, switch to evil-normal-state if current state is evil-insert-state"
+;;       (interactive)
+;;       (if (not evil-mode) (turn-on-evil-mode) (turn-off-evil-mode)))
     
-(global-set-key (kbd "C-\\") 'evil-toggle-input-method)
-
-(defun endless/comment-line (n)
-  "Comment or uncomment current line and leave point after it.
-With positive prefix, apply to N lines including current one.
-With negative prefix, apply to -N lines above."
-  (interactive "p")
-  (let ((range (list (line-beginning-position)
-                     (goto-char (line-end-position n)))))
-    (comment-or-uncomment-region
-     (apply #'min range)
-     (apply #'max range)))
-  ;; (forward-line 1)
-  (back-to-indentation))
-
-(global-set-key (kbd "C-;") 'endless/comment-line)
+;; (global-set-key (kbd "C-\\") 'evil-toggle-input-method)
 
 (define-key evil-normal-state-map (kbd "C-w C-l") 'evil-window-right)
 (define-key evil-normal-state-map (kbd "C-w C-h") 'evil-window-left)
@@ -141,9 +153,6 @@ With negative prefix, apply to -N lines above."
     (defalias #'forward-evil-word #'forward-evil-symbol))
 
 (setq-default company-minimum-prefix-length 2)
-(define-prefix-command 'danny-completions)
-(define-key evil-insert-state-map (kbd "C-k") 'danny-completions)
-(define-key evil-insert-state-map (kbd "C-k C-l") 'evil-complete-previous-line)
 
 (require 'company)
 (add-hook 'after-init-hook 'global-company-mode)
@@ -218,3 +227,36 @@ With negative prefix, apply to -N lines above."
 
 (require 'powerline)
 (powerline-center-evil-theme)
+
+
+(define-prefix-command 'danny-completions)
+(define-key evil-insert-state-map (kbd "C-k") 'danny-completions)
+(define-key evil-normal-state-map (kbd "C-k") 'danny-completions)
+(define-key danny-completions (kbd "C-l") 'evil-complete-previous-line)
+(define-key danny-completions (kbd "C-o") 'helm-occur)
+(define-key danny-completions (kbd "C-k") 'helm-resume)
+
+
+ ;; (defun kill-dired-buffers ()
+ ;; 	 (interactive)
+ ;; 	 (mapc (lambda (buffer) 
+ ;;           (when (eq 'dired-mode (buffer-local-value 'major-mode buffer)) 
+ ;;             (kill-buffer buffer))) 
+ ;;         (buffer-list)))
+
+
+(setq
+ ;; use gdb-many-windows by default
+ gdb-many-windows t
+
+ ;; Non-nil means display source file containing the main routine at startup
+ gdb-show-main t
+ )
+
+(require 'sr-speedbar)
+;(setq speedbar-show-unknown-files t) ; show all files
+(setq speedbar-use-images nil) ; use text for buttons
+;(setq sr-speedbar-right-side nil) ; put on left side
+(setq speedbar-hide-button-brackets-flag t)
+(setq speedbar-tag-hierarchy-method '(speedbar-sort-tag-hierarchy))
+(global-set-key (kbd "<f8>") 'sr-speedbar-toggle)
