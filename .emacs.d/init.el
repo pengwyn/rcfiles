@@ -16,6 +16,8 @@
 
 (defvar myPackages
   '(better-defaults
+    relative-line-numbers
+	rainbow-delimiters
     material-theme
     elpy
     ein
@@ -26,11 +28,11 @@
     evil-exchange
     evil-search-highlight-persist
     magit
-    relative-line-numbers
-    helm
 	sr-speedbar
-    ggtags
 	powerline
+	powerline-evil
+    helm
+    ggtags
 	company-quickhelp))
 
 
@@ -63,6 +65,9 @@
 (setq scroll-margin 3)
 
 (set-frame-font "GohuFont-11")
+
+(require 'rainbow-delimiters)
+(rainbow-delimiters-mode)
 
 (setq python-shell-interpreter "ipython2"
     python-shell-interpreter-args "--simple-prompt -i")
