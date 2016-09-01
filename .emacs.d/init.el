@@ -28,7 +28,8 @@
     magit
     relative-line-numbers
     helm
-	sr-speedbar))
+	sr-speedbar
+	company-quickhelp))
 
 
 (mapc #'(lambda (package)
@@ -38,9 +39,11 @@
 
 (elpy-enable)
 (delete 'elpy-module-highlight-indentation elpy-modules)
+(delete 'elpy-module-flymake elpy-modules)
 (setq elpy-rpc-python-command "python2")
 (elpy-use-ipython "ipython2")
 
+(require 'ein)
 (add-hook 'ein:connect-mode-hook 'ein:jedi-setup)
 
 ;; BASIC CUSTOMIZATION
@@ -84,7 +87,6 @@ With negative prefix, apply to -N lines above."
 
 (global-set-key (kbd "<f6>") 'magit-status)
 
-(require 'ein)
 
 (require 'evil)
 (evil-mode 1)
@@ -152,10 +154,35 @@ With negative prefix, apply to -N lines above."
 (with-eval-after-load 'evil
     (defalias #'forward-evil-word #'forward-evil-symbol))
 
-(setq-default company-minimum-prefix-length 2)
-
 (require 'company)
 (add-hook 'after-init-hook 'global-company-mode)
+
+(setq-default company-minimum-prefix-length 2)
+
+(setq-default company-backends '( (:separate company-semantic company-clang company-gtags company-yasnippet) company-capf company-dabbrev))
+;(setq-default company-backends '( company-yasnippet))
+
+(defun company-yasnippet-or-completion ()
+  "Solve company yasnippet conflicts."
+  (interactive)
+  (let ((yas-fallback-behavior
+         (apply 'company-complete-common nil)))
+    (yas-expand)))
+
+(add-hook 'company-mode-hook
+          (lambda ()
+            (substitute-key-definition
+             'company-complete-common
+             'company-yasnippet-or-completion
+             company-active-map)))
+
+;; (add-hook 'elpy-mode-hook
+;; 	(lambda () (setcar company-backends '(:separate elpy-company-backend company-yasnippet)))
+;; )
+(define-key company-mode-map (kbd "C-<tab>") 'company-other-backend)
+
+(company-quickhelp-mode t)
+
 
 (require 'semantic)
 (require 'semantic/db-global)
