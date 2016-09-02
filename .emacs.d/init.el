@@ -166,8 +166,11 @@ With negative prefix, apply to -N lines above."
 
 (setq-default company-minimum-prefix-length 2)
 
-(setq-default company-backends '( (:separate company-semantic company-clang company-gtags company-yasnippet) company-capf company-dabbrev))
+;(setq-default company-backends '( (:separate company-semantic company-clang company-gtags) company-yasnippet company-capf company-dabbrev))
+(setq-default company-backends '( company-clang company-semantic company-gtags company-yasnippet company-capf company-dabbrev))
 ;(setq-default company-backends '( company-yasnippet))
+
+(setq-default company-dabbrev-time-limit 1.0)
 
 (defun company-yasnippet-or-completion ()
   "Solve company yasnippet conflicts."
@@ -186,6 +189,7 @@ With negative prefix, apply to -N lines above."
 ;; (add-hook 'elpy-mode-hook
 ;; 	(lambda () (setcar company-backends '(:separate elpy-company-backend company-yasnippet)))
 ;; )
+(define-key company-mode-map (kbd "C-M-i") 'company-complete)
 (define-key company-mode-map (kbd "C-<tab>") 'company-other-backend)
 
 (company-quickhelp-mode t)
@@ -269,6 +273,8 @@ With negative prefix, apply to -N lines above."
 (define-key danny-completions (kbd "C-l") 'evil-complete-previous-line)
 (define-key danny-completions (kbd "C-o") 'helm-occur)
 (define-key danny-completions (kbd "C-k") 'helm-resume)
+
+(global-set-key (kbd "C-x f") 'helm-multi-files)
 
 
  ;; (defun kill-dired-buffers ()
