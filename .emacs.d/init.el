@@ -16,6 +16,7 @@
 
 (defvar myPackages
   '(better-defaults
+	org
     relative-line-numbers
 	rainbow-delimiters
     material-theme
@@ -67,7 +68,7 @@
 (set-frame-font "GohuFont-11")
 
 (require 'rainbow-delimiters)
-(rainbow-delimiters-mode)
+(rainbow-delimiters-mode t)
 
 (setq python-shell-interpreter "ipython2"
     python-shell-interpreter-args "--simple-prompt -i")
@@ -86,6 +87,7 @@ With negative prefix, apply to -N lines above."
   (back-to-indentation))
 
 (global-set-key (kbd "C-;") 'endless/comment-line)
+(setq-default comment-style 'multi-line)
 
 (global-set-key (kbd "<f5>") 'compile)
 (setq-default compilation-read-command nil)
@@ -300,3 +302,15 @@ With negative prefix, apply to -N lines above."
 (setq speedbar-hide-button-brackets-flag t)
 (setq speedbar-tag-hierarchy-method '(speedbar-sort-tag-hierarchy))
 (global-set-key (kbd "<f8>") 'sr-speedbar-toggle)
+
+(require 'gud)
+(define-key gud-minor-mode-map (kbd "<f9>") 'gud-next)
+(add-hook 'gud-mode-hook
+		  (lambda () (tool-bar-mode t)))
+
+(eval-after-load 'comint
+  '(progn
+    (define-key comint-mode-map (kbd "<up>") 'comint-previous-input)
+    (define-key comint-mode-map (kbd "C-p") 'comint-previous-input)
+    (define-key comint-mode-map (kbd "<down>") 'comint-next-input)
+    (define-key comint-mode-map (kbd "C-n") 'comint-previous-input)))
