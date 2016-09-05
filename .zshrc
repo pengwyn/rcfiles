@@ -164,7 +164,11 @@ function gitpullall() {
 	git fetch --all # || return 1
 	if [[ $? != 0 ]]
 	then
+		echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+		echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
 		echo "!!!!!! Errors in git fetch --all !!!!!!!!!"
+		echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+		echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
 	fi
 
 	curbranch=$(git rev-parse --abbrev-ref HEAD)
