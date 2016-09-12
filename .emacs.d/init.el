@@ -28,6 +28,7 @@
     evil-visualstar
     evil-exchange
     evil-search-highlight-persist
+	evil-magit
     magit
 	sr-speedbar
 	powerline
@@ -67,8 +68,20 @@
 
 (set-frame-font "GohuFont-11")
 
+(global-auto-revert-mode t)
+
+(global-set-key (kbd "<f5>") 'compile)
+(setq-default compilation-read-command nil)
+(setq-default compile-command "make")
+(global-set-key (kbd "C-j") 'next-error)
+
+(require 'magit)
+(global-set-key (kbd "<f6>") 'magit-status)
+
+
 (require 'rainbow-delimiters)
-(rainbow-delimiters-mode t)
+;; (rainbow-delimiters-mode t)
+(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 
 (setq python-shell-interpreter "ipython2"
     python-shell-interpreter-args "--simple-prompt -i")
@@ -89,42 +102,15 @@ With negative prefix, apply to -N lines above."
 (global-set-key (kbd "C-;") 'endless/comment-line)
 (setq-default comment-style 'multi-line)
 
-(global-set-key (kbd "<f5>") 'compile)
-(setq-default compilation-read-command nil)
-(setq-default compile-command "make")
-(global-set-key (kbd "C-j") 'next-error)
-
-(global-set-key (kbd "<f6>") 'magit-status)
-
 
 (require 'evil)
 (evil-mode 1)
-
-(require 'evil-surround)
-(global-evil-surround-mode 1)
 
 (define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
 (define-key evil-visual-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
 
 (define-key evil-normal-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt)
 (define-key evil-visual-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt)
-
-(require 'evil-exchange)
-(setq evil-exchange-key (kbd "zx"))
-(evil-exchange-install)
-
-(require 'evil-search-highlight-persist)
-(global-evil-search-highlight-persist t)
-(setq evil-search-highlight-string-min-len 3)
-
-
-;;  (defun evil-toggle-input-method ()
-;;       "when toggle on input method, switch to evil-insert-state if possible.
-;;     when toggle off input method, switch to evil-normal-state if current state is evil-insert-state"
-;;       (interactive)
-;;       (if (not evil-mode) (turn-on-evil-mode) (turn-off-evil-mode)))
-    
-;; (global-set-key (kbd "C-\\") 'evil-toggle-input-method)
 
 (define-key evil-normal-state-map (kbd "C-w C-l") 'evil-window-right)
 (define-key evil-normal-state-map (kbd "C-w C-h") 'evil-window-left)
@@ -156,12 +142,36 @@ With negative prefix, apply to -N lines above."
     (evil-visual-restore) ; re-select last visual-mode selection
 ))
 
-(global-auto-revert-mode t)
-
 (setq-default evil-symbol-word-search 'symbol)
+
+(defun recenter-top-bottom-with-clear ()
+  "Do the normal recenter and redraw the screen."
+  (interactive)
+  (recenter-top-bottom)
+  (evil-search-highlight-persist-remove-all))
+
+(define-key evil-normal-state-map (kbd "C-x C-<space>") 'recenter-top-bottom-with-clear)
+(define-key evil-insert-state-map (kbd "C-x C-<space>") 'recenter-top-bottom-with-clear)
+(define-key evil-normal-state-map (kbd "C-x <space>") 'recenter-top-bottom-with-clear)
+(define-key evil-insert-state-map (kbd "C-x <space>") 'recenter-top-bottom-with-clear)
 
 (with-eval-after-load 'evil
     (defalias #'forward-evil-word #'forward-evil-symbol))
+
+(require 'evil-magit)
+
+(require 'evil-surround)
+(global-evil-surround-mode 1)
+
+(require 'evil-exchange)
+(setq evil-exchange-key (kbd "zx"))
+(evil-exchange-install)
+
+(require 'evil-search-highlight-persist)
+(global-evil-search-highlight-persist t)
+(setq evil-search-highlight-string-min-len 3)
+
+
 
 (require 'company)
 (add-hook 'after-init-hook 'global-company-mode)
@@ -194,6 +204,7 @@ With negative prefix, apply to -N lines above."
 (define-key company-mode-map (kbd "C-M-i") 'company-complete)
 (define-key company-mode-map (kbd "C-<tab>") 'company-other-backend)
 
+(require 'company-quickhelp)
 (company-quickhelp-mode t)
 
 
@@ -258,10 +269,6 @@ With negative prefix, apply to -N lines above."
               tab-width 4
               indent-tabs-mode t)
 
-;(add-to-list
-; 'display-buffer-alist
-; '("\\*compilation\\*" . (display-buffer-pop-up-window)))
-
 (setq-default split-height-threshold 20
 			  split-width-threshold 20)
 
@@ -288,11 +295,10 @@ With negative prefix, apply to -N lines above."
 
 
 (setq
- ;; use gdb-many-windows by default
  gdb-many-windows t
 
  ;; Non-nil means display source file containing the main routine at startup
- gdb-show-main t
+ ;; gdb-show-main t
  )
 
 (require 'sr-speedbar)
