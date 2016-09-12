@@ -177,6 +177,7 @@ With negative prefix, apply to -N lines above."
 (add-hook 'after-init-hook 'global-company-mode)
 
 (setq-default company-minimum-prefix-length 2)
+(setq-default company-idle-delay 0.1)
 
 ;(setq-default company-backends '( (:separate company-semantic company-clang company-gtags) company-yasnippet company-capf company-dabbrev))
 (setq-default company-backends '( company-clang company-semantic company-gtags company-yasnippet company-capf company-dabbrev))
@@ -299,6 +300,7 @@ With negative prefix, apply to -N lines above."
 
  ;; Non-nil means display source file containing the main routine at startup
  ;; gdb-show-main t
+ gdb-show-main nil
  )
 
 (require 'sr-speedbar)
