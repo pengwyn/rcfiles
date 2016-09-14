@@ -2,47 +2,51 @@
 
 ;; INSTALL PACKAGES
 ;; --------------------------------------
-
 (require 'package)
-
 (add-to-list 'package-archives
-             '("melpa" . "https://melpa.org/packages/"))
+			'("melpa" . "https://melpa.org/packages/"))
 ;(add-to-list 'package-archives
 ;             '("elpy" . "https://jorgenschaefer.github.io/packages/"))
 
 (package-initialize)
-(when (not package-archive-contents)
-  (package-refresh-contents))
 
-(defvar myPackages
-  '(better-defaults
-	org
-    relative-line-numbers
-	rainbow-delimiters
-    material-theme
-    elpy
-    ein
-    evil
-    evil-surround
-    evil-numbers
-    evil-visualstar
-    evil-exchange
-    evil-search-highlight-persist
-	evil-magit
-    magit
-	sr-speedbar
-	powerline
-	powerline-evil
-    helm
-    ggtags
-	company-quickhelp))
+(defun danny-load-all-packages ()
+  "Danny's wrapping of the autoinstallation of packages."
+
+	(when (not package-archive-contents)
+	(package-refresh-contents))
+
+	(defvar myPackages
+	'(better-defaults
+		org
+		relative-line-numbers
+		rainbow-delimiters
+		material-theme
+		elpy
+		ein
+		evil
+		evil-surround
+		evil-numbers
+		evil-visualstar
+		evil-exchange
+		evil-search-highlight-persist
+		evil-magit
+		magit
+		sr-speedbar
+		powerline
+		powerline-evil
+		helm
+		ggtags
+		company-quickhelp))
 
 
-(mapc #'(lambda (package)
-    (unless (package-installed-p package)
-      (package-install package)))
-      myPackages)
+	(mapc #'(lambda (package)
+		(unless (package-installed-p package)
+		(package-install package)))
+		myPackages)
+)
 
+(require 'elpy)
 (elpy-enable)
 (delete 'elpy-module-highlight-indentation elpy-modules)
 (delete 'elpy-module-flymake elpy-modules)
@@ -171,6 +175,8 @@ With negative prefix, apply to -N lines above."
 (global-evil-search-highlight-persist t)
 (setq evil-search-highlight-string-min-len 3)
 
+(require 'yasnippet)
+(yas-global-mode 1)
 
 
 (require 'company)
@@ -213,7 +219,19 @@ With negative prefix, apply to -N lines above."
 (require 'semantic/db-global)
 (semanticdb-enable-gnu-global-databases 'c-mode)
 (semanticdb-enable-gnu-global-databases 'c++-mode)
-(semantic-mode 1)
+
+(global-semanticdb-minor-mode 1)
+(global-semantic-idle-scheduler-mode 1)
+
+(global-semantic-idle-summary-mode 1)
+(add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode)
+
+;(semantic-mode 1)
+
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
+              (semantic-mode 1))))
 
 
 (require 'helm)
