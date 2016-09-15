@@ -47,11 +47,15 @@
 )
 
 (require 'elpy)
-(elpy-enable)
-(delete 'elpy-module-highlight-indentation elpy-modules)
-(delete 'elpy-module-flymake elpy-modules)
-(setq elpy-rpc-python-command "python2")
-(elpy-use-ipython "ipython2")
+(add-hook 'python-mode-hook
+          (lambda ()
+              (
+				(elpy-enable)
+				(delete 'elpy-module-highlight-indentation elpy-modules)
+				(delete 'elpy-module-flymake elpy-modules)
+				(setq elpy-rpc-python-command "python2")
+				(elpy-use-ipython "ipython2")
+				)))
 
 (require 'ein)
 (add-hook 'ein:connect-mode-hook 'ein:jedi-setup)
@@ -116,10 +120,10 @@ With negative prefix, apply to -N lines above."
 (define-key evil-normal-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt)
 (define-key evil-visual-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt)
 
-(define-key evil-normal-state-map (kbd "C-w C-l") 'evil-window-right)
-(define-key evil-normal-state-map (kbd "C-w C-h") 'evil-window-left)
-(define-key evil-normal-state-map (kbd "C-w C-k") 'evil-window-up)
-(define-key evil-normal-state-map (kbd "C-w C-j") 'evil-window-down)
+(define-key evil-window-map (kbd "C-l") 'evil-window-right)
+(define-key evil-window-map (kbd "C-h") 'evil-window-left)
+(define-key evil-window-map (kbd "C-k") 'evil-window-up)
+(define-key evil-window-map (kbd "C-j") 'evil-window-down)
 
 ;; (define-key evil-insert-state-map (kbd "C-a") 'evil-beginning-of-line)
 (define-key evil-insert-state-map (kbd "C-e") 'evil-end-of-line)
@@ -301,6 +305,7 @@ With negative prefix, apply to -N lines above."
 (define-key danny-completions (kbd "C-l") 'evil-complete-previous-line)
 (define-key danny-completions (kbd "C-o") 'helm-occur)
 (define-key danny-completions (kbd "C-k") 'helm-resume)
+(define-key danny-completions (kbd "C-a") 'helm-do-grep-ag)
 
 (global-set-key (kbd "C-x f") 'helm-multi-files)
 
