@@ -277,7 +277,7 @@ alias ssh='gpg-connect-agent updatestartuptty /bye;ssh'
 if [[ $(hostname) == "mixologist" ]]
 then
 	function sq () {
-		output=$(squeue -O jobid,username,partition,state,timeused,batchhost,reason,starttime $* )
+		output=$(squeue -O jobarrayid,name,username,partition,state,timeused,batchhost,reason,starttime $* )
 		print $output
 		jobnum=$(print $output | wc | awk '{print ($1 - 1)}')
 		myjobnum=$(print $output | grep pengwyn | wc | awk '{print $1}')
@@ -330,8 +330,15 @@ then
 	}
 fi
 
+if [[ -f ~/.local/lib/python2.7/site-packages/Jug-1.2.2-py2.7.egg/EGG-INFO/scripts/jug ]]
+then
+	PATH="$PATH:$HOME/.local/lib/python2.7/site-packages/Jug-1.2.2-py2.7.egg/EGG-INFO/scripts"
+fi
+
 function ssht () {
 	#gpg-connect-agent updatestartuptty /bye
 	ssh -t $@ "tmux new -A -s main"
 }
 compdef _ssh ssht=ssh
+
+alias s=sudo -E
