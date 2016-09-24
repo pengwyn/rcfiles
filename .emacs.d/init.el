@@ -47,15 +47,17 @@
 )
 
 (require 'elpy)
-(add-hook 'python-mode-hook
-          (lambda ()
-              (
-				(elpy-enable)
-				(delete 'elpy-module-highlight-indentation elpy-modules)
-				(delete 'elpy-module-flymake elpy-modules)
-				(setq elpy-rpc-python-command "python2")
-				(elpy-use-ipython "ipython2")
-				)))
+(setq eply-remove-modeline_lighter nil)
+(delete 'elpy-module-highlight-indentation elpy-modules)
+(delete 'elpy-module-flymake elpy-modules)
+(setq elpy-rpc-python-command "python2")
+;(elpy-use-ipython "ipython2 --pylab --profile math")
+(elpy-use-ipython "ipython2")
+;(setq python-shell-interpreter "ipython2"
+;    python-shell-interpreter-args "--simple-prompt -i")
+(setq python-shell-interpreter-args "--simple-prompt -i --pylab --profile math")
+
+(elpy-enable)
 
 (require 'ein)
 (add-hook 'ein:connect-mode-hook 'ein:jedi-setup)
@@ -90,9 +92,6 @@
 (require 'rainbow-delimiters)
 ;; (rainbow-delimiters-mode t)
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
-
-(setq python-shell-interpreter "ipython2"
-    python-shell-interpreter-args "--simple-prompt -i")
 
 (defun endless/comment-line (n)
   "Comment or uncomment current line and leave point after it.
@@ -341,10 +340,25 @@ With negative prefix, apply to -N lines above."
 
 (eval-after-load 'comint
   '(progn
-    (define-key comint-mode-map (kbd "<up>") 'comint-previous-input)
-    (define-key comint-mode-map (kbd "C-p") 'comint-previous-input)
-    (define-key comint-mode-map (kbd "<down>") 'comint-next-input)
-    (define-key comint-mode-map (kbd "C-n") 'comint-previous-input)))
+	(defun danny-prev-match (n) "" (interactive "p")
+							   (if (not (comint-after-pmark-p)) (end-of-buffer))
+							   (comint-previous-matching-input-from-input n)
+							   (setq this-command 'comint-previous-matching-input-from-input))
+	(defun danny-next-match (n) "" (interactive "p")
+							   (if (not (comint-after-pmark-p)) (end-of-buffer))
+							   (comint-next-matching-input-from-input n)
+							   (setq this-command 'comint-next-matching-input-from-input))
+
+    ;(define-key comint-mode-map (kbd "<up>") 'comint-previous-matching-input-from-input)
+    ;(define-key comint-mode-map (kbd "C-p") 'comint-previous-matching-input-from-input)
+    ;(define-key comint-mode-map (kbd "<down>") 'comint-next-matching-input-from-input)
+    ;(define-key comint-mode-map (kbd "C-n") 'comint-next-matching-input-from-input)
+    (define-key comint-mode-map (kbd "<up>") 'danny-prev-match)
+    (define-key comint-mode-map (kbd "C-p") 'danny-prev-match)
+    (define-key comint-mode-map (kbd "<down>") 'danny-next-match)
+    (define-key comint-mode-map (kbd "C-n") 'danny-next-match)
+	))
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -352,7 +366,16 @@ With negative prefix, apply to -N lines above."
  ;; If there is more than one, they won't work right.
  '(safe-local-variable-values
    (quote
-	((company-clang-arguments "-I/home/pengwyn/work4/ccode/SwarmMC/")))))
+	((eval
+	  (message "blah testing")
+	  (message "second testing"))
+	 (eval setenv "GTAGSLIBPATH" "/home/pengwyn/work4/ccode/SwarmMC/")
+	 (eval make-local-variable
+		   (quote process-environment))
+	 (eval message "blah testing")
+	 (eval setenv "GTAGSTHROUGH" "true")
+	 (eval setenv "GTAGSLIBDIR" "/home/pengwyn/work4/ccode/SwarmMC/")
+	 (company-clang-arguments "-I/home/pengwyn/work4/ccode/SwarmMC/")))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
