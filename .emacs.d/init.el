@@ -264,6 +264,7 @@ With negative prefix, apply to -N lines above."
 (global-set-key (kbd "M-x") 'helm-M-x)
 (setq helm-M-x-fuzzy-match t) ;; optional fuzzy matching for helm-M-x
 (global-set-key (kbd "C-x b") 'helm-mini)
+(global-set-key (kbd "C-x f") 'helm-find-files)
 (setq helm-semantic-fuzzy-match t
       helm-imenu-fuzzy-match    t)
 (define-key evil-normal-state-map (kbd "M-o") 'helm-recentf)
