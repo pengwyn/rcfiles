@@ -87,6 +87,7 @@ setopt longlistjobs
 setopt auto_pushd pushd_ignore_dups
 setopt noglobdots
 #unsetopt nomatch
+setopt autocontinue
 
 bindkey -e
 # End of lines configured by zsh-newuser-install
@@ -342,3 +343,4 @@ function ssht () {
 compdef _ssh ssht=ssh
 
 alias s=sudo -E
+alias d=disown %%
