@@ -57,7 +57,7 @@
 ;    python-shell-interpreter-args "--simple-prompt -i")
 (setq python-shell-interpreter-args "--simple-prompt -i --pylab --profile math")
 
-(elpy-enable)
+;(elpy-enable)
 
 (require 'ein)
 (add-hook 'ein:connect-mode-hook 'ein:jedi-setup)
@@ -265,6 +265,7 @@ With negative prefix, apply to -N lines above."
 (setq helm-M-x-fuzzy-match t) ;; optional fuzzy matching for helm-M-x
 (global-set-key (kbd "C-x b") 'helm-mini)
 (global-set-key (kbd "C-x f") 'helm-find-files)
+(global-set-key (kbd "C-x C-f") 'helm-multi-files)
 (setq helm-semantic-fuzzy-match t
       helm-imenu-fuzzy-match    t)
 (define-key evil-normal-state-map (kbd "M-o") 'helm-recentf)
@@ -307,7 +308,6 @@ With negative prefix, apply to -N lines above."
 (define-key danny-completions (kbd "C-k") 'helm-resume)
 (define-key danny-completions (kbd "C-a") 'helm-do-grep-ag)
 
-(global-set-key (kbd "C-x f") 'helm-multi-files)
 
 
  ;; (defun kill-dired-buffers ()
