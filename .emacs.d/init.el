@@ -22,6 +22,7 @@
 		relative-line-numbers
 		rainbow-delimiters
 		material-theme
+		alect-theme
 		elpy
 		ein
 		evil
@@ -37,7 +38,9 @@
 		powerline-evil
 		helm
 		ggtags
-		company-quickhelp))
+		company-quickhelp
+		julia-mode
+		julia-shell))
 
 
 	(mapc #'(lambda (package)
@@ -365,6 +368,9 @@ With negative prefix, apply to -N lines above."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   (quote
+	(julia-mode julia-shell sr-speedbar relative-line-numbers rainbow-delimiters powerline-evil material-theme helm ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults alect-themes)))
  '(safe-local-variable-values
    (quote
 	((eval
