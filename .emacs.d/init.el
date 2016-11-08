@@ -12,6 +12,7 @@
 
 (defun danny-load-all-packages ()
   "Danny's wrapping of the autoinstallation of packages."
+  (interactive)
 
 	(when (not package-archive-contents)
 	(package-refresh-contents))
@@ -22,7 +23,7 @@
 		relative-line-numbers
 		rainbow-delimiters
 		material-theme
-		alect-theme
+		alect-themes
 		elpy
 		ein
 		evil
@@ -370,19 +371,7 @@ With negative prefix, apply to -N lines above."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-	(julia-mode julia-shell sr-speedbar relative-line-numbers rainbow-delimiters powerline-evil material-theme helm ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults alect-themes)))
- '(safe-local-variable-values
-   (quote
-	((eval
-	  (message "blah testing")
-	  (message "second testing"))
-	 (eval setenv "GTAGSLIBPATH" "/home/pengwyn/work4/ccode/SwarmMC/")
-	 (eval make-local-variable
-		   (quote process-environment))
-	 (eval message "blah testing")
-	 (eval setenv "GTAGSTHROUGH" "true")
-	 (eval setenv "GTAGSLIBDIR" "/home/pengwyn/work4/ccode/SwarmMC/")
-	 (company-clang-arguments "-I/home/pengwyn/work4/ccode/SwarmMC/")))))
+	(julia-shell julia-mode sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
