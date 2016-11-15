@@ -311,6 +311,7 @@ With negative prefix, apply to -N lines above."
 (define-key danny-completions (kbd "C-o") 'helm-occur)
 (define-key danny-completions (kbd "C-k") 'helm-resume)
 (define-key danny-completions (kbd "C-a") 'helm-do-grep-ag)
+(define-key danny-completions (kbd "C-d") 'ggtags-find-definition)
 
 
 
