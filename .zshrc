@@ -197,7 +197,7 @@ alias gpl="gpg-connect-agent updatestartuptty /bye; git pull"
 alias gpla="gitpullall"
 alias gps="git push"
 alias gr="git remote"
-alias gl="git log --oneline --graph"
+alias gl="git log --oneline --graph --all --decorate"
 alias g="git"
 
 autoload -U colors && colors
