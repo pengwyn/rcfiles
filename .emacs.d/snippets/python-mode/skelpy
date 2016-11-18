@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: _skelpy
+# key: _skelpy
+# --
+from __future__ import division, print_function
+from std_imports import *
+
+from matplotlib.pylab import *
+from numpy import *
