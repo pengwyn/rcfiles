@@ -365,6 +365,9 @@ With negative prefix, apply to -N lines above."
     (define-key comint-mode-map (kbd "C-n") 'danny-next-match)
 	))
 
+;; Latex stuff
+(add-hook 'latex-mode-hook 'auto-fill-mode)
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
