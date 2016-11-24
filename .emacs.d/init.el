@@ -113,6 +113,8 @@ With negative prefix, apply to -N lines above."
 (global-set-key (kbd "C-;") 'endless/comment-line)
 (setq-default comment-style 'multi-line)
 
+;;;;;;;;;;;;;;;
+;; Evil stuff
 
 (require 'evil)
 (evil-mode 1)
@@ -182,9 +184,15 @@ With negative prefix, apply to -N lines above."
 (global-evil-search-highlight-persist t)
 (setq evil-search-highlight-string-min-len 3)
 
+
+
+
 (require 'yasnippet)
 (yas-global-mode 1)
 
+
+;;;;;;;;;;;;;;;;
+;; Company stuff
 
 (require 'company)
 (add-hook 'after-init-hook 'global-company-mode)
@@ -372,6 +380,11 @@ With negative prefix, apply to -N lines above."
 (add-hook 'LaTeX-mode-hook (lambda () (load-theme 'material-light)))
 (add-hook 'doc-view-mode-hook (lambda () (relative-line-numbers-mode -1)))
 
+;; Ediff stuff
+(setq ediff-diff-options "-w")
+(setq ediff-split-window-function 'split-window-horizontally)
+(setq ediff-window-setup-function 'ediff-setup-windows-plain)
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -383,7 +396,7 @@ With negative prefix, apply to -N lines above."
  '(fill-column 80)
  '(package-selected-packages
    (quote
-	(auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell julia-mode sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes)))
+	(vdiff company evil goto-chg helm magit auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell julia-mode sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes)))
  '(preview-auto-cache-preamble t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
