@@ -10,45 +10,6 @@
 
 (package-initialize)
 
-(defun danny-load-all-packages ()
-  "Danny's wrapping of the autoinstallation of packages."
-  (interactive)
-
-	(when (not package-archive-contents)
-	(package-refresh-contents))
-
-	(defvar myPackages
-	'(better-defaults
-		org
-		relative-line-numbers
-		rainbow-delimiters
-		material-theme
-		alect-themes
-		elpy
-		ein
-		evil
-		evil-surround
-		evil-numbers
-		evil-visualstar
-		evil-exchange
-		evil-search-highlight-persist
-		evil-magit
-		magit
-		sr-speedbar
-		powerline
-		powerline-evil
-		helm
-		ggtags
-		company-quickhelp
-		julia-mode
-		julia-shell))
-
-
-	(mapc #'(lambda (package)
-		(unless (package-installed-p package)
-		(package-install package)))
-		myPackages)
-)
 
 (require 'elpy)
 (setq eply-remove-modeline_lighter nil)
@@ -396,7 +357,7 @@ With negative prefix, apply to -N lines above."
  '(fill-column 80)
  '(package-selected-packages
    (quote
-	(vdiff company evil goto-chg helm magit auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell julia-mode sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes)))
+	(vdiff goto-chg auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell julia-mode sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes evil helm magit org powerline)))
  '(preview-auto-cache-preamble t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -404,3 +365,49 @@ With negative prefix, apply to -N lines above."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+
+
+
+
+
+;; (defun danny-load-all-packages ()
+;;   "Danny's wrapping of the autoinstallation of packages."
+;;   (interactive)
+
+;; 	(when (not package-archive-contents)
+;; 	(package-refresh-contents))
+
+;; 	(defvar myPackages
+;; 	'(better-defaults
+;; 		org
+;; 		relative-line-numbers
+;; 		rainbow-delimiters
+;; 		material-theme
+;; 		alect-themes
+;; 		elpy
+;; 		ein
+;; 		evil
+;; 		evil-surround
+;; 		evil-numbers
+;; 		evil-visualstar
+;; 		evil-exchange
+;; 		evil-search-highlight-persist
+;; 		evil-magit
+;; 		magit
+;; 		sr-speedbar
+;; 		powerline
+;; 		powerline-evil
+;; 		helm
+;; 		ggtags
+;; 		company-quickhelp
+;; 		julia-mode
+;; 		julia-shell))
+
+
+;; 	(mapc #'(lambda (package)
+;; 		(unless (package-installed-p package)
+;; 		(package-install package)))
+;; 		myPackages)
+;; )
+(define-obsolete-function-alias 'danny-load-all-packages 'package-install-selected-packages)
