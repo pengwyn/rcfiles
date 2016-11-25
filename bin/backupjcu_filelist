@@ -56,7 +56,7 @@ function copytohdd ()
 	foundadrive=0
 	prefix=/run/media/pengwyn
 	#for drive in "$prefix/"{"TOSHIBA EXT",ADATA_2TB}
-	for drive in "TOSHIBA EXT" "ADATA_2TB"
+	for drive in "TOSHIBA EXT" "ADATA_2TB" "SSD 250"
 	do
 		devpath="/dev/disk/by-label/${drive// /\\x20}"
 		driveinfo=$(udisksctl info -b $devpath)
