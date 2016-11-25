@@ -3,10 +3,14 @@
 ;; INSTALL PACKAGES
 ;; --------------------------------------
 (require 'package)
-(add-to-list 'package-archives
-			'("melpa" . "https://melpa.org/packages/"))
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+(add-to-list 'package-archives '("melpa stable" . "https://stable.melpa.org/packages/"))
 ;(add-to-list 'package-archives
 ;             '("elpy" . "https://jorgenschaefer.github.io/packages/"))
+(setq package-archive-priorities
+	  '(("melpa stable" . 5)
+		("gnu" . 0)
+		("melpa" . -5)))
 
 (package-initialize)
 
@@ -210,6 +214,9 @@ With negative prefix, apply to -N lines above."
               (semantic-mode 1))))
 
 
+;;;;;;;;;;;;;;;
+; Helm stuff
+
 (require 'helm)
 (require 'helm-config)
 
@@ -243,6 +250,11 @@ With negative prefix, apply to -N lines above."
       helm-imenu-fuzzy-match    t)
 (define-key evil-normal-state-map (kbd "M-o") 'helm-recentf)
 
+(define-key helm-grep-map (kbd "C-.") 'helm-goto-next-file)
+(define-key helm-grep-map (kbd "C-,") 'helm-goto-precedent-file)
+
+
+
 (require 'ggtags)
 (add-hook 'c-mode-common-hook
           (lambda ()
@@ -260,6 +272,11 @@ With negative prefix, apply to -N lines above."
 
 ;(define-key evil-normal-state-map (kbd "M-.") 'ggtags-find-tag-dwim)
 (define-key evil-normal-state-map (kbd "M-.") nil)
+
+
+
+;;;;;;;;;;;;;;;;
+; C stuff
 
 (setq-default c-default-style "linux"
               c-basic-offset 4
@@ -355,7 +372,7 @@ With negative prefix, apply to -N lines above."
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
-	("b0ab5c9172ea02fba36b974bbd93bc26e9d26f379c9a29b84903c666a5fde837" "7153b82e50b6f7452b4519097f880d968a6eaf6f6ef38cc45a144958e553fbc6" default)))
+	("5dc0ae2d193460de979a463b907b4b2c6d2c9c4657b2e9e66b8898d2592e3de5" "b0ab5c9172ea02fba36b974bbd93bc26e9d26f379c9a29b84903c666a5fde837" "7153b82e50b6f7452b4519097f880d968a6eaf6f6ef38cc45a144958e553fbc6" default)))
  '(fill-column 80)
  '(package-selected-packages
    (quote
