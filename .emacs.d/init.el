@@ -359,6 +359,7 @@ With negative prefix, apply to -N lines above."
 (add-hook 'LaTeX-mode-hook 'latex-preview-pane-mode)
 (add-hook 'LaTeX-mode-hook (lambda () (load-theme 'material-light)))
 (add-hook 'doc-view-mode-hook (lambda () (relative-line-numbers-mode -1)))
+(add-hook 'LaTeX-mode-hook (lambda () (add-hook 'after-save-hook 'preview-buffer nil t)))
 
 ;; Ediff stuff
 (setq ediff-diff-options "-w")
