@@ -14,6 +14,12 @@
 
 (package-initialize)
 
+;; Put this at the start to allow removal of minor modes as we go
+(require 'dim)
+;; Some common ones
+(dim-minor-name 'yas-minor-mode nil)
+(dim-minor-name 'undo-tree-mode nil)
+
 
 (require 'elpy)
 (setq eply-remove-modeline_lighter nil)
@@ -220,6 +226,8 @@ With negative prefix, apply to -N lines above."
 (require 'helm)
 (require 'helm-config)
 
+(dim-minor-name 'helm-mode nil)
+
 ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
 ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
 ;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
@@ -248,7 +256,7 @@ With negative prefix, apply to -N lines above."
 (global-set-key (kbd "C-x C-f") 'helm-multi-files)
 (setq helm-semantic-fuzzy-match t
       helm-imenu-fuzzy-match    t)
-(define-key evil-normal-state-map (kbd "M-o") 'helm-recentf)
+(define-key evil-normal-state-map (kbd "C-p") 'helm-recentf)
 
 (define-key helm-grep-map (kbd "C-.") 'helm-goto-next-file)
 (define-key helm-grep-map (kbd "C-,") 'helm-goto-precedent-file)
@@ -353,6 +361,19 @@ With negative prefix, apply to -N lines above."
     (define-key comint-mode-map (kbd "C-n") 'danny-next-match)
 	))
 
+	
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Org-mode stuff
+;;------------------------------------------------
+(define-prefix-command 'danny-orgmode)
+(global-set-key (kbd "<f7>") 'danny-orgmode)
+
+(define-key danny-orgmode "l" 'org-store-link)
+(define-key danny-orgmode "a" 'org-agenda)
+(define-key danny-orgmode "c" 'org-capture)
+(define-key danny-orgmode "b" 'org-iswitchb)
+
+;;;;;;;;;;;;;;;;
 ;; Latex stuff
 (add-hook 'LaTeX-mode-hook 'auto-fill-mode)
 (add-hook 'LaTeX-mode-hook 'prettify-symbols-mode)
@@ -366,6 +387,34 @@ With negative prefix, apply to -N lines above."
 (setq ediff-split-window-function 'split-window-horizontally)
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; which-key mode
+;;------------------------------------------------
+(require 'which-key)
+(which-key-mode)
+(which-key-setup-side-window-right)
+(dim-minor-name 'which-key-mode nil)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Other stuff
+;;------------------------------------------------
+
+;; Emergency switch back to minibuffer
+;; Stolen from http://superuser.com/questions/132225/how-to-get-back-to-an-active-minibuffer-prompt-in-emacs-without-the-mouse
+(defun switch-to-minibuffer-window ()
+  "switch to minibuffer window (if active)"
+  (interactive)
+  (when (active-minibuffer-window)
+    (select-frame-set-input-focus (window-frame (active-minibuffer-window)))
+    (select-window (active-minibuffer-window))))
+(global-set-key (kbd "<f12>") 'switch-to-minibuffer-window)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Emacs customize stuff automatically added in below
+;;---------------------------------------------------
+
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -377,7 +426,7 @@ With negative prefix, apply to -N lines above."
  '(fill-column 80)
  '(package-selected-packages
    (quote
-	(vdiff goto-chg auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell julia-mode sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes evil helm magit org powerline)))
+	(flycheck helm-flycheck dim which-key vdiff goto-chg auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell julia-mode sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes evil helm magit org powerline)))
  '(preview-auto-cache-preamble t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
