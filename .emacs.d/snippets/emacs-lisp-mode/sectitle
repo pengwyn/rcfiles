@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: sectiontitle
+# key: sec
+#
+## Old attempt
+##;; $1 ${1:$(make-string (max 0 (- 50 4 (string-width yas-text))) ?\s)}
+# --
+${1:$(make-string (max 50 (+ 3 (string-width yas-text))) ?;)}
+;; $1
+;;${1:$(make-string (- (max 50 (+ 3 (string-width yas-text))) 2) ?-)}
+$0
