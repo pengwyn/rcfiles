@@ -1,5 +1,8 @@
 ;; init.el --- Emacs configuration
 
+
+(define-obsolete-function-alias 'danny-load-all-packages 'package-install-selected-packages)
+
 ;; INSTALL PACKAGES
 ;; --------------------------------------
 (require 'package)
@@ -14,13 +17,37 @@
 
 (package-initialize)
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Emacs customize stuff automatically added in below
+;;---------------------------------------------------
+(custom-set-variables
+ '(custom-safe-themes
+   (quote
+	("5dc0ae2d193460de979a463b907b4b2c6d2c9c4657b2e9e66b8898d2592e3de5" "b0ab5c9172ea02fba36b974bbd93bc26e9d26f379c9a29b84903c666a5fde837" "7153b82e50b6f7452b4519097f880d968a6eaf6f6ef38cc45a144958e553fbc6" default)))
+ '(fill-column 80)
+ '(org-agenda-files (quote ("~/Dropbox/org/notes.org")))
+ '(package-selected-packages
+   (quote
+	(flycheck helm-flycheck dim which-key vdiff goto-chg auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell julia-mode sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes evil helm magit org powerline)))
+ '(preview-auto-cache-preamble t))
+(custom-set-faces
+ )
+
+
+
 ;; Put this at the start to allow removal of minor modes as we go
 (require 'dim)
 ;; Some common ones
-(dim-minor-name 'yas-minor-mode nil)
-(dim-minor-name 'undo-tree-mode nil)
+(dim-minor-name 'yas-minor-mode nil 'yasnippet)
+(dim-minor-name 'undo-tree-mode nil 'undo-tree)
+(dim-minor-name 'abbrev-mode nil 'abbrev)
 
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Python stuff
+;;----------------------------
 (require 'elpy)
 (setq eply-remove-modeline_lighter nil)
 (delete 'elpy-module-highlight-indentation elpy-modules)
@@ -37,9 +64,9 @@
 (require 'ein)
 (add-hook 'ein:connect-mode-hook 'ein:jedi-setup)
 
-;; BASIC CUSTOMIZATION
-;; --------------------------------------
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; General stuff
+;;----------------------------
 (setq inhibit-startup-message t) ;; hide the startup message
 (load-theme 'alect-black t) ;; load material theme
 ;(global-linum-mode t) ;; enable line numbers globally
@@ -54,11 +81,7 @@
 (set-frame-font "GohuFont-11")
 
 (global-auto-revert-mode t)
-
-(global-set-key (kbd "<f5>") 'compile)
-(setq-default compilation-read-command nil)
-(setq-default compile-command "make")
-(global-set-key (kbd "C-j") 'next-error)
+(dim-minor-name 'auto-revert-mode nil 'autorevert)
 
 (require 'magit)
 (global-set-key (kbd "<f6>") 'magit-status)
@@ -89,12 +112,6 @@ With negative prefix, apply to -N lines above."
 
 (require 'evil)
 (evil-mode 1)
-
-(define-key evil-normal-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
-(define-key evil-visual-state-map (kbd "C-c +") 'evil-numbers/inc-at-pt)
-
-(define-key evil-normal-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt)
-(define-key evil-visual-state-map (kbd "C-c -") 'evil-numbers/dec-at-pt)
 
 (define-key evil-window-map (kbd "C-l") 'evil-window-right)
 (define-key evil-window-map (kbd "C-h") 'evil-window-left)
@@ -134,10 +151,14 @@ With negative prefix, apply to -N lines above."
   (recenter-top-bottom)
   (evil-search-highlight-persist-remove-all))
 
-(define-key evil-normal-state-map (kbd "C-x C-<space>") 'recenter-top-bottom-with-clear)
-(define-key evil-insert-state-map (kbd "C-x C-<space>") 'recenter-top-bottom-with-clear)
-(define-key evil-normal-state-map (kbd "C-x <space>") 'recenter-top-bottom-with-clear)
-(define-key evil-insert-state-map (kbd "C-x <space>") 'recenter-top-bottom-with-clear)
+(dolist (map '(evil-normal-state-map evil-insert-state-map evil-motion-state-map))
+	(define-key (eval map) (kbd "C-c +") 'evil-numbers/inc-at-pt)
+	(define-key (eval map) (kbd "C-c -") 'evil-numbers/dec-at-pt)
+	(define-key (eval map) (kbd "RET") nil)
+
+ (dolist (key '("C-x C-<space>" "C-x <space>" "C-l"))
+   (define-key (eval map) (kbd key) 'recenter-top-bottom-with-clear))
+)
 
 (with-eval-after-load 'evil
     (defalias #'forward-evil-word #'forward-evil-symbol))
@@ -201,32 +222,16 @@ With negative prefix, apply to -N lines above."
 (company-quickhelp-mode t)
 
 
-(require 'semantic)
-(require 'semantic/db-global)
-(semanticdb-enable-gnu-global-databases 'c-mode)
-(semanticdb-enable-gnu-global-databases 'c++-mode)
-
-(global-semanticdb-minor-mode 1)
-(global-semantic-idle-scheduler-mode 1)
-
-(global-semantic-idle-summary-mode 1)
-(add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode)
-
-;(semantic-mode 1)
-
-(add-hook 'c-mode-common-hook
-          (lambda ()
-            (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
-              (semantic-mode 1))))
 
 
-;;;;;;;;;;;;;;;
-; Helm stuff
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Helm stuff
+;;----------------------------
 (require 'helm)
 (require 'helm-config)
 
-(dim-minor-name 'helm-mode nil)
+(dim-minor-name 'helm-mode nil 'helm-mode)
 
 ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
 ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
@@ -262,7 +267,9 @@ With negative prefix, apply to -N lines above."
 (define-key helm-grep-map (kbd "C-,") 'helm-goto-precedent-file)
 
 
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ggtags
+;;----------------------------
 (require 'ggtags)
 (add-hook 'c-mode-common-hook
           (lambda ()
@@ -283,8 +290,10 @@ With negative prefix, apply to -N lines above."
 
 
 
-;;;;;;;;;;;;;;;;
-; C stuff
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; C Stuff
+;;----------------------------
+(require 'cc-mode)
 
 (setq-default c-default-style "linux"
               c-basic-offset 4
@@ -294,11 +303,46 @@ With negative prefix, apply to -N lines above."
 (setq-default split-height-threshold 20
 			  split-width-threshold 20)
 
+(require 'semantic)
+(require 'semantic/db-global)
+(semanticdb-enable-gnu-global-databases 'c-mode)
+(semanticdb-enable-gnu-global-databases 'c++-mode)
+
+(global-semanticdb-minor-mode 1)
+(global-semantic-idle-scheduler-mode 1)
+
+(global-semantic-idle-summary-mode 1)
+(add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode)
+
+;(semantic-mode 1)
+
+(add-hook 'c-mode-common-hook
+          (lambda ()
+            (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
+              (semantic-mode 1)
+			  (flycheck-mode 1))))
+
+;; (global-set-key (kbd "<f5>") 'compile)
+(setq-default compilation-read-command nil)
+(setq-default compile-command "make")
+;; (global-set-key (kbd "C-j") 'next-error)
+(define-key c-mode-map (kbd "<f5>") 'compile)
+(define-key c-mode-map (kbd "C-j") 'next-error)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Powerline
+;;----------------------------
 (require 'powerline)
 (powerline-center-evil-theme)
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; My maps
+;;----------------------------
 (define-prefix-command 'danny-completions)
+
 (define-key evil-insert-state-map (kbd "C-k") 'danny-completions)
 (define-key evil-normal-state-map (kbd "C-k") 'danny-completions)
 (define-key danny-completions (kbd "C-l") 'evil-complete-previous-line)
@@ -311,6 +355,8 @@ With negative prefix, apply to -N lines above."
 
 
 
+;; TODO I want to come back to this and have a binding that closes all *...* windows
+
  ;; (defun kill-dired-buffers ()
  ;; 	 (interactive)
  ;; 	 (mapc (lambda (buffer) 
@@ -318,6 +364,10 @@ With negative prefix, apply to -N lines above."
  ;;             (kill-buffer buffer))) 
  ;;         (buffer-list)))
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; GUD
+;;----------------------------
 
 (setq
  gdb-many-windows t
@@ -373,8 +423,25 @@ With negative prefix, apply to -N lines above."
 (define-key danny-orgmode "c" 'org-capture)
 (define-key danny-orgmode "b" 'org-iswitchb)
 
-;;;;;;;;;;;;;;;;
+;; TODO: make the tasks thing a bit more automatic.
+(setq org-capture-templates
+	  '(("c" "Coding todo entry" entry
+	      (file+headline "" "Coding")
+		  "* TODO %i%?    :%f:\n\t%\i\n\t%u\n\t%a")
+	    ("t" "General task" entry
+	      (file+headline "" "Tasks")
+		  "* TODO %i%?    :%f:\n\t%\i\n\t%u\n\t%a")
+	    ("z" "Miscellaneous" checkitem
+	      (file+headline "" "Misc")
+	      ;(file "")
+		  ;"- [ ] %i%?\n\t%u"
+		  )))
+(setq org-directory "~/Dropbox/org")
+(setq org-default-notes-file (concat org-directory "/notes.org"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Latex stuff
+;;----------------------------
 (add-hook 'LaTeX-mode-hook 'auto-fill-mode)
 (add-hook 'LaTeX-mode-hook 'prettify-symbols-mode)
 (add-hook 'LaTeX-mode-hook 'latex-preview-pane-mode)
@@ -382,7 +449,9 @@ With negative prefix, apply to -N lines above."
 (add-hook 'doc-view-mode-hook (lambda () (relative-line-numbers-mode -1)))
 (add-hook 'LaTeX-mode-hook (lambda () (add-hook 'after-save-hook 'preview-buffer nil t)))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Ediff stuff
+;;----------------------------
 (setq ediff-diff-options "-w")
 (setq ediff-split-window-function 'split-window-horizontally)
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
@@ -410,73 +479,3 @@ With negative prefix, apply to -N lines above."
 (global-set-key (kbd "<f12>") 'switch-to-minibuffer-window)
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Emacs customize stuff automatically added in below
-;;---------------------------------------------------
-
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   (quote
-	("5dc0ae2d193460de979a463b907b4b2c6d2c9c4657b2e9e66b8898d2592e3de5" "b0ab5c9172ea02fba36b974bbd93bc26e9d26f379c9a29b84903c666a5fde837" "7153b82e50b6f7452b4519097f880d968a6eaf6f6ef38cc45a144958e553fbc6" default)))
- '(fill-column 80)
- '(package-selected-packages
-   (quote
-	(flycheck helm-flycheck dim which-key vdiff goto-chg auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell julia-mode sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes evil helm magit org powerline)))
- '(preview-auto-cache-preamble t))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-
-
-
-
-
-
-;; (defun danny-load-all-packages ()
-;;   "Danny's wrapping of the autoinstallation of packages."
-;;   (interactive)
-
-;; 	(when (not package-archive-contents)
-;; 	(package-refresh-contents))
-
-;; 	(defvar myPackages
-;; 	'(better-defaults
-;; 		org
-;; 		relative-line-numbers
-;; 		rainbow-delimiters
-;; 		material-theme
-;; 		alect-themes
-;; 		elpy
-;; 		ein
-;; 		evil
-;; 		evil-surround
-;; 		evil-numbers
-;; 		evil-visualstar
-;; 		evil-exchange
-;; 		evil-search-highlight-persist
-;; 		evil-magit
-;; 		magit
-;; 		sr-speedbar
-;; 		powerline
-;; 		powerline-evil
-;; 		helm
-;; 		ggtags
-;; 		company-quickhelp
-;; 		julia-mode
-;; 		julia-shell))
-
-
-;; 	(mapc #'(lambda (package)
-;; 		(unless (package-installed-p package)
-;; 		(package-install package)))
-;; 		myPackages)
-;; )
-(define-obsolete-function-alias 'danny-load-all-packages 'package-install-selected-packages)
