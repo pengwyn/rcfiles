@@ -22,6 +22,10 @@
 ;; Emacs customize stuff automatically added in below
 ;;---------------------------------------------------
 (custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
 	("5dc0ae2d193460de979a463b907b4b2c6d2c9c4657b2e9e66b8898d2592e3de5" "b0ab5c9172ea02fba36b974bbd93bc26e9d26f379c9a29b84903c666a5fde837" "7153b82e50b6f7452b4519097f880d968a6eaf6f6ef38cc45a144958e553fbc6" default)))
@@ -29,9 +33,13 @@
  '(org-agenda-files (quote ("~/Dropbox/org/notes.org")))
  '(package-selected-packages
    (quote
-	(flycheck helm-flycheck dim which-key vdiff goto-chg auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell julia-mode sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes evil helm magit org powerline)))
+	(prettify-greek flycheck helm-flycheck dim which-key vdiff goto-chg auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell julia-mode sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes evil helm magit org powerline)))
  '(preview-auto-cache-preamble t))
 (custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  )
 
 
@@ -118,6 +126,11 @@ With negative prefix, apply to -N lines above."
 (define-key evil-window-map (kbd "C-k") 'evil-window-up)
 (define-key evil-window-map (kbd "C-j") 'evil-window-down)
 
+(define-key evil-insert-state-map (kbd "M-l") 'evil-forward-char)
+(define-key evil-insert-state-map (kbd "M-h") 'evil-backward-char)
+(define-key evil-insert-state-map (kbd "M-k") 'evil-previous-line)
+(define-key evil-insert-state-map (kbd "M-j") 'evil-next-line)
+
 ;; (define-key evil-insert-state-map (kbd "C-a") 'evil-beginning-of-line)
 (define-key evil-insert-state-map (kbd "C-e") 'evil-end-of-line)
 
@@ -160,8 +173,9 @@ With negative prefix, apply to -N lines above."
    (define-key (eval map) (kbd key) 'recenter-top-bottom-with-clear))
 )
 
-(require 'org)
-(evil-set-initial-state 'org-agenda-mode 'motion)
+;; Don't do this because org-agenda has a lot of different bindings.
+;; (require 'org)
+;; (evil-set-initial-state 'org-agenda-mode 'motion)
 
 (setq-default evil-symbol-word-search 'symbol)
 (with-eval-after-load 'evil
@@ -196,7 +210,8 @@ With negative prefix, apply to -N lines above."
 (setq-default company-minimum-prefix-length 2)
 (setq-default company-idle-delay 0.2)
 
-; Note that company-yasnippet is bad and never returns nil so the other backends can never be used.
+;; Note that company-yasnippet is bad and never returns nil so the other
+;; backends can never be used.  It's better to use the yas fallback options.
 ;(setq-default company-backends '( (:separate company-semantic company-clang company-gtags) company-yasnippet company-capf company-dabbrev))
 ;(setq-default company-backends '( company-clang company-semantic company-gtags company-yasnippet company-capf company-dabbrev))
 (setq-default company-backends '( company-clang company-semantic company-gtags company-capf company-dabbrev))
@@ -267,7 +282,7 @@ With negative prefix, apply to -N lines above."
 (global-set-key (kbd "C-x C-f") 'helm-multi-files)
 (setq helm-semantic-fuzzy-match t
       helm-imenu-fuzzy-match    t)
-(define-key evil-normal-state-map (kbd "C-p") 'helm-recentf)
+(define-key evil-motion-state-map (kbd "M-p") 'helm-recentf)
 
 (define-key helm-grep-map (kbd "C-.") 'helm-goto-next-file)
 (define-key helm-grep-map (kbd "C-,") 'helm-goto-precedent-file)
