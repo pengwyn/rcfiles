@@ -143,8 +143,6 @@ With negative prefix, apply to -N lines above."
     (evil-visual-restore) ; re-select last visual-mode selection
 ))
 
-(setq-default evil-symbol-word-search 'symbol)
-
 (defun recenter-top-bottom-with-clear ()
   "Do the normal recenter and redraw the screen."
   (interactive)
@@ -154,12 +152,18 @@ With negative prefix, apply to -N lines above."
 (dolist (map '(evil-normal-state-map evil-insert-state-map evil-motion-state-map))
 	(define-key (eval map) (kbd "C-c +") 'evil-numbers/inc-at-pt)
 	(define-key (eval map) (kbd "C-c -") 'evil-numbers/dec-at-pt)
+
 	(define-key (eval map) (kbd "RET") nil)
+	(define-key (eval map) (kbd " ") nil)
 
  (dolist (key '("C-x C-<space>" "C-x <space>" "C-l"))
    (define-key (eval map) (kbd key) 'recenter-top-bottom-with-clear))
 )
 
+(require 'org)
+(evil-set-initial-state 'org-agenda-mode 'motion)
+
+(setq-default evil-symbol-word-search 'symbol)
 (with-eval-after-load 'evil
     (defalias #'forward-evil-word #'forward-evil-symbol))
 
@@ -190,10 +194,12 @@ With negative prefix, apply to -N lines above."
 (add-hook 'after-init-hook 'global-company-mode)
 
 (setq-default company-minimum-prefix-length 2)
-(setq-default company-idle-delay 0.1)
+(setq-default company-idle-delay 0.2)
 
+; Note that company-yasnippet is bad and never returns nil so the other backends can never be used.
 ;(setq-default company-backends '( (:separate company-semantic company-clang company-gtags) company-yasnippet company-capf company-dabbrev))
-(setq-default company-backends '( company-clang company-semantic company-gtags company-yasnippet company-capf company-dabbrev))
+;(setq-default company-backends '( company-clang company-semantic company-gtags company-yasnippet company-capf company-dabbrev))
+(setq-default company-backends '( company-clang company-semantic company-gtags company-capf company-dabbrev))
 ;(setq-default company-backends '( company-yasnippet))
 
 (setq-default company-dabbrev-time-limit 1.0)
