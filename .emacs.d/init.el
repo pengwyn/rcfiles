@@ -126,10 +126,15 @@ With negative prefix, apply to -N lines above."
 (define-key evil-window-map (kbd "C-k") 'evil-window-up)
 (define-key evil-window-map (kbd "C-j") 'evil-window-down)
 
-(define-key evil-insert-state-map (kbd "M-l") 'evil-forward-char)
-(define-key evil-insert-state-map (kbd "M-h") 'evil-backward-char)
-(define-key evil-insert-state-map (kbd "M-k") 'evil-previous-line)
-(define-key evil-insert-state-map (kbd "M-j") 'evil-next-line)
+(dolist (map '(evil-normal-state-map evil-insert-state-map evil-motion-state-map evil-emacs-state-map))
+	(define-key (eval map) (kbd "M-l") 'evil-forward-char)
+	(define-key (eval map) (kbd "M-h") 'evil-backward-char)
+	(define-key (eval map) (kbd "M-k") 'evil-previous-line)
+	(define-key (eval map) (kbd "M-j") 'evil-next-line))
+
+(dolist (map '(evil-motion-state-map evil-emacs-state-map))
+	(define-key (eval map) (kbd "C-w") 'evil-window-map)
+	(define-key (eval map) (kbd "M-p") 'helm-recentf))
 
 ;; (define-key evil-insert-state-map (kbd "C-a") 'evil-beginning-of-line)
 (define-key evil-insert-state-map (kbd "C-e") 'evil-end-of-line)
@@ -195,10 +200,13 @@ With negative prefix, apply to -N lines above."
 (setq evil-search-highlight-string-min-len 3)
 
 
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Yasnippet
+;;----------------------------
 
 (require 'yasnippet)
 (yas-global-mode 1)
+(define-key yas-minor-mode-map (kbd "C-M-y") 'yas-expand)
 
 
 ;;;;;;;;;;;;;;;;
@@ -282,7 +290,7 @@ With negative prefix, apply to -N lines above."
 (global-set-key (kbd "C-x C-f") 'helm-multi-files)
 (setq helm-semantic-fuzzy-match t
       helm-imenu-fuzzy-match    t)
-(define-key evil-motion-state-map (kbd "M-p") 'helm-recentf)
+;; (define-key evil-motion-state-map (kbd "M-p") 'helm-recentf)
 
 (define-key helm-grep-map (kbd "C-.") 'helm-goto-next-file)
 (define-key helm-grep-map (kbd "C-,") 'helm-goto-precedent-file)
