@@ -444,6 +444,9 @@ With negative prefix, apply to -N lines above."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Org-mode stuff
 ;;------------------------------------------------
+(setq-default org-tags-column -100)
+(setq-default org-agenda-tags-column -100)
+
 (define-prefix-command 'danny-orgmode)
 (global-set-key (kbd "<f7>") 'danny-orgmode)
 
@@ -451,6 +454,9 @@ With negative prefix, apply to -N lines above."
 (define-key danny-orgmode "a" 'org-agenda)
 (define-key danny-orgmode "c" 'org-capture)
 (define-key danny-orgmode "b" 'org-iswitchb)
+(define-key danny-orgmode "j" 'org-clock-goto)
+(define-key danny-orgmode "o" 'org-clock-out)
+(define-key danny-orgmode "i" 'org-clock-in-last)
 
 ;; TODO: make the tasks thing a bit more automatic.
 (setq org-capture-templates
