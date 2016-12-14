@@ -446,6 +446,7 @@ With negative prefix, apply to -N lines above."
 ;;------------------------------------------------
 (setq-default org-tags-column -100)
 (setq-default org-agenda-tags-column -100)
+(setq-default org-return-follows-link t)
 
 (define-prefix-command 'danny-orgmode)
 (global-set-key (kbd "<f7>") 'danny-orgmode)
