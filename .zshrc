@@ -343,5 +343,5 @@ function ssht () {
 }
 compdef _ssh ssht=ssh
 
-alias s=sudo -E
-alias d=disown %%
+alias s="sudo -E"
+alias d="disown %%"
