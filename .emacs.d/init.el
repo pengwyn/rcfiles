@@ -57,15 +57,15 @@
 ;; Python stuff
 ;;----------------------------
 (require 'elpy)
-(setq eply-remove-modeline_lighter nil)
+(setq-default eply-remove-modeline_lighter nil)
 (delete 'elpy-module-highlight-indentation elpy-modules)
 (delete 'elpy-module-flymake elpy-modules)
-(setq elpy-rpc-python-command "python2")
+(setq-default elpy-rpc-python-command "python2")
 ;(elpy-use-ipython "ipython2 --pylab --profile math")
 (elpy-use-ipython "ipython2")
-;(setq python-shell-interpreter "ipython2"
+;(setq-default python-shell-interpreter "ipython2"
 ;    python-shell-interpreter-args "--simple-prompt -i")
-(setq python-shell-interpreter-args "--simple-prompt -i --pylab --profile math")
+(setq-default python-shell-interpreter-args "--simple-prompt -i --pylab --profile math")
 
 ;(elpy-enable)
 
@@ -75,18 +75,21 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; General stuff
 ;;----------------------------
-(setq inhibit-startup-message t) ;; hide the startup message
+(setq-default inhibit-startup-message t) ;; hide the startup message
 (load-theme 'alect-black t) ;; load material theme
 ;(global-linum-mode t) ;; enable line numbers globally
 (global-relative-line-numbers-mode)
 
-;(setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
-(setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
-(setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
-(setq scroll-step 1) ;; keyboard scroll one line at a time
-(setq scroll-margin 3)
+;(setq-default mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
+(setq-default mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
+(setq-default mouse-wheel-follow-mouse 't) ;; scroll window under mouse
+(setq-default scroll-step 1) ;; keyboard scroll one line at a time
+(setq-default scroll-margin 3)
 
 (set-frame-font "GohuFont-11")
+
+(setq-default split-height-threshold 20
+			  split-width-threshold 20)
 
 (global-auto-revert-mode t)
 (dim-minor-name 'auto-revert-mode nil 'autorevert)
@@ -134,7 +137,7 @@ With negative prefix, apply to -N lines above."
 
 (dolist (map '(evil-motion-state-map evil-emacs-state-map))
 	(define-key (eval map) (kbd "C-w") 'evil-window-map)
-	(define-key (eval map) (kbd "M-p") 'helm-recentf))
+	(define-key (eval map) (kbd "C-M-r") 'helm-recentf))
 
 ;; (define-key evil-insert-state-map (kbd "C-a") 'evil-beginning-of-line)
 (define-key evil-insert-state-map (kbd "C-e") 'evil-end-of-line)
@@ -192,12 +195,12 @@ With negative prefix, apply to -N lines above."
 (global-evil-surround-mode 1)
 
 (require 'evil-exchange)
-(setq evil-exchange-key (kbd "zx"))
+(setq-default evil-exchange-key (kbd "zx"))
 (evil-exchange-install)
 
 (require 'evil-search-highlight-persist)
 (global-evil-search-highlight-persist t)
-(setq evil-search-highlight-string-min-len 3)
+(setq-default evil-search-highlight-string-min-len 3)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -273,23 +276,23 @@ With negative prefix, apply to -N lines above."
 (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
 
 (when (executable-find "curl")
-  (setq helm-google-suggest-use-curl-p t))
+  (setq-default helm-google-suggest-use-curl-p t))
 
-(setq helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
-      helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
-      helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
-      helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
-      helm-ff-file-name-history-use-recentf t)
+(setq-default helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
+			  helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
+			  helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
+			  helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
+			  helm-ff-file-name-history-use-recentf t)
 
 (helm-mode 1)
 
 (global-set-key (kbd "M-x") 'helm-M-x)
-(setq helm-M-x-fuzzy-match t) ;; optional fuzzy matching for helm-M-x
+(setq-default helm-M-x-fuzzy-match t) ;; optional fuzzy matching for helm-M-x
 (global-set-key (kbd "C-x b") 'helm-mini)
 (global-set-key (kbd "C-x f") 'helm-find-files)
 (global-set-key (kbd "C-x C-f") 'helm-multi-files)
-(setq helm-semantic-fuzzy-match t
-      helm-imenu-fuzzy-match    t)
+(setq-default helm-semantic-fuzzy-match t
+              helm-imenu-fuzzy-match    t)
 ;; (define-key evil-motion-state-map (kbd "M-p") 'helm-recentf)
 
 (define-key helm-grep-map (kbd "C-.") 'helm-goto-next-file)
@@ -329,9 +332,6 @@ With negative prefix, apply to -N lines above."
               tab-width 4
               indent-tabs-mode t)
 
-(setq-default split-height-threshold 20
-			  split-width-threshold 20)
-
 (require 'semantic)
 (require 'semantic/db-global)
 (semanticdb-enable-gnu-global-databases 'c-mode)
@@ -340,7 +340,8 @@ With negative prefix, apply to -N lines above."
 (global-semanticdb-minor-mode 1)
 (global-semantic-idle-scheduler-mode 1)
 
-(global-semantic-idle-summary-mode 1)
+;; This inteferes with too many other things.
+;; (global-semantic-idle-summary-mode 1)
 (add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode)
 
 ;(semantic-mode 1)
@@ -398,7 +399,7 @@ With negative prefix, apply to -N lines above."
 ;; GUD
 ;;----------------------------
 
-(setq
+(setq-default
  gdb-many-windows t
 
  ;; Non-nil means display source file containing the main routine at startup
@@ -407,11 +408,11 @@ With negative prefix, apply to -N lines above."
  )
 
 (require 'sr-speedbar)
-;(setq speedbar-show-unknown-files t) ; show all files
-(setq speedbar-use-images nil) ; use text for buttons
-;(setq sr-speedbar-right-side nil) ; put on left side
-(setq speedbar-hide-button-brackets-flag t)
-(setq speedbar-tag-hierarchy-method '(speedbar-sort-tag-hierarchy))
+;(setq-default speedbar-show-unknown-files t) ; show all files
+(setq-default speedbar-use-images nil) ; use text for buttons
+;(setq-default sr-speedbar-right-side nil) ; put on left side
+(setq-default speedbar-hide-button-brackets-flag t)
+(setq-default speedbar-tag-hierarchy-method '(speedbar-sort-tag-hierarchy))
 (global-set-key (kbd "<f8>") 'sr-speedbar-toggle)
 
 (require 'gud)
@@ -444,9 +445,14 @@ With negative prefix, apply to -N lines above."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Org-mode stuff
 ;;------------------------------------------------
-(setq-default org-tags-column -100)
-(setq-default org-agenda-tags-column -100)
-(setq-default org-return-follows-link t)
+(setq-default org-tags-column -100
+              org-agenda-tags-column -100
+              org-return-follows-link t
+              org-log-done 'time
+              org-directory "~/Dropbox/org"
+              org-default-notes-file (concat org-directory "/notes.org"))
+
+(eval-after-load "org" '(setq-default org-modules (append 'org-modules '(org-habit org-mouse))))
 
 (define-prefix-command 'danny-orgmode)
 (global-set-key (kbd "<f7>") 'danny-orgmode)
@@ -460,7 +466,7 @@ With negative prefix, apply to -N lines above."
 (define-key danny-orgmode "i" 'org-clock-in-last)
 
 ;; TODO: make the tasks thing a bit more automatic.
-(setq org-capture-templates
+(setq-default org-capture-templates
 	  '(("c" "Coding todo entry" entry
 	      (file+headline "" "Coding")
 		  "* TODO %i%?    :%f:\n\t%\i\n\t%u\n\t%a")
@@ -472,8 +478,6 @@ With negative prefix, apply to -N lines above."
 	      ;(file "")
 		  ;"- [ ] %i%?\n\t%u"
 		  )))
-(setq org-directory "~/Dropbox/org")
-(setq org-default-notes-file (concat org-directory "/notes.org"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Latex stuff
@@ -488,9 +492,9 @@ With negative prefix, apply to -N lines above."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Ediff stuff
 ;;----------------------------
-(setq ediff-diff-options "-w")
-(setq ediff-split-window-function 'split-window-horizontally)
-(setq ediff-window-setup-function 'ediff-setup-windows-plain)
+(setq-default ediff-diff-options "-w")
+(setq-default ediff-split-window-function 'split-window-horizontally)
+(setq-default ediff-window-setup-function 'ediff-setup-windows-plain)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; which-key mode
