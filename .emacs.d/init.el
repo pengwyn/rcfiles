@@ -450,7 +450,9 @@ With negative prefix, apply to -N lines above."
               org-return-follows-link t
               org-log-done 'time
               org-directory "~/Dropbox/org"
-              org-default-notes-file (concat org-directory "/notes.org"))
+              org-default-notes-file (concat org-directory "/notes.org")
+			  org-habit-graph-column 70
+			  org-habit-show-habits-only-for-today nil)
 
 (eval-after-load "org" '(setq-default org-modules (append org-modules '(org-habit org-mouse))))
 
@@ -502,7 +504,7 @@ With negative prefix, apply to -N lines above."
 ;;------------------------------------------------
 (require 'which-key)
 (which-key-mode)
-(which-key-setup-side-window-right)
+(which-key-setup-side-window-right-bottom)
 (dim-minor-name 'which-key-mode nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
