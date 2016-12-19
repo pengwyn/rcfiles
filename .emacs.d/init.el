@@ -452,7 +452,7 @@ With negative prefix, apply to -N lines above."
               org-directory "~/Dropbox/org"
               org-default-notes-file (concat org-directory "/notes.org"))
 
-(eval-after-load "org" '(setq-default org-modules (append 'org-modules '(org-habit org-mouse))))
+(eval-after-load "org" '(setq-default org-modules (append org-modules '(org-habit org-mouse))))
 
 (define-prefix-command 'danny-orgmode)
 (global-set-key (kbd "<f7>") 'danny-orgmode)
