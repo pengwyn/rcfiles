@@ -457,6 +457,7 @@ With negative prefix, apply to -N lines above."
 (define-prefix-command 'danny-orgmode)
 (global-set-key (kbd "<f7>") 'danny-orgmode)
 
+(define-key danny-orgmode (kbd "<f7>") (lambda () (interactive) (find-file-other-window org-default-notes-file)))
 (define-key danny-orgmode "l" 'org-store-link)
 (define-key danny-orgmode "a" 'org-agenda)
 (define-key danny-orgmode "c" 'org-capture)
