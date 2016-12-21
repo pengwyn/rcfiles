@@ -50,6 +50,7 @@
 (dim-minor-name 'yas-minor-mode nil 'yasnippet)
 (dim-minor-name 'undo-tree-mode nil 'undo-tree)
 (dim-minor-name 'abbrev-mode nil 'abbrev)
+(dim-minor-name 'auto-fill-function nil)
 
 
 
@@ -482,15 +483,21 @@ With negative prefix, apply to -N lines above."
 		  ;"- [ ] %i%?\n\t%u"
 		  )))
 
+(add-hook 'org-mode 'auto-fill-mode)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Latex stuff
 ;;----------------------------
 (add-hook 'LaTeX-mode-hook 'auto-fill-mode)
+(add-hook 'LaTeX-mode-hook 'flyspell-mode)
 (add-hook 'LaTeX-mode-hook 'prettify-symbols-mode)
 (add-hook 'LaTeX-mode-hook 'latex-preview-pane-mode)
 (add-hook 'LaTeX-mode-hook (lambda () (load-theme 'material-light)))
 (add-hook 'doc-view-mode-hook (lambda () (relative-line-numbers-mode -1)))
 (add-hook 'LaTeX-mode-hook (lambda () (add-hook 'after-save-hook 'preview-buffer nil t)))
+
+; Delay the company tooltips
+(add-hook 'LaTeX-mode-hook (lambda () (setq company-idle-delay 2.0)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Ediff stuff
