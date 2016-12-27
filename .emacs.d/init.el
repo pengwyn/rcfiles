@@ -119,6 +119,8 @@ With negative prefix, apply to -N lines above."
 (global-set-key (kbd "C-;") 'endless/comment-line)
 (setq-default comment-style 'multi-line)
 
+(setq-default recentf-max-saved-items 1000)
+
 ;;;;;;;;;;;;;;;
 ;; Evil stuff
 
@@ -457,10 +459,19 @@ With negative prefix, apply to -N lines above."
 
 (eval-after-load "org" '(setq-default org-modules (append org-modules '(org-habit org-mouse))))
 
+
+(defun danny-open-orgfile
+	(&optional arg)
+  "Open the default org file. If a prefix is supplied, open the org file in another window."
+  (interactive "p")
+	   ;(message "%s" arg)
+	   (if (and arg (> arg 1))
+		   (find-file-other-window org-default-notes-file)
+		   (find-file org-default-notes-file)))
 (define-prefix-command 'danny-orgmode)
 (global-set-key (kbd "<f7>") 'danny-orgmode)
 
-(define-key danny-orgmode (kbd "<f7>") (lambda () (interactive) (find-file-other-window org-default-notes-file)))
+(define-key danny-orgmode (kbd "<f7>") 'danny-open-orgfile)
 (define-key danny-orgmode "l" 'org-store-link)
 (define-key danny-orgmode "a" 'org-agenda)
 (define-key danny-orgmode "c" 'org-capture)
