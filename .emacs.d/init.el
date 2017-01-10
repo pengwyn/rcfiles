@@ -84,7 +84,8 @@
 ;(setq-default mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
 (setq-default mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
 (setq-default mouse-wheel-follow-mouse 't) ;; scroll window under mouse
-(setq-default scroll-step 1) ;; keyboard scroll one line at a time
+;; (setq-default scroll-step 1) ;; keyboard scroll one line at a time
+(setq-default scroll-conservatively 101) ;; keyboard scroll one line at a time
 (setq-default scroll-margin 3)
 
 (set-frame-font "GohuFont-11")
