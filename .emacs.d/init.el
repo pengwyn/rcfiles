@@ -255,7 +255,8 @@ With negative prefix, apply to -N lines above."
 ;; backends can never be used.  It's better to use the yas fallback options.
 ;(setq-default company-backends '( (:separate company-semantic company-clang company-gtags) company-yasnippet company-capf company-dabbrev))
 ;(setq-default company-backends '( company-clang company-semantic company-gtags company-yasnippet company-capf company-dabbrev))
-(setq-default company-backends '( company-clang company-semantic company-gtags company-capf company-dabbrev))
+;(setq-default company-backends '( company-clang company-semantic company-gtags company-capf company-dabbrev))
+(setq-default company-backends '( company-clang company-semantic company-gtags company-capf company-keywords company-dabbrev-code))
 ;(setq-default company-backends '( company-yasnippet))
 
 (setq-default company-dabbrev-time-limit 1.0)
@@ -277,7 +278,7 @@ With negative prefix, apply to -N lines above."
 ;; (add-hook 'elpy-mode-hook
 ;; 	(lambda () (setcar company-backends '(:separate elpy-company-backend company-yasnippet)))
 ;; )
-(define-key company-mode-map (kbd "C-M-i") 'company-complete)
+;(define-key company-mode-map (kbd "C-M-i") 'company-complete)
 (define-key company-mode-map (kbd "C-<tab>") 'company-other-backend)
 
 (require 'company-quickhelp)
