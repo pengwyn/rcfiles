@@ -345,3 +345,6 @@ compdef _ssh ssht=ssh
 
 alias s="sudo -E"
 alias d="disown %%"
+
+# Stop coredumps
+ulimit -c 0
