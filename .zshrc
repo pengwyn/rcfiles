@@ -276,6 +276,18 @@ export GPG_TTY=$(tty)
 # Force an update for every ssh command
 alias ssh='gpg-connect-agent updatestartuptty /bye;ssh'
 
+
+function prompt_confirm() {
+  while true; do
+    read -r "REPLY?${1:-Continue?} [yes/no]: "
+    case $REPLY in
+      yes|YES) echo ; return 0 ;;
+      no|NO) echo ; return 1 ;;
+      *) printf " \033[31m %s \n\033[0m" "invalid input"
+    esac 
+  done  
+}
+
 if [[ $(hostname) == "mixologist" ]]
 then
 	function sq () {
@@ -329,6 +341,50 @@ then
 		then
 			cat $temp
 		fi
+	}
+
+	function SLURMsetminenice() {
+		for jobid in $(squeue -h -u pengwyn -O jobid)
+		do
+			scontrol update jobid=$jobid nice=10000
+		done
+	}
+
+	function SLURMpausepending() {
+		for jobid in $(squeue -h -u pengwyn -t pending -O jobid)
+		do
+			scontrol holdu $jobid
+		done
+	}
+
+	function SLURMreleaseall() {
+		for jobid in $(squeue -h -u pengwyn -O jobid)
+		do
+			scontrol release $jobid
+		done
+	}
+
+	function SLURMcanceljobgrep() {
+		if [[ $# != 1 ]]
+		then
+			echo "Need one argument!"
+			return 1
+		fi
+
+		filteredlist=$(squeue -h -O "jobid,name" | awk '$2 ~ /'$1'/')
+
+		if [[ -z "$filteredlist" ]]
+		then
+			echo "No jobs to cancel"
+			return 0
+		fi
+
+		echo "Going to cancel the following:"
+		echo $filteredlist
+		
+		prompt_confirm || return 0
+
+		scancel $(echo $filteredlist | awk '{print $1}')
 	}
 fi
 
