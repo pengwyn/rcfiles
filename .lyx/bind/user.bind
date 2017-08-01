@@ -22,4 +22,4 @@ Format 2
 \bind "C-Down" "math-insert \\downarrow"
 \bind "M-Right" "math-insert \\rightarrow"
 \bind "M-Left" "math-insert \\leftarrow"
-
+\bind "C-M-z" "command-sequence note-insert Greyedout; self-insert ================================; paragraph-break; self-insert COMMENT:; paragraph-break; paragraph-break; self-insert ================================; inset-begin-select ; font-bold; font-noun ; escape; down; down"
