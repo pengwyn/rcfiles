@@ -1,7 +1,7 @@
-;; init.el --- Emacs configuration
+;; * init.el --- Emacs configuration
 
 
-(define-obsolete-function-alias 'danny-load-all-packages 'package-install-selected-packages)
+;; (define-obsolete-function-alias 'danny-load-all-packages 'package-install-selected-packages)
 
 ;; INSTALL PACKAGES
 ;; --------------------------------------
@@ -19,7 +19,7 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Emacs customize stuff automatically added in below
+;; * Emacs customize stuff automatically added in below
 ;;---------------------------------------------------
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -33,7 +33,7 @@
  '(org-agenda-files (quote ("~/Dropbox/org/notes.org")))
  '(package-selected-packages
    (quote
-	(ess prettify-greek flycheck helm-flycheck dim which-key vdiff goto-chg auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell julia-mode sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes evil helm magit org powerline)))
+	(outorg outshine helm-navi navi-mode ess prettify-greek flycheck helm-flycheck dim which-key vdiff goto-chg auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell julia-mode sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes evil helm magit org powerline nlinum nlinum-relative)))
  '(preview-auto-cache-preamble t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -55,7 +55,7 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Python stuff
+;; * Python stuff
 ;;----------------------------
 (require 'elpy)
 (setq-default eply-remove-modeline_lighter nil)
@@ -74,12 +74,15 @@
 (add-hook 'ein:connect-mode-hook 'ein:jedi-setup)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; General stuff
+;; * General stuff
 ;;----------------------------
 (setq-default inhibit-startup-message t) ;; hide the startup message
-(load-theme 'alect-black t) ;; load material theme
 ;(global-linum-mode t) ;; enable line numbers globally
-(global-relative-line-numbers-mode)
+;(global-relative-line-numbers-mode)
+;(linum-relative-global-mode)
+(global-nlinum-relative-mode)
+
+(load-theme 'alect-black t) ;; load material theme
 
 ;(setq-default mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
 (setq-default mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
@@ -149,7 +152,7 @@ With negative prefix, apply to -N lines above."
 (setq-default prettify-symbols-unprettify-at-point "right-edge")
 
 ;;;;;;;;;;;;;;;
-;; Evil stuff
+;; * Evil stuff
 
 (require 'evil)
 (evil-mode 1)
@@ -234,7 +237,7 @@ With negative prefix, apply to -N lines above."
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Yasnippet
+;; * Yasnippet
 ;;----------------------------
 
 (require 'yasnippet)
@@ -243,7 +246,7 @@ With negative prefix, apply to -N lines above."
 
 
 ;;;;;;;;;;;;;;;;
-;; Company stuff
+;; * Company stuff
 
 (require 'company)
 (add-hook 'after-init-hook 'global-company-mode)
@@ -289,7 +292,7 @@ With negative prefix, apply to -N lines above."
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Helm stuff
+;; * Helm stuff
 ;;----------------------------
 (require 'helm)
 (require 'helm-config)
@@ -331,7 +334,7 @@ With negative prefix, apply to -N lines above."
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; ggtags
+;; * ggtags
 ;;----------------------------
 (require 'ggtags)
 (add-hook 'c-mode-common-hook
@@ -347,6 +350,7 @@ With negative prefix, apply to -N lines above."
 (define-key ggtags-mode-map (kbd "C-c g u") 'ggtags-update-tags)
 
 (define-key ggtags-mode-map (kbd "M-,") 'pop-tag-mark)
+(define-key ggtags-mode-map (kbd "C-M-,") 'ggtags-find-tag-continue)
 
 ;(define-key evil-normal-state-map (kbd "M-.") 'ggtags-find-tag-dwim)
 (define-key evil-normal-state-map (kbd "M-.") nil)
@@ -354,7 +358,7 @@ With negative prefix, apply to -N lines above."
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; C Stuff
+;; * C Stuff
 ;;----------------------------
 (require 'cc-mode)
 
@@ -393,14 +397,14 @@ With negative prefix, apply to -N lines above."
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Powerline
+;; * Powerline
 ;;----------------------------
 (require 'powerline)
 (powerline-center-evil-theme)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; My maps
+;; * My maps
 ;;----------------------------
 (define-prefix-command 'danny-completions)
 
@@ -427,7 +431,7 @@ With negative prefix, apply to -N lines above."
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; GUD
+;; * GUD
 ;;----------------------------
 
 (setq-default
@@ -474,7 +478,7 @@ With negative prefix, apply to -N lines above."
 
 	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Org-mode stuff
+;; * Org-mode stuff
 ;;------------------------------------------------
 (setq-default org-tags-column -100
               org-agenda-tags-column -100
@@ -526,8 +530,10 @@ With negative prefix, apply to -N lines above."
 
 (add-hook 'org-mode-hook 'auto-fill-mode)
 
+(evil-set-initial-state 'org-agenda-mode 'normal)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Latex stuff
+;; * Latex stuff
 ;;----------------------------
 (add-hook 'LaTeX-mode-hook 'auto-fill-mode)
 (add-hook 'LaTeX-mode-hook 'flyspell-mode)
@@ -541,14 +547,14 @@ With negative prefix, apply to -N lines above."
 (add-hook 'LaTeX-mode-hook (lambda () (setq company-idle-delay 2.0)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Ediff stuff
+;; * Ediff stuff
 ;;----------------------------
 (setq-default ediff-diff-options "-w")
 (setq-default ediff-split-window-function 'split-window-horizontally)
 (setq-default ediff-window-setup-function 'ediff-setup-windows-plain)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; which-key mode
+;; * which-key mode
 ;;------------------------------------------------
 (require 'which-key)
 (which-key-mode)
@@ -556,7 +562,7 @@ With negative prefix, apply to -N lines above."
 (dim-minor-name 'which-key-mode nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Other stuff
+;; * Other stuff
 ;;------------------------------------------------
 
 ;; Emergency switch back to minibuffer
@@ -570,3 +576,18 @@ With negative prefix, apply to -N lines above."
 (global-set-key (kbd "<f12>") 'switch-to-minibuffer-window)
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; * Outshine/outorg/navi-mode stuff
+;; ** testing
+;;----------------------------
+
+(require 'outshine)
+(add-hook 'outline-minor-mode-hook 'outshine-hook-function)
+;; (add-hook 'outline-minor-mode-hook (lambda ()
+;; 									 (unless (eq major-mode 'org-mode) (progn (outshine-hook-function) (message "%s" "looks like this was not org-mode!")))))
+
+(add-hook 'prog-mode-hook 'outline-minor-mode)
+
+(set-face-attribute 'outline-1 nil :height 2.0 :family "Inconsolata")
+(set-face-attribute 'outline-2 nil :height 1.5 :family "Inconsolata")
+(set-face-attribute 'outline-3 nil :height 1.2 :family "Inconsolata")

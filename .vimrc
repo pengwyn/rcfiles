@@ -22,6 +22,7 @@ Bundle 'mbbill/undotree'
 Bundle 'TaskList.vim'
 Bundle 'vim-scripts/renamer.vim'
 Bundle 'jlanzarotta/bufexplorer'
+Bundle 'kien/rainbow_parentheses.vim'
 
 Bundle 'Valloric/YouCompleteMe'
 "Bundle 'davidhalter/jedi-vim.git'
@@ -152,13 +153,18 @@ augroup vimrcEx
 	autocmd InsertEnter * if !exists('w:last_fdm') | let w:last_fdm=&foldmethod | setlocal foldmethod=manual | endif
 	autocmd InsertLeave,WinLeave * if exists('w:last_fdm') | let &l:foldmethod=w:last_fdm | unlet w:last_fdm | endif
 
-	let g:rainbow         = 1
-	"let g:rainbow_nested  = 1
-	let g:rainbow_paren   = 1
-	let g:rainbow_brace   = 1
-	let g:rainbow_bracket = 1
-	autocmd BufReadPost * source $HOME/.vim/rainbow_paren.vim
-	autocmd BufNewFile  * source $HOME/.vim/rainbow_paren.vim
+	"let g:rainbow         = 1
+	""let g:rainbow_nested  = 1
+	"let g:rainbow_paren   = 1
+	"let g:rainbow_brace   = 1
+	"let g:rainbow_bracket = 1
+	"autocmd BufReadPost * source $HOME/.vim/rainbow_paren.vim
+	"autocmd BufNewFile  * source $HOME/.vim/rainbow_paren.vim
+	
+	autocmd VimEnter * RainbowParenthesesToggle
+	autocmd Syntax * RainbowParenthesesLoadRound
+	autocmd Syntax * RainbowParenthesesLoadSquare
+	autocmd Syntax * RainbowParenthesesLoadBraces
 
 	autocmd FileType help nnoremap <CR> <C-]>
 	autocmd FileType help nnoremap <BS> <C-T>
