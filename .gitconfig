@@ -11,3 +11,5 @@
 	tool = vimdiff
 [alias]
 	dannystarallremotes = "!for remote in $(git remote) ; do git remote set-branches $remote \\* ; echo $remote \\* ; done"
+[core]
+	excludesfile = /home/pengwyn/default_gitignore

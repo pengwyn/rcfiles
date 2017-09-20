@@ -12,3 +12,4 @@
 *.log
 *.dvi
 *.aux
+.nfs*
