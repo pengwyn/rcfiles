@@ -530,7 +530,7 @@ With negative prefix, apply to -N lines above."
 
 (add-hook 'org-mode-hook 'auto-fill-mode)
 
-(evil-set-initial-state 'org-agenda-mode 'normal)
+;; (evil-set-initial-state 'org-agenda-mode 'normal)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Latex stuff
