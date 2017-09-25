@@ -24,9 +24,10 @@ Bundle 'vim-scripts/renamer.vim'
 Bundle 'jlanzarotta/bufexplorer'
 Bundle 'kien/rainbow_parentheses.vim'
 
-Bundle 'Valloric/YouCompleteMe'
-"Bundle 'davidhalter/jedi-vim.git'
-"Bundle 'Shougo/neocomplcache.git'
+"Bundle 'Valloric/YouCompleteMe'
+""Bundle 'davidhalter/jedi-vim.git'
+""Bundle 'Shougo/neocomplcache.git'
+
 Bundle 'SirVer/ultisnips'
 Bundle 'honza/vim-snippets'
 
