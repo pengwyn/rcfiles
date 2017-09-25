@@ -480,6 +480,8 @@ With negative prefix, apply to -N lines above."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Org-mode stuff
 ;;------------------------------------------------
+(require 'org)
+
 (setq-default org-tags-column -100
               org-agenda-tags-column -100
               org-return-follows-link t
@@ -531,6 +533,10 @@ With negative prefix, apply to -N lines above."
 (add-hook 'org-mode-hook 'auto-fill-mode)
 
 ;; (evil-set-initial-state 'org-agenda-mode 'normal)
+
+(set-face-attribute 'org-level-1 nil :height 1.5 :family "Inconsolata")
+(set-face-attribute 'org-level-2 nil :height 1.2 :family "Inconsolata")
+;; (set-face-attribute 'outline-3 nil :height 1.2 :family "Inconsolata")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Latex stuff
