@@ -299,8 +299,18 @@ then
 	function sq () {
 		output=$(squeue -O jobarrayid,name,username,partition,state,timeused,batchhost,reason,starttime $* )
 		print $output
-		jobnum=$(print $output | wc | awk '{print ($1 - 1)}')
-		myjobnum=$(print $output | grep pengwyn | wc | awk '{print $1}')
+
+awkcount='
+BEGIN { cnt=0 }
+$1 == "JOBID" { next }
+match($1, /[[:digit:]]+_\[([[:digit:]]+)-([[:digit:]]+)\]/ , vals) { cnt = cnt + vals[2] - vals[1] + 1 ; next }
+{ cnt++ }
+END { print cnt }
+'
+		#jobnum=$(print $output | wc | awk '{print ($1 - 1)}')
+		#myjobnum=$(print $output | grep pengwyn | wc | awk '{print $1}')
+		jobnum=$(print $output | awk "$awkcount")
+		myjobnum=$(print $output | grep pengwyn | awk "$awkcount")
 		print "Number of jobs: $jobnum, number of my jobs: $myjobnum"
 	}
 
