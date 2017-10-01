@@ -218,7 +218,8 @@ With negative prefix, apply to -N lines above."
 ;; (require 'org)
 ;; (evil-set-initial-state 'org-agenda-mode 'motion)
 
-(setq-default evil-symbol-word-search 'symbol)
+(setq-default evil-symbol-word-search 'symbol
+			  evil-want-fine-undo t)
 (with-eval-after-load 'evil
     (defalias #'forward-evil-word #'forward-evil-symbol))
 
@@ -250,6 +251,7 @@ With negative prefix, apply to -N lines above."
 
 (require 'company)
 (add-hook 'after-init-hook 'global-company-mode)
+(setq-default company-global-modes '(not shell-mode))
 
 (setq-default company-minimum-prefix-length 2)
 (setq-default company-idle-delay 0.2)
@@ -489,7 +491,16 @@ With negative prefix, apply to -N lines above."
               org-directory "~/Dropbox/org"
               org-default-notes-file (concat org-directory "/notes.org")
 			  org-habit-graph-column 70
-			  org-habit-show-habits-only-for-today nil)
+			  org-habit-show-habits-only-for-today nil
+			  org-refile-targets '((org-agenda-files :maxlevel . 3))
+			  org-refile-use-outline-path t
+			  org-outline-path-complete-in-steps nil
+			  org-enforce-todo-dependencies t
+			  org-agenda-skip-deadline-prewarning-if-scheduled t
+			  org-deadline-warning-days 5
+			  org-stuck-projects '("TODO={.+}/-DONE" nil nil "SCHEDULED:\\|DEADLINE:")
+			  org-agenda-skip-deadline-if-done t
+			  org-agenda-skip-scheduled-if-done t)
 
 (eval-after-load "org" '(setq-default org-modules (append org-modules '(org-habit org-mouse))))
 
@@ -537,6 +548,8 @@ With negative prefix, apply to -N lines above."
 (set-face-attribute 'org-level-1 nil :height 1.5 :family "Inconsolata")
 (set-face-attribute 'org-level-2 nil :height 1.2 :family "Inconsolata")
 ;; (set-face-attribute 'outline-3 nil :height 1.2 :family "Inconsolata")
+
+(set-face-attribute 'org-agenda-dimmed-todo-face nil :foreground "grey20")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Latex stuff
