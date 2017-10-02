@@ -402,5 +402,7 @@ compdef _ssh ssht=ssh
 alias s="sudo -E"
 alias d="disown %%"
 
+alias rs="rsync -avziu --info=progress2 --append"
+
 # Stop coredumps
 ulimit -c 0
