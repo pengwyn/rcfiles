@@ -402,6 +402,10 @@ END { print cnt }
 
 		scancel $(echo $filteredlist | awk '{print $1}')
 	}
+
+	function rootssh() {
+		ssh -i ~/.ssh/id_cluster_root "root@$1"
+	}
 fi
 
 if [[ -f ~/.local/lib/python2.7/site-packages/Jug-1.2.2-py2.7.egg/EGG-INFO/scripts/jug ]]
