@@ -276,6 +276,7 @@ export GPG_TTY=$(tty)
 # Force an update for every ssh command
 alias ssh='gpg-connect-agent updatestartuptty /bye;ssh'
 
+alias rs="gpg-connect-agent updatestartuptty /bye;rsync -avziu --info=progress2 --append-verify"
 
 function prompt_confirm() {
   while true; do
@@ -402,7 +403,6 @@ compdef _ssh ssht=ssh
 alias s="sudo -E"
 alias d="disown %%"
 
-alias rs="rsync -avziu --info=progress2 --append"
 
 # Stop coredumps
 ulimit -c 0
