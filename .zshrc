@@ -276,7 +276,7 @@ export GPG_TTY=$(tty)
 # Force an update for every ssh command
 alias ssh='gpg-connect-agent updatestartuptty /bye;ssh'
 
-alias rs="gpg-connect-agent updatestartuptty /bye;rsync -avziu --info=progress2"
+alias rs="gpg-connect-agent updatestartuptty /bye;rsync -avzziu --info=progress2"
 
 function prompt_confirm() {
   while true; do
