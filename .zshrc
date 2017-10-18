@@ -1,3 +1,5 @@
+[[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ ' && return
+
 # The following lines were added by compinstall
 fpath=(~/.zsh/completion $fpath)
 
@@ -252,6 +254,9 @@ unalias run-help
 autoload run-help
 
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+source /usr/share/fzf/completion.zsh
+source /usr/share/fzf/key-bindings.zsh
 
 . $HOME/z.sh
 

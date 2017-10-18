@@ -334,6 +334,8 @@ With negative prefix, apply to -N lines above."
 (define-key helm-grep-map (kbd "C-.") 'helm-goto-next-file)
 (define-key helm-grep-map (kbd "C-,") 'helm-goto-precedent-file)
 
+;; Kind of helm related
+(eval-after-load 'tramp '(setenv "SHELL" "/bin/bash"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * ggtags
@@ -606,6 +608,7 @@ With negative prefix, apply to -N lines above."
 ;; 									 (unless (eq major-mode 'org-mode) (progn (outshine-hook-function) (message "%s" "looks like this was not org-mode!")))))
 
 (add-hook 'prog-mode-hook 'outline-minor-mode)
+(dim-minor-name 'outline-minor-mode nil)
 
 (set-face-attribute 'outline-1 nil :height 2.0 :family "Inconsolata")
 (set-face-attribute 'outline-2 nil :height 1.5 :family "Inconsolata")
