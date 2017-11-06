@@ -151,6 +151,8 @@ With negative prefix, apply to -N lines above."
 
 (setq-default prettify-symbols-unprettify-at-point "right-edge")
 
+(save-place-mode 1)
+
 ;;;;;;;;;;;;;;;
 ;; * Evil stuff
 

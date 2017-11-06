@@ -18,3 +18,11 @@ if true #isinteractive()
 	#println("After plots")
 end
 
+
+for pkg in ["Glob", "PyPlot", "PlotlyJS", "Plots", "StaticArrays", "DataFrames", "JLD", "LsqFit", "QuadGK"]
+    if Pkg.installed(pkg) == nothing
+        print_with_color(:green, "Install package $pkg:\n", bold=true)
+        Pkg.add(pkg)
+        Pkg.build(pkg)
+    end
+end
