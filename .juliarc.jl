@@ -19,7 +19,7 @@ if true #isinteractive()
 end
 
 
-for pkg in ["Glob", "PyPlot", "PlotlyJS", "Plots", "StaticArrays", "DataFrames", "JLD", "LsqFit", "QuadGK"]
+for pkg in ["Glob", "PyPlot", "PlotlyJS", "Plots", "StaticArrays", "DataFrames", "JLD", "LsqFit", "QuadGK", "MAT", "DifferentialEquations"]
     if Pkg.installed(pkg) == nothing
         print_with_color(:green, "Install package $pkg:\n", bold=true)
         Pkg.add(pkg)
