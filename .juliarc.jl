@@ -40,7 +40,7 @@ if true
                 "Roots"]
 		if Pkg.installed(pkg) == nothing
             if firsttime
-                print_with_color(:green, "Updating package database:\n", bold=true)
+                print_with_color(:green, "Updating package database before installing $pkg:\n", bold=true)
                 Pkg.update()
 				firsttime = false
             end
