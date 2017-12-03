@@ -1,4 +1,4 @@
-@everywhere push!(LOAD_PATH, "/home/pengwyn/work5/julia")
+@everywhere push!(LOAD_PATH, "/home/pengwyn/work5/julia", "/home/pengwyn/work5/julia/SwarmMC")
 
 if false #isinteractive()
 	@schedule begin
@@ -17,7 +17,8 @@ if true
 	@everywhere push!(LOAD_PATH, ".")
 	@everywhere using Generic
 
-    ENV["PLOTS_DEFAULT_BACKEND"] = "PlotlyJS"
+    #ENV["PLOTS_DEFAULT_BACKEND"] = "PlotlyJS"
+    ENV["PLOTS_DEFAULT_BACKEND"] = "PyPlot"
 end
 
 
