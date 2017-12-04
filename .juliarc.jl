@@ -21,32 +21,35 @@ if true
 end
 
 
-if true
-    firsttime = true
-	for pkg in ["Glob",
-                "PyPlot",
-                "PlotlyJS",
-                "GR",
-                "Plots",
-                "StaticArrays",
-                "DataFrames",
-                "JLD",
-                "LsqFit",
-                "QuadGK",
-                "MAT",
-                "DifferentialEquations",
-                "SpecialFunctions",
-                "IJulia",
-                "Roots"]
-		if Pkg.installed(pkg) == nothing
-            if firsttime
-                print_with_color(:green, "Updating package database before installing $pkg:\n", bold=true)
-                Pkg.update()
-				firsttime = false
-            end
-			print_with_color(:green, "Install package $pkg:\n", bold=true)
-			Pkg.add(pkg)
-			Pkg.build(pkg)
+if true && !("NO_JULIA_PACKAGE_CHECK" in keys(ENV))
+	withenv("NO_JULIA_PACKAGE_CHECK" => "STOP") do
+		firsttime = true
+		for pkg in ["Glob",
+					"PyPlot",
+					"PlotlyJS",
+					"GR",
+					"Plots",
+					"StaticArrays",
+					"DataFrames",
+					"JLD",
+					"LsqFit",
+					"QuadGK",
+					"MAT",
+					"DifferentialEquations",
+					"SpecialFunctions",
+					"IJulia",
+					"Roots"]
+			if Pkg.installed(pkg) == nothing
+				if firsttime
+					print_with_color(:green, "Updating package database before installing $pkg:\n", bold=true)
+					Pkg.update()
+					println("About to change firstime to false: $(getpid())")
+					firsttime = false
+				end
+				print_with_color(:green, "Install package $pkg:\n", bold=true)
+				Pkg.add(pkg)
+				Pkg.build(pkg)
+			end
 		end
 	end
 end
