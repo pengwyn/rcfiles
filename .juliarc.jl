@@ -43,10 +43,19 @@ if true && !("NO_JULIA_PACKAGE_CHECK" in keys(ENV))
 					"Roots"]
 			if Pkg.installed(pkg) == nothing
 				if firsttime
-					print_with_color(:green, "Updating package database before installing $pkg:\n", bold=true)
-					Pkg.update()
-					println("About to change firstime to false: $(getpid())")
-					firsttime = false
+					print("Do I want to update packages now? ")
+					ans = chomp(readline())
+					if ans == "yes"
+						print_with_color(:green, "Updating package database before installing $pkg:\n", bold=true)
+						Pkg.update()
+						println("About to change firstime to false: $(getpid())")
+						firsttime = false
+					elseif ans == "no"
+						println("Aborting")
+						break
+					else
+						error("Unknown answer - should be 'yes' or 'no'")
+					end
 				end
 				print_with_color(:green, "Install package $pkg:\n", bold=true)
 				Pkg.add(pkg)
