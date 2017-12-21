@@ -417,6 +417,8 @@ END { print cnt }
 	}
 
 	alias emacs='emacs -nw'
+
+	export NO_JULIA_PACKAGE_CHECK=nocheck
 fi
 
 if [[ -f ~/.local/lib/python2.7/site-packages/Jug-1.2.2-py2.7.egg/EGG-INFO/scripts/jug ]]
