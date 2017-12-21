@@ -283,6 +283,15 @@ alias ssh='gpg-connect-agent updatestartuptty /bye;ssh'
 
 alias rs="gpg-connect-agent updatestartuptty /bye;rsync -avzziu --info=progress2"
 
+function ediff() {
+	if [[ -z "${2}" ]]; then
+		echo "USAGE: ediff <FILE 1> <FILE 2>"
+	else
+		# The --eval flag takes lisp code and evaluates it with EMACS
+		emacs --eval "(ediff-files \"$1\" \"$2\")"
+	fi
+}
+
 function prompt_confirm() {
   while true; do
     read -r "REPLY?${1:-Continue?} [yes/no]: "
