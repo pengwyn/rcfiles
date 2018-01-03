@@ -1,5 +1,4 @@
-@everywhere push!(LOAD_PATH, "/home/pengwyn/work5/julia", "/home/pengwyn/work5/julia/SwarmMC")
-@everywhere push!(LOAD_PATH, "/home/pengwyn/work5/julia/monolithictest")
+@everywhere push!(LOAD_PATH, "/home/pengwyn/work5/julia")
 
 if false #isinteractive()
 	@schedule begin
