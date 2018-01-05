@@ -325,6 +325,7 @@ With negative prefix, apply to -N lines above."
 (helm-mode 1)
 
 (global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "C-M-x") 'execute-extended-command)
 (setq-default helm-M-x-fuzzy-match t) ;; optional fuzzy matching for helm-M-x
 (global-set-key (kbd "C-x b") 'helm-mini)
 (global-set-key (kbd "C-x f") 'helm-find-files)
