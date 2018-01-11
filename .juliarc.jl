@@ -41,7 +41,8 @@ if true && !("NO_JULIA_PACKAGE_CHECK" in keys(ENV))
 					"IJulia",
 					"Roots",
 					"Revise",
-					"Polynomials"]
+					"Polynomials",
+					"Dierckx"]
 			if Pkg.installed(pkg) == nothing
 				if firsttime
 					print("Do I want to update packages now? ")
