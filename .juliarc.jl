@@ -30,7 +30,9 @@ function PackageCheck()
 						"Roots",
 						"Revise",
 						"Polynomials",
-						"Dierckx"]
+						"Dierckx",
+						"EllipsisNotation"
+						]
 				if Pkg.installed(pkg) == nothing
 					if firsttime
 						print("Do I want to update packages now? ")
