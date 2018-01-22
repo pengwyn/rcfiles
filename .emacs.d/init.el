@@ -613,6 +613,6 @@ With negative prefix, apply to -N lines above."
 (add-hook 'prog-mode-hook 'outline-minor-mode)
 (dim-minor-name 'outline-minor-mode nil)
 
-(set-face-attribute 'outline-1 nil :height 2.0 :family "Inconsolata")
+(set-face-attribute 'outline-1 nil :height 2.0 :family "Inconsolata" :foreground "black" :background "DarkSeaGreen1")
 (set-face-attribute 'outline-2 nil :height 1.5 :family "Inconsolata")
 (set-face-attribute 'outline-3 nil :height 1.2 :family "Inconsolata")
