@@ -66,8 +66,10 @@ atreplinit() do REPL
     @schedule begin
         sleep(0.1)
         try
-            @eval using Revise
-			println("Loaded Revise")
+			if !("NO_REVISE" in keys(ENV))
+				@eval using Revise
+				println("Loaded Revise")
+			end
 			@eval using Generic
 			println("Loaded Generic")
 			#@eval using Plots
