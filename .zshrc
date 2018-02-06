@@ -1,5 +1,8 @@
 [[ $TERM == "dumb" ]] && unsetopt zle && PS1='$ ' && return
 
+############################
+# * COMPLETION
+
 # The following lines were added by compinstall
 fpath=(~/.zsh/completion $fpath)
 
@@ -72,7 +75,16 @@ zstyle :compinstall filename '/home/pengwyn/.zshrc'
 
 autoload -Uz compinit
 compinit
+
+bindkey '^[[Z' reverse-menu-complete
+zstyle ':completion:*' menu select
+
 # End of lines added by compinstall
+
+
+############################
+# * Basic options
+
 # Lines configured by zsh-newuser-install
 HISTFILE=~/.histfile
 HISTSIZE=10000
@@ -95,16 +107,14 @@ bindkey -e
 # End of lines configured by zsh-newuser-install
 
 
-# Stolen from graysky2 config
-pagrep() {
-	[[ -z "$1" ]] && echo 'Define a grep string and try again' && return 1
-	find . -type f | parallel -k -j150% -n 1000 -m grep -H -n "$1" {}
-}
-
-tailc() { tail -n 40 "$1" | column -t; }
-
 # My stuff
 eval "`dircolors -b`"
+
+# Stop coredumps
+ulimit -c 0
+
+############################
+# * History keys
 
 autoload -U history-search-end
 
@@ -116,6 +126,9 @@ bindkey "\e[A" history-beginning-search-backward-end
 
 bindkey "^[[3~" delete-char
 bindkey "^[3;5~" delete-char
+
+############################
+# * SUDO key
 
 function add-sudo-in-front()
 {
@@ -141,8 +154,8 @@ function quote-word-on-cursor()
 zle -N quote-word-on-cursor
 bindkey "\C-p" quote-word-on-cursor
 
-bindkey '^[[Z' reverse-menu-complete
-zstyle ':completion:*' menu select
+########################################
+# * ALIASES
 
 alias ls='ls --color=auto'
 alias la='ls -lAh'
@@ -202,6 +215,35 @@ alias gr="git remote"
 alias gl="git log --oneline --graph --all --decorate"
 alias g="git"
 
+# Quickfind
+function qfind {
+	find -iname "*$1*"
+}
+
+function ediff() {
+	if [[ -z "${2}" ]]; then
+		echo "USAGE: ediff <FILE 1> <FILE 2>"
+	else
+		# The --eval flag takes lisp code and evaluates it with EMACS
+		emacs --eval "(ediff-files \"$1\" \"$2\")"
+	fi
+}
+
+function ssht () {
+	#gpg-connect-agent updatestartuptty /bye
+	ssh -t $@ "tmux new -A -s main"
+}
+compdef _ssh ssht=ssh
+
+alias s="sudo -E"
+alias d="disown %%"
+
+alias jupy="jupyter notebook --notebook-dir=${HOME}/Dropbox/Physics/MyCalcs/JupyterNotebooks"
+
+
+############################
+# * PROMPT
+
 autoload -U colors && colors
 function precmd() {
 	RET="$?"
@@ -223,6 +265,10 @@ setopt prompt_subst
 export PROMPT='$(retlprompt)'
 export RPROMPT='$(retrprompt)'
 
+
+############################
+# * Common ENV vars
+
 export PYTHONPATH="$HOME/work4/python:$HOME/work_helium34/python:$HOME/work3/python"
 #alias changepython2="export PYTHONPATH=$HOME/work2/python"
 
@@ -243,22 +289,23 @@ export LESS_TERMCAP_so=$(printf "\e[1;47;30m")
 export LESS_TERMCAP_ue=$(printf "\e[0m")
 export LESS_TERMCAP_us=$(printf "\e[0;36m")
 
-# Quickfind
-function qfind {
-	find -iname "*$1*"
-}
-
-#alias qme='ssh zodiac bash -ic qme'
-
 unalias run-help
 autoload run-help
 
+############################
+# * Highlighting
+
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
+############################
+# * FZF
 source /usr/share/fzf/completion.zsh
 source /usr/share/fzf/key-bindings.zsh
 
 . $HOME/z.sh
+
+############################
+# * gpg-agent
 
 #eval $(gpg-agent --daemon --enable-ssh-support --disable-scdaemon)
 # Doing this with manual setting because gpg-agent doesn't return the environment variables a second time.
@@ -283,14 +330,8 @@ alias ssh='gpg-connect-agent updatestartuptty /bye;ssh'
 
 alias rs="gpg-connect-agent updatestartuptty /bye;rsync -avzziu --info=progress2"
 
-function ediff() {
-	if [[ -z "${2}" ]]; then
-		echo "USAGE: ediff <FILE 1> <FILE 2>"
-	else
-		# The --eval flag takes lisp code and evaluates it with EMACS
-		emacs --eval "(ediff-files \"$1\" \"$2\")"
-	fi
-}
+############################
+# * Utils
 
 function prompt_confirm() {
   while true; do
@@ -303,6 +344,8 @@ function prompt_confirm() {
   done  
 }
 
+############################
+# * Cluster specific
 if [[ $(hostname) == "mixologist" ]]
 then
 	function sq () {
@@ -421,20 +464,8 @@ END { print cnt }
 	export NO_JULIA_PACKAGE_CHECK=nocheck
 fi
 
-if [[ -f ~/.local/lib/python2.7/site-packages/Jug-1.2.2-py2.7.egg/EGG-INFO/scripts/jug ]]
-then
-	PATH="$PATH:$HOME/.local/lib/python2.7/site-packages/Jug-1.2.2-py2.7.egg/EGG-INFO/scripts"
-fi
+#if [[ -f ~/.local/lib/python2.7/site-packages/Jug-1.2.2-py2.7.egg/EGG-INFO/scripts/jug ]]
+#then
+#	PATH="$PATH:$HOME/.local/lib/python2.7/site-packages/Jug-1.2.2-py2.7.egg/EGG-INFO/scripts"
+#fi
 
-function ssht () {
-	#gpg-connect-agent updatestartuptty /bye
-	ssh -t $@ "tmux new -A -s main"
-}
-compdef _ssh ssht=ssh
-
-alias s="sudo -E"
-alias d="disown %%"
-
-
-# Stop coredumps
-ulimit -c 0
