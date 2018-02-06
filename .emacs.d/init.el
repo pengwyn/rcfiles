@@ -57,21 +57,21 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Python stuff
 ;;----------------------------
-(require 'elpy)
-(setq-default eply-remove-modeline_lighter nil)
-(delete 'elpy-module-highlight-indentation elpy-modules)
-(delete 'elpy-module-flymake elpy-modules)
-(setq-default elpy-rpc-python-command "python2")
-;(elpy-use-ipython "ipython2 --pylab --profile math")
-(elpy-use-ipython "ipython2")
-;(setq-default python-shell-interpreter "ipython2"
-;    python-shell-interpreter-args "--simple-prompt -i")
-(setq-default python-shell-interpreter-args "--simple-prompt -i --pylab --profile math")
-
-;(elpy-enable)
-
-(require 'ein)
-(add-hook 'ein:connect-mode-hook 'ein:jedi-setup)
+;; (require 'elpy)
+;; (setq-default eply-remove-modeline_lighter nil)
+;; (delete 'elpy-module-highlight-indentation elpy-modules)
+;; (delete 'elpy-module-flymake elpy-modules)
+;; (setq-default elpy-rpc-python-command "python2")
+;; ;(elpy-use-ipython "ipython2 --pylab --profile math")
+;; (elpy-use-ipython "ipython2")
+;; ;(setq-default python-shell-interpreter "ipython2"
+;; ;    python-shell-interpreter-args "--simple-prompt -i")
+;; (setq-default python-shell-interpreter-args "--simple-prompt -i --pylab --profile math")
+;; 
+;; ;(elpy-enable)
+;; 
+;; (require 'ein)
+;; (add-hook 'ein:connect-mode-hook 'ein:jedi-setup)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * General stuff
