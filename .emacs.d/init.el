@@ -26,22 +26,12 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   (quote
-	("5dc0ae2d193460de979a463b907b4b2c6d2c9c4657b2e9e66b8898d2592e3de5" "b0ab5c9172ea02fba36b974bbd93bc26e9d26f379c9a29b84903c666a5fde837" "7153b82e50b6f7452b4519097f880d968a6eaf6f6ef38cc45a144958e553fbc6" default)))
  '(fill-column 80)
  '(org-agenda-files (quote ("~/Dropbox/org/notes.org")))
  '(package-selected-packages
    (quote
 	(outorg outshine helm-navi navi-mode ess prettify-greek flycheck helm-flycheck dim which-key vdiff goto-chg auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell julia-mode sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes evil helm magit org powerline nlinum nlinum-relative)))
  '(preview-auto-cache-preamble t))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-
 
 
 ;; Put this at the start to allow removal of minor modes as we go

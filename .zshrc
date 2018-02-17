@@ -213,6 +213,8 @@ alias gpla="gitpullall"
 alias gps="git push"
 alias gr="git remote"
 alias gl="git log --oneline --graph --all --decorate"
+alias gb="git branch"
+alias gf="git fetch"
 alias g="git"
 
 # Quickfind
