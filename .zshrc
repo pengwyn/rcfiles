@@ -246,6 +246,21 @@ alias jupy="jupyter notebook --notebook-dir=${HOME}/Dropbox/Physics/MyCalcs/Jupy
 ############################
 # * PROMPT
 
+_git_repo_name() { 
+    gittopdir=$(git rev-parse --git-dir 2> /dev/null)
+    if [[ "foo$gittopdir" == "foo.git" ]]; then
+        echo `basename $(pwd)`
+    elif [[ "foo$gittopdir" != "foo" ]]; then
+        echo `dirname $gittopdir | xargs basename`
+    fi
+}
+_git_branch_name() {    
+    git branch 2>/dev/null | awk '/^\*/ { print $2 }'
+}    
+ _git_is_dirty() { 
+   git diff --quiet 2> /dev/null || echo '*'
+ }
+
 autoload -U colors && colors
 function precmd() {
 	RET="$?"
@@ -257,10 +272,25 @@ function retrprompt() {
    	else
 		echo -n "%{$fg_bold[red]%}"
 	fi
-	echo -n "[$RET] %{$fg[yellow]%}%*%{$reset_color%}"
+	#echo -n "[$RET] %{$fg[yellow]%}%*%{$reset_color%}"
+	echo -n "[$RET] %{$fg[yellow]%}%T%{$reset_color%}"
 }
 function retlprompt() {
-	echo -n "%n@%m %U%{$fg[yellow]%}%~%{$reset_color%}%u$ "
+	dirty=$(_git_is_dirty)
+	if [[ "$dirty" == "*" ]] ; then
+		gitcolour="%{$fg[magenta]%}"
+	else
+		gitcolour="%{$fg[cyan]%}"
+	fi
+	branchname=$(_git_branch_name)
+	if [[ -z "$branchname" ]] ; then
+		gitstuff=""
+	else
+		gitstuff="${gitcolour}${branchname}%{$reset_color%} "
+	fi
+
+	#echo -n "%n@%m %U%{$fg[yellow]%}%~%{$reset_color%}%u$ "
+	echo -n "%m ${gitstuff}%U%{$fg[yellow]%}%~%{$reset_color%}%u$ "
 }
 
 setopt prompt_subst
