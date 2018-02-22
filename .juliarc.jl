@@ -69,7 +69,7 @@ atreplinit() do REPL
         sleep(0.1)
         try
 			if !("NO_REVISE" in keys(ENV))
-				@eval using Revise
+				@everywhere @eval using Revise
 				println("Loaded Revise")
 			end
 			@eval using Generic
