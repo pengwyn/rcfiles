@@ -240,7 +240,8 @@ compdef _ssh ssht=ssh
 alias s="sudo -E"
 alias d="disown %%"
 
-alias jupy="jupyter notebook --notebook-dir=${HOME}/Dropbox/Physics/MyCalcs/JupyterNotebooks"
+#alias jupy="jupyter notebook --notebook-dir=${HOME}/Dropbox/Physics/MyCalcs/JupyterNotebooks"
+alias jupy="tmux new -s Jupy -d jupyter notebook --notebook-dir=${HOME}/Dropbox/Physics/MyCalcs/JupyterNotebooks"
 
 
 ############################
