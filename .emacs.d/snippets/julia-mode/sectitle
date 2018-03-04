@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: sectiontitle
+# key: sec
+#
+# --
+${1:$(make-string (max 30 (* 2 (+ 3 (string-width yas-text)))) ?#)}
+# * $1
+#${1:$(make-string (- (max 30 (* 2 (+ 3 (string-width yas-text)))) 2) ?-)}
+$0
