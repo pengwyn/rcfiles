@@ -26,6 +26,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+	("732b807b0543855541743429c9979ebfb363e27ec91e82f463c91e68c772f6e3" default)))
  '(fill-column 80)
  '(org-agenda-files (quote ("~/Dropbox/org/notes.org")))
  '(package-selected-packages
@@ -606,3 +609,9 @@ With negative prefix, apply to -N lines above."
 (set-face-attribute 'outline-1 nil :height 2.0 :family "Inconsolata" :foreground "black" :background "DarkSeaGreen1")
 (set-face-attribute 'outline-2 nil :height 1.5 :family "Inconsolata")
 (set-face-attribute 'outline-3 nil :height 1.2 :family "Inconsolata")
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
