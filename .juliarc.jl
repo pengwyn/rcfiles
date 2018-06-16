@@ -20,7 +20,7 @@ function PackageCheck()
 						"Plots",
 						"StaticArrays",
 						"DataFrames",
-						"JLD",
+						"JLD2",
 						"LsqFit",
 						"QuadGK",
 						"MAT",
@@ -31,7 +31,13 @@ function PackageCheck()
 						"Revise",
 						"Polynomials",
 						"Dierckx",
-						"EllipsisNotation"
+						"EllipsisNotation",
+                        "OffsetArrays",
+                        "MicroLogging",
+                        "NamedTuples",
+                        "Optim",
+                        "Reexport",
+                        "NNLS",
 						]
 				if Pkg.installed(pkg) == nothing
 					if firsttime

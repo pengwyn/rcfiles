@@ -31,11 +31,11 @@
 	("732b807b0543855541743429c9979ebfb363e27ec91e82f463c91e68c772f6e3" default)
 	("b0ab5c9172ea02fba36b974bbd93bc26e9d26f379c9a29b84903c666a5fde837" default)))
  '(fill-column 80)
- '(julia-max-block-lookback 50000)
+ '(julia-max-block-lookback 50000 t)
  '(org-agenda-files (quote ("~/Dropbox/org/notes.org")))
  '(package-selected-packages
    (quote
-	(outorg helm-navi navi-mode ess prettify-greek flycheck helm-flycheck dim which-key vdiff goto-chg auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes evil helm magit org powerline nlinum nlinum-relative)))
+	(outshine outorg helm-navi navi-mode ess prettify-greek flycheck helm-flycheck dim which-key vdiff goto-chg auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes evil helm magit org powerline nlinum nlinum-relative)))
  '(preview-auto-cache-preamble t))
 
 
@@ -262,6 +262,7 @@ With negative prefix, apply to -N lines above."
 ;(setq-default company-backends '( (:separate company-clang company-semantic company-gtags company-capf company-keywords) company-dabbrev-code))
 ;(setq-default company-backends '( (:separate company-clang company-semantic company-gtags company-capf company-keywords) company-dabbrev-code company-dabbrev))
 (setq-default company-backends '( company-clang company-semantic company-gtags company-capf company-keywords company-dabbrev-code company-dabbrev))
+;(setq-default company-backends '( company-clang company-semantic company-capf company-keywords company-dabbrev-code company-dabbrev))
 ;(setq-default company-backends '( company-yasnippet))
 
 (setq-default company-dabbrev-time-limit 1.0)
@@ -289,6 +290,8 @@ With negative prefix, apply to -N lines above."
 (require 'company-quickhelp)
 (company-quickhelp-mode t)
 
+(require 'company-gtags)
+(setq-default company-gtags-modes (append company-gtags-modes '(julia-mode-prog-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ** Hippie-expand
@@ -407,6 +410,7 @@ With negative prefix, apply to -N lines above."
 
 
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * C Stuff
 ;;----------------------------
@@ -481,6 +485,20 @@ With negative prefix, apply to -N lines above."
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; * Speedbar
+;;----------------------------
+
+(require 'sr-speedbar)
+;(setq-default speedbar-show-unknown-files t) ; show all files
+(setq-default speedbar-use-images nil) ; use text for buttons
+;(setq-default sr-speedbar-right-side nil) ; put on left side
+(setq-default speedbar-hide-button-brackets-flag t)
+(setq-default speedbar-tag-hierarchy-method '(speedbar-sort-tag-hierarchy))
+(global-set-key (kbd "<f8>") 'sr-speedbar-toggle)
+
+(speedbar-add-supported-extension ".jl")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * GUD
 ;;----------------------------
 
@@ -491,14 +509,6 @@ With negative prefix, apply to -N lines above."
  ;; gdb-show-main t
  gdb-show-main nil
  )
-
-(require 'sr-speedbar)
-;(setq-default speedbar-show-unknown-files t) ; show all files
-(setq-default speedbar-use-images nil) ; use text for buttons
-;(setq-default sr-speedbar-right-side nil) ; put on left side
-(setq-default speedbar-hide-button-brackets-flag t)
-(setq-default speedbar-tag-hierarchy-method '(speedbar-sort-tag-hierarchy))
-(global-set-key (kbd "<f8>") 'sr-speedbar-toggle)
 
 (require 'gud)
 (define-key gud-minor-mode-map (kbd "<f9>") 'gud-next)
@@ -663,6 +673,13 @@ With negative prefix, apply to -N lines above."
 ;; Fix overwriting self-insert-command for company
 ;; (add-to-list 'company-begin-commands 'outshine-self-insert-command)
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; * Julia
+;;----------------------------
+(require 'julia-mode)
+(add-hook 'julia-mode-hook 'ggtags-mode)
+(add-hook 'julia-mode-hook (lambda () (setq-local ggtags-process-environment '("GTAGSLABEL=ctags"))))
 
 
 (custom-set-faces
