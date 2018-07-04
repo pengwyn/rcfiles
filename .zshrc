@@ -236,6 +236,7 @@ function ssht () {
 	ssh -t $@ "tmux new -A -s main"
 }
 compdef _ssh ssht=ssh
+compdef _pacman aurman=pacman
 
 alias s="sudo -E"
 alias d="disown %%"
