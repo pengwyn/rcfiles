@@ -244,6 +244,7 @@ alias d="disown %%"
 #alias jupy="jupyter notebook --notebook-dir=${HOME}/Dropbox/Physics/MyCalcs/JupyterNotebooks"
 #alias jupy="tmux new -s Jupy -d jupyter notebook --notebook-dir=${HOME}/Dropbox/Physics/MyCalcs/JupyterNotebooks"
 alias jupy="tmux new -s Jupy -d env JUPYTER_CONFIG_DIR=${HOME}/Dropbox/Physics/MyCalcs/JupyterNotebooks/.jupyter jupyter notebook --notebook-dir=${HOME}/Dropbox/Physics/MyCalcs/JupyterNotebooks"
+alias jupyat="tmux attach -t Jupy"
 
 alias pacupdatekernel="s pacman -Syu --needed linux linux-firmware"
 
