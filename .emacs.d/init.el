@@ -686,6 +686,8 @@ With negative prefix, apply to -N lines above."
 (require 'projectile-direnv)
 (add-hook 'projectile-mode-hook 'projectile-direnv-export-variables)
 
+(projectile-global-mode)
+
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
