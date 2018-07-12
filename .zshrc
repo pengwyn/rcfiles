@@ -497,6 +497,7 @@ END { print cnt }
 	function rootssh() {
 		ssh -i ~/.ssh/id_cluster_root "root@$1"
 	}
+	compdef _ssh rootssh=ssh
 
 	alias emacs='emacs -nw'
 
@@ -507,4 +508,4 @@ fi
 #then
 #	PATH="$PATH:$HOME/.local/lib/python2.7/site-packages/Jug-1.2.2-py2.7.egg/EGG-INFO/scripts"
 #fi
-
+#
