@@ -28,7 +28,7 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
-	("732b807b0543855541743429c9979ebfb363e27ec91e82f463c91e68c772f6e3" default)))
+	("b0ab5c9172ea02fba36b974bbd93bc26e9d26f379c9a29b84903c666a5fde837" "732b807b0543855541743429c9979ebfb363e27ec91e82f463c91e68c772f6e3" default)))
  '(fill-column 80)
  '(julia-max-block-lookback 50000)
  '(org-agenda-files (quote ("~/Dropbox/org/notes.org")))
