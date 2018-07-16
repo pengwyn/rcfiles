@@ -34,7 +34,7 @@
  '(org-agenda-files (quote ("~/Dropbox/org/notes.org")))
  '(package-selected-packages
    (quote
-	(projectile projectile-direnv projectile-variable outshine outorg helm-navi navi-mode ess prettify-greek flycheck helm-flycheck dim which-key vdiff goto-chg auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes evil helm magit org powerline nlinum nlinum-relative)))
+	(mmm-mode company-php php-mode projectile projectile-direnv projectile-variable outshine outorg helm-navi navi-mode ess prettify-greek flycheck helm-flycheck dim which-key vdiff goto-chg auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes evil helm magit org powerline nlinum nlinum-relative)))
  '(preview-auto-cache-preamble t))
 
 
@@ -714,3 +714,12 @@ See `comment-region' for behavior of a prefix arg."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; * HTML editing
+;;----------------------------
+
+(require 'mmm-auto)
+
+(setq mmm-global-mode 'maybe)
+(mmm-add-mode-ext-class 'html-mode "\\.php\\'" 'html-php)
