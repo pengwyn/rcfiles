@@ -147,6 +147,16 @@ With negative prefix, apply to -N lines above."
 
 (save-place-mode 1)
 
+;; This is copied from https://stackoverflow.com/questions/23588549/emacs-copy-region-line-and-comment-at-the-same-time
+(defun copy-and-comment-region (beg end &optional arg)
+  "Duplicate the region and comment-out the copied text.
+See `comment-region' for behavior of a prefix arg."
+  (interactive "r\nP")
+  (copy-region-as-kill beg end)
+  (goto-char end)
+  (yank)
+  (comment-region beg end arg))
+
 ;;;;;;;;;;;;;;;
 ;; * Evil stuff
 
@@ -471,6 +481,12 @@ With negative prefix, apply to -N lines above."
 (define-key danny-completions (kbd "C-r") 'ggtags-find-reference)
 (define-key danny-completions (kbd "C-s") 'ggtags-find-other-symbol)
 
+(define-key evil-visual-state-map (kbd "C-y") 'copy-and-comment-region)
+
+;; (define-prefix-command 'danny-utils)
+;; (define-key evil-normal-state-map (kbd "C-y") 'danny-utils)
+;; (define-key danny-utils (kbd "C-y") 'copy-and-comment-region)
+
 
 
 ;; TODO I want to come back to this and have a binding that closes all *...* windows
@@ -654,7 +670,6 @@ With negative prefix, apply to -N lines above."
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Outshine/outorg/navi-mode stuff
-;; ** testing
 ;;----------------------------
 
 (require 'outshine)
@@ -669,6 +684,8 @@ With negative prefix, apply to -N lines above."
 (set-face-attribute 'outline-2 nil :height 1.5 :family "Inconsolata")
 (set-face-attribute 'outline-3 nil :height 1.2 :family "Inconsolata")
 
+(setq outshine-imenu-show-headlines-p nil)
+
 ;; Fix overwriting self-insert-command for company
 ;; (add-to-list 'company-begin-commands 'outshine-self-insert-command)
 
@@ -679,6 +696,8 @@ With negative prefix, apply to -N lines above."
 (require 'julia-mode)
 (add-hook 'julia-mode-hook 'ggtags-mode)
 ;; (add-hook 'julia-mode-hook (lambda () (setq-local ggtags-process-environment '("GTAGSLABEL=juliactags"))))
+; TODO: I should fix this up for that it uses something like the default julia-mode settings but handles my macro prefixes.
+(add-hook 'julia-mode-hook (lambda () (setq-local imenu-create-index-function #'ggtags-build-imenu-index)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Projectile
