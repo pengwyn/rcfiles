@@ -742,7 +742,24 @@ See `comment-region' for behavior of a prefix arg."
 (add-hook 'julia-mode-hook 'ggtags-mode)
 ;; (add-hook 'julia-mode-hook (lambda () (setq-local ggtags-process-environment '("GTAGSLABEL=juliactags"))))
 ; TODO: I should fix this up for that it uses something like the default julia-mode settings but handles my macro prefixes.
-(add-hook 'julia-mode-hook (lambda () (setq-local imenu-create-index-function #'ggtags-build-imenu-index)))
+;; (add-hook 'julia-mode-hook (lambda () (setq-local imenu-create-index-function #'ggtags-build-imenu-index)))
+
+
+; Fixing up imenu in julia-mode to work with my macros
+(let ((macroprefix "^\\(?:[[:blank:]]*@[^[:blank:]@]+\\)*"))
+	(setq julia-imenu-generic-expression
+	;; don't use syntax classes, screws egrep
+	`(
+		;("Function (_)" ,(concat macroprefix "[[:blank:]]*function[[:blank:]]+\\(_[^[:blank:]]*\\)") 1)
+		("Function" ,(concat macroprefix "[[:blank:]]*function[[:blank:]]+\\(.*)\\)[[:blank:]]*") 1)
+		("Function" ,(concat macroprefix "[[:blank:]]*\\([^[:blank:](]*(.*)\\)[[:blank:]]*=[^=]*") 1)
+		("Const" "[ \t]*const \\([^ \t\n]*\\)" 1)
+		;; ("Type"  ,(concat macroprefix "^[ \t]*[a-zA-Z0-9_]*type[a-zA-Z0-9_]* \\([^ \t\n]*\\)") 1)
+		("Struct" ,(concat macroprefix "\\(?:[[:blank:]]*mutable\\)?[[:blank:]]+struct[[:blank:]]+\\([^{[:blank:]\n]+\\)") 1)
+		;; ("Require"      " *\\(\\brequire\\)(\\([^ \t\n)]*\\)" 2)
+		;; ("Include"      ,(concat macroprefix " *\\(\\binclude\\)(\\([^ \t\n)]*\\)") 2)
+		("Using"      ,(concat macroprefix "[[:blank:]]*using[[:blank:]]*\\(.*\\)") 1)
+		)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Projectile
