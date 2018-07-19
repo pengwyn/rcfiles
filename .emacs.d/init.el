@@ -31,10 +31,12 @@
 	("b0ab5c9172ea02fba36b974bbd93bc26e9d26f379c9a29b84903c666a5fde837" "732b807b0543855541743429c9979ebfb363e27ec91e82f463c91e68c772f6e3" default)))
  '(fill-column 80)
  '(julia-max-block-lookback 50000)
+ '(minimap-width-fraction 0.1)
+ '(minimap-window-location (quote right))
  '(org-agenda-files (quote ("~/Dropbox/org/notes.org")))
  '(package-selected-packages
    (quote
-	(mmm-mode company-php php-mode projectile projectile-direnv projectile-variable outshine outorg helm-navi navi-mode ess prettify-greek flycheck helm-flycheck dim which-key vdiff goto-chg auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes evil helm magit org powerline nlinum nlinum-relative)))
+	(minimap yasnippet-snippets mmm-mode company-php php-mode projectile projectile-direnv projectile-variable outshine outorg helm-navi navi-mode ess prettify-greek flycheck helm-flycheck dim which-key vdiff goto-chg auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes evil helm magit org powerline nlinum nlinum-relative)))
  '(preview-auto-cache-preamble t))
 
 
@@ -162,6 +164,8 @@ See `comment-region' for behavior of a prefix arg."
 
 (require 'evil)
 (evil-mode 1)
+
+(setq evil-cross-line t)
 
 (define-key evil-window-map (kbd "C-l") 'evil-window-right)
 (define-key evil-window-map (kbd "C-h") 'evil-window-left)
@@ -558,6 +562,13 @@ See `comment-region' for behavior of a prefix arg."
 
 (speedbar-add-supported-extension ".jl")
 
+;; (add-hook
+;;  'speedbar-timer-hook
+;;  (lambda ()
+;;     (save-excursion
+;;         (set-buffer speedbar-buffer)
+;;         (speedbar-expand-line))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * GUD
 ;;----------------------------
@@ -718,7 +729,11 @@ See `comment-region' for behavior of a prefix arg."
 ;;----------------------------
 
 (require 'outshine)
-(add-hook 'outline-minor-mode-hook 'outshine-hook-function)
+(add-hook 'outline-minor-mode-hook
+		  (lambda () (progn
+					(outshine-hook-function)
+					(setq-local outshine-imenu-preliminary-generic-expression
+						`((nil ,(concat (message "%s" (outshine-calc-outline-regexp)) "\\(.*$\\)") 1))))))
 ;; (add-hook 'outline-minor-mode-hook (lambda ()
 ;; 									 (unless (eq major-mode 'org-mode) (progn (outshine-hook-function) (message "%s" "looks like this was not org-mode!")))))
 
@@ -730,6 +745,9 @@ See `comment-region' for behavior of a prefix arg."
 (set-face-attribute 'outline-3 nil :height 1.2 :family "Inconsolata")
 
 (setq outshine-imenu-show-headlines-p nil)
+; Need this to help with outshine-imenu
+;; (add-hook 'outline-minor-mode-hook (lambda () (setq-local outshine-imenu-preliminary-generic-expression
+;;                `((nil ,(concat (message "%s" (outshine-calc-outline-regexp)) "\\(.*$\\)") 1)))))
 
 ;; Fix overwriting self-insert-command for company
 ;; (add-to-list 'company-begin-commands 'outshine-self-insert-command)
@@ -775,7 +793,7 @@ See `comment-region' for behavior of a prefix arg."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(minimap-font-face ((t (:height 20 :family "DejaVu Sans Mono")))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * HTML editing
