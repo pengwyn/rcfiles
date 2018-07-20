@@ -158,6 +158,9 @@ See `comment-region' for behavior of a prefix arg."
   (goto-char end)
   (yank)
   (comment-region beg end arg))
+(defun copy-and-comment-line (&optional arg)
+  (interactive "P")
+  (copy-and-comment-region (line-beginning-position) (line-end-position)))
 
 ;;;;;;;;;;;;;;;
 ;; * Evil stuff
@@ -531,6 +534,8 @@ See `comment-region' for behavior of a prefix arg."
 (define-key danny-completions (kbd "C-s") 'ggtags-find-other-symbol)
 
 (define-key evil-visual-state-map (kbd "C-y") 'copy-and-comment-region)
+(define-key evil-insert-state-map (kbd "C-y") 'copy-and-comment-line)
+(define-key evil-normal-state-map (kbd "C-y") 'copy-and-comment-line)
 
 ;; (define-prefix-command 'danny-utils)
 ;; (define-key evil-normal-state-map (kbd "C-y") 'danny-utils)
