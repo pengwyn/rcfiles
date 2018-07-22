@@ -784,6 +784,8 @@ See `comment-region' for behavior of a prefix arg."
 		("Using"      ,(concat macroprefix "[[:blank:]]*using[[:blank:]]*\\(.*\\)") 1)
 		)))
 
+(add-hook 'julia-mode-hook (lambda () (setq-local company-backends '( company-gtags company-dabbrev-code company-dabbrev))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Projectile
 ;;----------------------------
