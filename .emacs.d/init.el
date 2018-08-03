@@ -734,11 +734,16 @@ See `comment-region' for behavior of a prefix arg."
 ;;----------------------------
 
 (require 'outshine)
+;; (add-hook 'outline-minor-mode-hook
+;; 		  (lambda () (progn
+;; 					(outshine-hook-function)
+;; 					(setq-local outshine-imenu-preliminary-generic-expression
+;; 						`((nil ,(concat (message "%s" (outshine-calc-outline-regexp)) "\\(.*$\\)") 1))))))
 (add-hook 'outline-minor-mode-hook
 		  (lambda () (progn
 					(outshine-hook-function)
 					(setq-local outshine-imenu-preliminary-generic-expression
-						`((nil ,(concat (message "%s" (outshine-calc-outline-regexp)) "\\(.*$\\)") 1))))))
+						`((nil ,(concat (outshine-calc-outline-regexp) "\\(.*$\\)") 1))))))
 ;; (add-hook 'outline-minor-mode-hook (lambda ()
 ;; 									 (unless (eq major-mode 'org-mode) (progn (outshine-hook-function) (message "%s" "looks like this was not org-mode!")))))
 
