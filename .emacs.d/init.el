@@ -169,6 +169,8 @@ See `comment-region' for behavior of a prefix arg."
 (evil-mode 1)
 
 (setq evil-cross-line t)
+; A cheat to disable copying to x clipboard.
+(setq evil-visual-x-select-timeout 999)
 
 (define-key evil-window-map (kbd "C-l") 'evil-window-right)
 (define-key evil-window-map (kbd "C-h") 'evil-window-left)
