@@ -1,11 +1,16 @@
-@everywhere push!(LOAD_PATH, "/home/pengwyn/work5/julia")
+import Distributed
 
-if true
-	@everywhere push!(LOAD_PATH, ".")
-
-    #ENV["PLOTS_DEFAULT_BACKEND"] = "PlotlyJS"
-    ENV["PLOTS_DEFAULT_BACKEND"] = "PyPlot"
+if Distributed.nprocs() == 1
+	push!(LOAD_PATH, "/home/pengwyn/work5/julia")
+	push!(LOAD_PATH, ".")
+else
+	@eval Distributed.@everywhere push!(LOAD_PATH, "/home/pengwyn/work5/julia")
+	@eval Distributed.@everywhere push!(LOAD_PATH, ".")
 end
+
+
+#ENV["PLOTS_DEFAULT_BACKEND"] = "PlotlyJS"
+#ENV["PLOTS_DEFAULT_BACKEND"] = "PyPlot"
 
 
 function PackageCheck()
@@ -69,21 +74,31 @@ if false
 	PackageCheck()
 end
 
-
-atreplinit() do REPL
-    @schedule begin
-        sleep(0.1)
-        try
-			if !("NO_REVISE" in keys(ENV))
-				@everywhere @eval using Revise
-				println("Loaded Revise")
-			end
-			@eval using Generic
-			println("Loaded Generic")
-			#@eval using Plots
-			#println("Loaded Plots")
-        catch err
-            warn("Could not load Revise.")
-        end
-    end
+try
+    @eval using Revise
+    # Turn on Revise's automatic-evaluation behavior
+    Revise.async_steal_repl_backend()
+catch err
+    @warn "Could not load Revise."
 end
+# atreplinit() do REPL
+#     using Distributed
+#     Distributed.@schedule begin
+#         sleep(0.1)
+#         try
+# 			if !("NO_REVISE" in keys(ENV))
+# 				# Distributed.@everywhere @eval using Revise
+# 				@eval using Revise
+# 				println("Loaded Revise")
+# 			end
+# 			@eval using Generic
+# 			println("Loaded Generic")
+# 			#@eval using Plots
+# 			#println("Loaded Plots")
+#         catch err
+#             warn("Could not load Revise.")
+#         end
+#     end
+# end
+
+using Generic
