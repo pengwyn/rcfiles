@@ -257,7 +257,6 @@ See `comment-region' for behavior of a prefix arg."
 (require 'evil-mc)
 (global-evil-mc-mode 1)
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Yasnippet
 ;;----------------------------
@@ -557,7 +556,6 @@ See `comment-region' for behavior of a prefix arg."
  ;;             (kill-buffer buffer))) 
  ;;         (buffer-list)))
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Speedbar
 ;;----------------------------
@@ -764,9 +762,8 @@ See `comment-region' for behavior of a prefix arg."
 ;; (add-hook 'outline-minor-mode-hook (lambda () (setq-local outshine-imenu-preliminary-generic-expression
 ;;                `((nil ,(concat (message "%s" (outshine-calc-outline-regexp)) "\\(.*$\\)") 1)))))
 
-;; Fix overwriting self-insert-command for company
-;; (add-to-list 'company-begin-commands 'outshine-self-insert-command)
-
+;; Fix self-insert-command for evil-mc
+(add-to-list 'evil-mc-custom-known-commands '(outshine-self-insert-command . ((:default . evil-mc-execute-default-call-with-count))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Julia
