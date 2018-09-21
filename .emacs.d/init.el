@@ -36,7 +36,7 @@
  '(org-agenda-files (quote ("~/Dropbox/org/notes.org")))
  '(package-selected-packages
    (quote
-	(evil-mc multiple-cursors sublimity julia-mode pkgbuild-mode yaml-mode minimap yasnippet-snippets mmm-mode company-php php-mode projectile projectile-direnv projectile-variable outshine outorg helm-navi navi-mode ess prettify-greek flycheck helm-flycheck dim which-key vdiff goto-chg auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes evil helm magit org powerline nlinum nlinum-relative)))
+	(evil-avy evil-mc multiple-cursors sublimity julia-mode pkgbuild-mode yaml-mode minimap yasnippet-snippets mmm-mode company-php php-mode projectile projectile-direnv projectile-variable outshine outorg helm-navi navi-mode ess prettify-greek flycheck helm-flycheck dim which-key vdiff goto-chg auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes evil helm magit org powerline nlinum nlinum-relative)))
  '(preview-auto-cache-preamble t))
 
 
@@ -256,6 +256,48 @@ See `comment-region' for behavior of a prefix arg."
 
 (require 'evil-mc)
 (global-evil-mc-mode 1)
+
+(defun danny-make-evil-mc-cursor-on-click (event)
+  "Stolen partially from the multiple cursor version code"
+  (interactive "e")
+  (mouse-minibuffer-check event)
+  ;; Use event-end in case called from mouse-drag-region.
+  ;; If EVENT is a click, event-end and event-start give same value.
+  (let ((position (event-end event)))
+    (if (not (windowp (posn-window position)))
+        (error "Position not in text area of window"))
+    (select-window (posn-window position))
+    (let ((pt (posn-point position)))
+      (if (numberp pt)
+          ;; is there a fake cursor with the actual *point* right where we are?
+		(save-excursion
+			(goto-char pt)
+			(evil-mc-make-cursor-here))))))
+(global-set-key (kbd "C-S-<mouse-1>") 'danny-make-evil-mc-cursor-on-click)
+
+(defun danny-evil-mc-edit-lines (&optional arg)
+  "Stolen from multiple cursors"
+  (interactive "P")
+  (when (not (and mark-active (/= (point) (mark))))
+    (error "Mark a set of lines first"))
+  (let* ((col (current-column))
+         (point-line (line-number-at-pos))
+         (mark-line (progn (exchange-point-and-mark) (line-number-at-pos)))
+         (direction (if (< point-line mark-line) :up :down)))
+    (deactivate-mark)
+    (when (and (eq direction :up) (bolp))
+      (previous-logical-line 1 nil)
+      (move-to-column col))
+    ;; Add the cursors
+    (while (not (eq (line-number-at-pos) point-line))
+      ;; create the cursor
+      (evil-mc-make-cursor-here)
+      ;; proceed to next
+      (if (eq direction :up)
+          (previous-logical-line 1 nil)
+        (next-logical-line 1 nil))
+      (move-to-column col))
+    ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Yasnippet
@@ -536,10 +578,13 @@ See `comment-region' for behavior of a prefix arg."
 (define-key danny-completions (kbd "C-d") 'ggtags-find-definition)
 (define-key danny-completions (kbd "C-r") 'ggtags-find-reference)
 (define-key danny-completions (kbd "C-s") 'ggtags-find-other-symbol)
+(define-key danny-completions (kbd "C-h") 'helm-navi-headings)
 
 (define-key evil-visual-state-map (kbd "C-y") 'copy-and-comment-region)
 (define-key evil-insert-state-map (kbd "C-y") 'copy-and-comment-line)
 (define-key evil-normal-state-map (kbd "C-y") 'copy-and-comment-line)
+
+(define-key evil-normal-state-map (kbd "M-a") 'avy-goto-char-timer)
 
 ;; (define-prefix-command 'danny-utils)
 ;; (define-key evil-normal-state-map (kbd "C-y") 'danny-utils)
