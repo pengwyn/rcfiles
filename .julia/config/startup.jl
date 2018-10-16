@@ -3,11 +3,11 @@ import Distributed
 #if isinteractive()
 if true
 	if Distributed.nprocs() == 1
-		push!(LOAD_PATH, "/home/pengwyn/work5/julia")
-		push!(LOAD_PATH, ".")
+		pushfirst!(LOAD_PATH, "/home/pengwyn/work5/julia")
+		pushfirst!(LOAD_PATH, ".")
 	else
-		@eval Distributed.@everywhere push!(LOAD_PATH, "/home/pengwyn/work5/julia")
-		@eval Distributed.@everywhere push!(LOAD_PATH, ".")
+		@eval Distributed.@everywhere pushfirst!(LOAD_PATH, "/home/pengwyn/work5/julia")
+		@eval Distributed.@everywhere pushfirst!(LOAD_PATH, ".")
 	end
 
 
