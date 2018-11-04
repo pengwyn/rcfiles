@@ -257,6 +257,8 @@ See `comment-region' for behavior of a prefix arg."
 (require 'evil-mc)
 (global-evil-mc-mode 1)
 
+;(add-to-list 'evil-mc-custom-known-commands '(outshine-self-insert-command . ((:default . evil-mc-execute-default-call-with-count))))
+
 (defun danny-make-evil-mc-cursor-on-click (event)
   "Stolen partially from the multiple cursor version code"
   (interactive "e")
@@ -332,19 +334,19 @@ See `comment-region' for behavior of a prefix arg."
 
 (setq-default company-dabbrev-time-limit 1.0)
 
-(defun company-yasnippet-or-completion ()
-  "Solve company yasnippet conflicts."
-  (interactive)
-  (let ((yas-fallback-behavior
-         (apply 'company-complete-common nil)))
-    (yas-expand)))
-
-(add-hook 'company-mode-hook
-          (lambda ()
-            (substitute-key-definition
-             'company-complete-common
-             'company-yasnippet-or-completion
-             company-active-map)))
+;(defun company-yasnippet-or-completion ()
+;  "Solve company yasnippet conflicts."
+;  (interactive)
+;  (let ((yas-fallback-behavior
+;         (apply 'company-complete-common nil)))
+;    (yas-expand)))
+;
+;(add-hook 'company-mode-hook
+;          (lambda ()
+;            (substitute-key-definition
+;             'company-complete-common
+;             'company-yasnippet-or-completion
+;             company-active-map)))
 
 ;; (add-hook 'elpy-mode-hook
 ;; 	(lambda () (setcar company-backends '(:separate elpy-company-backend company-yasnippet)))
