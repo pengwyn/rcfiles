@@ -119,6 +119,16 @@ export LESS_TERMCAP_so=$(printf "\e[1;47;30m")
 export LESS_TERMCAP_ue=$(printf "\e[0m")
 export LESS_TERMCAP_us=$(printf "\e[0;36m")
 
+############################
+# * Full updates
+
+function pacfull()
+{
+	ignored=( $(cat /etc/pacman.conf | awk '/^IgnorePkg/ {split($0,a,"=");print a[2]}') )
+	# sudo pacman -Syu --needed "${ignored[@]}"
+	# sudo pacman -Syu --needed $ignored
+	yay -Syu --needed $ignored
+}
 
 ############################
 # * Cluster specific
@@ -242,3 +252,4 @@ END { print cnt }
 
 	export NO_JULIA_PACKAGE_CHECK=nocheck
 fi
+

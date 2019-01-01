@@ -272,13 +272,3 @@ function quote-word-on-cursor()
 zle -N quote-word-on-cursor
 bindkey "\C-p" quote-word-on-cursor
 
-
-############################
-# * Full updates
-
-function pacfull()
-{
-	ignored=( $(cat /etc/pacman.conf | awk '/^IgnorePkg/ {split($0,a,"=");print a[2]}') )
-	# sudo pacman -Syu --needed "${ignored[@]}"
-	sudo pacman -Syu --needed $ignored
-}
