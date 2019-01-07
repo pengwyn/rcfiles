@@ -10,6 +10,7 @@ Format 4
 \unbind "C-Down" "paragraph-down"
 \unbind "M-Right" "tabular-feature move-column-right"
 \unbind "M-Left" "tabular-feature move-column-left"
+\unbind "C-S-n" "buffer-new-template"
 
 \bind "M-m d" "command-sequence math-display  ; math-number-toggle;"
 \bind "M-m r" "math-insert \\mathrm"
@@ -23,4 +24,5 @@ Format 4
 \bind "M-Right" "math-insert \\rightarrow"
 \bind "M-Left" "math-insert \\leftarrow"
 \bind "C-M-z" "command-sequence note-insert Greyedout; self-insert ================================; paragraph-break; self-insert COMMENT:; paragraph-break; paragraph-break; self-insert ================================; inset-begin-select ; font-bold; font-noun ; escape; down; down"
+\bind "C-S-n" "note-insert"
 
