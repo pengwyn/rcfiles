@@ -254,8 +254,13 @@ See `comment-region' for behavior of a prefix arg."
 (global-evil-search-highlight-persist t)
 (setq-default evil-search-highlight-string-min-len 3)
 
+(eval-after-load 'evil-mc '(evil-define-key 'normal evil-mc-key-map "\M-n" nil))
+(eval-after-load 'evil-mc '(evil-define-key 'normal evil-mc-key-map "\M-p" nil))
+
 (require 'evil-mc)
 (global-evil-mc-mode 1)
+
+(setq-default evil-mc-one-cursor-show-mode-line-text nil)
 
 ;(add-to-list 'evil-mc-custom-known-commands '(outshine-self-insert-command . ((:default . evil-mc-execute-default-call-with-count))))
 
