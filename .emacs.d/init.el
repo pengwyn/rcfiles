@@ -84,10 +84,9 @@
 ;; * General stuff
 ;;----------------------------
 (setq-default inhibit-startup-message t) ;; hide the startup message
-;(global-linum-mode t) ;; enable line numbers globally
-;(global-relative-line-numbers-mode)
-;(linum-relative-global-mode)
 (global-nlinum-relative-mode)
+
+(setq x-select-enable-clipboard nil)
 
 (load-theme 'alect-black t) ;; load material theme
 
@@ -251,6 +250,14 @@ See `comment-region' for behavior of a prefix arg."
 			  evil-want-fine-undo t)
 (with-eval-after-load 'evil
     (defalias #'forward-evil-word #'forward-evil-symbol))
+
+(setq evil-emacs-state-cursor '("red" box))
+(setq evil-normal-state-cursor '("green" box))
+(setq evil-visual-state-cursor '("orange" box))
+(setq evil-insert-state-cursor '("red" bar))
+(setq evil-replace-state-cursor '("red" bar))
+(setq evil-operator-state-cursor '("red" hollow))
+
 
 (require 'evil-magit)
 
