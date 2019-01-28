@@ -37,7 +37,16 @@
  '(package-selected-packages
    (quote
 	(htmlize wgrep-helm evil-avy evil-mc multiple-cursors sublimity julia-mode pkgbuild-mode yaml-mode minimap yasnippet-snippets mmm-mode company-php php-mode projectile projectile-direnv projectile-variable outshine outorg helm-navi navi-mode ess prettify-greek flycheck helm-flycheck dim which-key vdiff goto-chg auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes evil helm magit org powerline nlinum nlinum-relative)))
- '(preview-auto-cache-preamble t))
+ '(preview-auto-cache-preamble t)
+ '(preview-orientation (quote below)))
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(minimap-font-face ((t (:height 20 :family "DejaVu Sans Mono"))))
+ '(preview-face ((t (:inverse-video t)))))
 
 
 ;; Put this at the start to allow removal of minor modes as we go
@@ -891,13 +900,6 @@ See `comment-region' for behavior of a prefix arg."
 
 (projectile-global-mode)
 
-
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(minimap-font-face ((t (:height 20 :family "DejaVu Sans Mono")))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * HTML editing
