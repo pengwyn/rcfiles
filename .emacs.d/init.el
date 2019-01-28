@@ -11,9 +11,9 @@
 ;(add-to-list 'package-archives
 ;             '("elpy" . "https://jorgenschaefer.github.io/packages/"))
 (setq package-archive-priorities
-	  '(("melpa stable" . 5)
-		("gnu" . 0)
-		("melpa" . -5)))
+	  '(("melpa stable" . -5)
+		("gnu" . -10)
+		("melpa" . 5)))
 
 (package-initialize)
 
