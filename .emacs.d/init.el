@@ -11,7 +11,7 @@
 ;(add-to-list 'package-archives
 ;             '("elpy" . "https://jorgenschaefer.github.io/packages/"))
 (setq package-archive-priorities
-	  '(("melpa stable" . -5)
+	  '(("melpa stable" . 0)
 		("gnu" . -10)
 		("melpa" . 5)))
 
@@ -31,6 +31,7 @@
 	("04dd0236a367865e591927a3810f178e8d33c372ad5bfef48b5ce90d4b476481" "a0feb1322de9e26a4d209d1cfa236deaf64662bb604fa513cca6a057ddf0ef64" "7153b82e50b6f7452b4519097f880d968a6eaf6f6ef38cc45a144958e553fbc6" "5e3fc08bcadce4c6785fc49be686a4a82a356db569f55d411258984e952f194a" "b0ab5c9172ea02fba36b974bbd93bc26e9d26f379c9a29b84903c666a5fde837" "732b807b0543855541743429c9979ebfb363e27ec91e82f463c91e68c772f6e3" default)))
  '(fill-column 80)
  '(julia-max-block-lookback 50000)
+ '(menu-bar-mode nil)
  '(minimap-width-fraction 0.1)
  '(minimap-window-location (quote right))
  '(org-agenda-files (quote ("~/Dropbox/org/notes.org")))
@@ -38,7 +39,8 @@
    (quote
 	(htmlize wgrep-helm evil-avy evil-mc multiple-cursors sublimity julia-mode pkgbuild-mode yaml-mode minimap yasnippet-snippets mmm-mode company-php php-mode projectile projectile-direnv projectile-variable outshine outorg helm-navi navi-mode ess prettify-greek flycheck helm-flycheck dim which-key vdiff goto-chg auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes evil helm magit org powerline nlinum nlinum-relative)))
  '(preview-auto-cache-preamble t)
- '(preview-orientation (quote below)))
+ '(preview-orientation (quote below))
+ '(tool-bar-mode nil))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -843,11 +845,17 @@ See `comment-region' for behavior of a prefix arg."
 ;; 						`((nil ,(concat (message "%s" (outshine-calc-outline-regexp)) "\\(.*$\\)") 1))))))
 (add-hook 'outline-minor-mode-hook
 		  (lambda () (progn
-					(outshine-hook-function)
+					;; (outshine-hook-function)
+					(outshine-mode)
 					(setq-local outshine-imenu-preliminary-generic-expression
 						`((nil ,(concat (outshine-calc-outline-regexp) "\\(.*$\\)") 1))))))
+;; (add-hook 'outline-minor-mode-hook
+;; 		  (lambda () (setq-local outshine-imenu-preliminary-generic-expression
+;; 						`((nil ,(concat (outshine-calc-outline-regexp) "\\(.*$\\)") 1)))))
 ;; (add-hook 'outline-minor-mode-hook (lambda ()
 ;; 									 (unless (eq major-mode 'org-mode) (progn (outshine-hook-function) (message "%s" "looks like this was not org-mode!")))))
+;(setq outshine-imenu-preliminary-generic-expression
+;	`((nil ,(concat (outshine-calc-outline-regexp) "\\(.*$\\)") 1)))
 
 (add-hook 'prog-mode-hook 'outline-minor-mode)
 (dim-minor-name 'outline-minor-mode nil)
