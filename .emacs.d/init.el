@@ -39,7 +39,6 @@
    (quote
 	(htmlize wgrep-helm evil-avy evil-mc multiple-cursors sublimity julia-mode pkgbuild-mode yaml-mode minimap yasnippet-snippets mmm-mode company-php php-mode projectile projectile-direnv projectile-variable outshine outorg helm-navi navi-mode ess prettify-greek flycheck helm-flycheck dim which-key vdiff goto-chg auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes evil helm magit org powerline nlinum nlinum-relative)))
  '(preview-auto-cache-preamble t)
- '(preview-orientation (quote below))
  '(tool-bar-mode nil))
 
 (custom-set-faces
@@ -105,13 +104,39 @@
 (global-auto-revert-mode t)
 (dim-minor-name 'auto-revert-mode nil 'autorevert)
 
-(require 'magit)
-(global-set-key (kbd "<f6>") 'magit-status)
 
+
+(setq-default recentf-max-saved-items 1000)
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ** Short modes
+;;----------------------------
+
+(require 'magit)
+
+(save-place-mode 1)
+(show-paren-mode 1)
 
 (require 'rainbow-delimiters)
 ;; (rainbow-delimiters-mode t)
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+
+(require 'powerline)
+(powerline-center-evil-theme)
+
+(require 'projectile-direnv)
+(add-hook 'projectile-mode-hook 'projectile-direnv-export-variables)
+(projectile-global-mode)
+
+(require 'mmm-auto)
+(setq mmm-global-mode 'maybe)
+(mmm-add-mode-ext-class 'html-mode "\\.php\\'" 'html-php)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ** Commenting things
+;;----------------------------
 
 (defun endless/comment-line (n)
   "Comment or uncomment current line and leave point after it.
@@ -129,7 +154,25 @@ With negative prefix, apply to -N lines above."
 (global-set-key (kbd "C-;") 'endless/comment-line)
 (setq-default comment-style 'multi-line)
 
-(setq-default recentf-max-saved-items 1000)
+
+;; This is copied from https://stackoverflow.com/questions/23588549/emacs-copy-region-line-and-comment-at-the-same-time
+(defun copy-and-comment-region (beg end &optional arg)
+  "Duplicate the region and comment-out the copied text.
+See `comment-region' for behavior of a prefix arg."
+  (interactive "r\nP")
+  (copy-region-as-kill beg end)
+  (goto-char end)
+  (yank)
+  (comment-region beg end arg))
+(defun copy-and-comment-line (&optional arg)
+  (interactive "P")
+  (copy-and-comment-region (line-beginning-position) (line-end-position)))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ** Prettify
+;;----------------------------
 
 (require 'prettify-greek)
 
@@ -157,20 +200,19 @@ With negative prefix, apply to -N lines above."
 
 (setq-default prettify-symbols-unprettify-at-point "right-edge")
 
-(save-place-mode 1)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ** Switch back to minibuffer
+;;------------------------------------------------
 
-;; This is copied from https://stackoverflow.com/questions/23588549/emacs-copy-region-line-and-comment-at-the-same-time
-(defun copy-and-comment-region (beg end &optional arg)
-  "Duplicate the region and comment-out the copied text.
-See `comment-region' for behavior of a prefix arg."
-  (interactive "r\nP")
-  (copy-region-as-kill beg end)
-  (goto-char end)
-  (yank)
-  (comment-region beg end arg))
-(defun copy-and-comment-line (&optional arg)
-  (interactive "P")
-  (copy-and-comment-region (line-beginning-position) (line-end-position)))
+;; Emergency switch back to minibuffer
+;; Stolen from http://superuser.com/questions/132225/how-to-get-back-to-an-active-minibuffer-prompt-in-emacs-without-the-mouse
+(defun switch-to-minibuffer-window ()
+  "switch to minibuffer window (if active)"
+  (interactive)
+  (when (active-minibuffer-window)
+    (select-frame-set-input-focus (window-frame (active-minibuffer-window)))
+    (select-window (active-minibuffer-window))))
+
 
 ;;;;;;;;;;;;;;;
 ;; * Evil stuff
@@ -281,6 +323,10 @@ See `comment-region' for behavior of a prefix arg."
 (setq-default evil-mc-one-cursor-show-mode-line-text nil)
 
 ;(add-to-list 'evil-mc-custom-known-commands '(outshine-self-insert-command . ((:default . evil-mc-execute-default-call-with-count))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ** Additional commands
+;;----------------------------
 
 (defun danny-make-evil-mc-cursor-on-click (event)
   "Stolen partially from the multiple cursor version code"
@@ -620,12 +666,6 @@ See `comment-region' for behavior of a prefix arg."
 
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; * Powerline
-;;----------------------------
-(require 'powerline)
-(powerline-center-evil-theme)
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * My maps
@@ -674,7 +714,6 @@ See `comment-region' for behavior of a prefix arg."
 ;(setq-default sr-speedbar-right-side nil) ; put on left side
 (setq-default speedbar-hide-button-brackets-flag t)
 (setq-default speedbar-tag-hierarchy-method '(speedbar-sort-tag-hierarchy))
-(global-set-key (kbd "<f8>") 'sr-speedbar-toggle)
 
 (speedbar-add-supported-extension ".jl")
 
@@ -760,17 +799,6 @@ See `comment-region' for behavior of a prefix arg."
 	   (if (and arg (> arg 1))
 		   (find-file-other-window org-default-notes-file)
 		   (find-file org-default-notes-file)))
-(define-prefix-command 'danny-orgmode)
-(global-set-key (kbd "<f7>") 'danny-orgmode)
-
-(define-key danny-orgmode (kbd "<f7>") 'danny-open-orgfile)
-(define-key danny-orgmode "l" 'org-store-link)
-(define-key danny-orgmode "a" 'org-agenda)
-(define-key danny-orgmode "c" 'org-capture)
-(define-key danny-orgmode "b" 'org-iswitchb)
-(define-key danny-orgmode "j" 'org-clock-goto)
-(define-key danny-orgmode "o" 'org-clock-out)
-(define-key danny-orgmode "i" 'org-clock-in-last)
 
 ;; TODO: make the tasks thing a bit more automatic.
 (setq-default org-capture-templates
@@ -810,6 +838,8 @@ See `comment-region' for behavior of a prefix arg."
 ; Delay the company tooltips
 (add-hook 'LaTeX-mode-hook (lambda () (setq company-idle-delay 2.0)))
 
+(when (string= (system-name) "pengix")
+	(setq-default preview-orientation 'below))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Ediff stuff
 ;;----------------------------
@@ -824,20 +854,6 @@ See `comment-region' for behavior of a prefix arg."
 (which-key-mode)
 (which-key-setup-side-window-right-bottom)
 (dim-minor-name 'which-key-mode nil)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; * Other stuff
-;;------------------------------------------------
-
-;; Emergency switch back to minibuffer
-;; Stolen from http://superuser.com/questions/132225/how-to-get-back-to-an-active-minibuffer-prompt-in-emacs-without-the-mouse
-(defun switch-to-minibuffer-window ()
-  "switch to minibuffer window (if active)"
-  (interactive)
-  (when (active-minibuffer-window)
-    (select-frame-set-input-focus (window-frame (active-minibuffer-window)))
-    (select-window (active-minibuffer-window))))
-(global-set-key (kbd "<f12>") 'switch-to-minibuffer-window)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -907,20 +923,23 @@ See `comment-region' for behavior of a prefix arg."
 
 (add-hook 'julia-mode-hook (lambda () (setq-local company-backends '( company-gtags company-dabbrev-code))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; * Projectile
-;;----------------------------
-(require 'projectile-direnv)
-(add-hook 'projectile-mode-hook 'projectile-direnv-export-variables)
-
-(projectile-global-mode)
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; * HTML editing
+;; * Key bindings
 ;;----------------------------
 
-(require 'mmm-auto)
 
-(setq mmm-global-mode 'maybe)
-(mmm-add-mode-ext-class 'html-mode "\\.php\\'" 'html-php)
+(define-prefix-command 'danny-orgmode)
+(define-key danny-orgmode (kbd "<f7>") 'danny-open-orgfile)
+(define-key danny-orgmode "l" 'org-store-link)
+(define-key danny-orgmode "a" 'org-agenda)
+(define-key danny-orgmode "c" 'org-capture)
+(define-key danny-orgmode "b" 'org-iswitchb)
+(define-key danny-orgmode "j" 'org-clock-goto)
+(define-key danny-orgmode "o" 'org-clock-out)
+(define-key danny-orgmode "i" 'org-clock-in-last)
+
+(global-set-key (kbd "<f7>") 'danny-orgmode)
+(global-set-key (kbd "<f6>") 'magit-status)
+(global-set-key (kbd "<f12>") 'switch-to-minibuffer-window)
+(global-set-key (kbd "<f8>") 'sr-speedbar-toggle)
