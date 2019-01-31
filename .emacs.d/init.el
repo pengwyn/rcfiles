@@ -128,9 +128,9 @@
 (require 'powerline)
 (powerline-center-evil-theme)
 
-(require 'projectile-direnv)
-(add-hook 'projectile-mode-hook 'projectile-direnv-export-variables)
-(projectile-global-mode)
+;; (require 'projectile-direnv)
+;; (add-hook 'projectile-mode-hook 'projectile-direnv-export-variables)
+;; (projectile-global-mode)
 
 (require 'mmm-auto)
 (setq mmm-global-mode 'maybe)
