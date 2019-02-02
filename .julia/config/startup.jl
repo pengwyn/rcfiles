@@ -49,5 +49,5 @@ if true
 		@warn "Could not load Revise."
 	end
 
-	using Generic
+	using DanUtils
 end
