@@ -89,7 +89,9 @@
 
 (setq x-select-enable-clipboard nil)
 
-(load-theme 'alect-black t) ;; load material theme
+(when (display-graphic-p)
+	(load-theme 'alect-black t) ;; load material theme
+	)
 
 ;(setq-default mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
 (setq-default mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
