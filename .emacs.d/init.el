@@ -37,8 +37,22 @@
  '(org-agenda-files (quote ("~/Dropbox/org/notes.org")))
  '(package-selected-packages
    (quote
-	(htmlize wgrep-helm evil-avy evil-mc multiple-cursors sublimity julia-mode pkgbuild-mode yaml-mode minimap yasnippet-snippets mmm-mode company-php php-mode projectile projectile-direnv projectile-variable outshine outorg helm-navi navi-mode ess prettify-greek flycheck helm-flycheck dim which-key vdiff goto-chg auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes evil helm magit org powerline nlinum nlinum-relative)))
+	(helm-projectile htmlize wgrep-helm evil-avy evil-mc multiple-cursors sublimity julia-mode pkgbuild-mode yaml-mode minimap yasnippet-snippets mmm-mode company-php php-mode projectile projectile-direnv projectile-variable outshine outorg helm-navi navi-mode ess prettify-greek flycheck helm-flycheck dim which-key vdiff goto-chg auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes evil helm magit org powerline nlinum nlinum-relative)))
  '(preview-auto-cache-preamble t)
+ '(safe-local-variable-values
+   (quote
+	((org-publish-project-alist
+	  ("org-notes" :base-directory "~/Dropbox/Physics/Students/ScatteringSteps/org" :base-extension "org" :publishing-directory "/ssh:scucomp1.anu.edu.au:public_html/ScatteringSteps" :recursive t :publishing-function org-html-publish-to-html :headline-levels 4 :auto-preamble t)
+	  ("org-static" :base-directory "~/Dropbox/Physics/Students/ScatteringSteps/org" :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|svg" :publishing-directory "/ssh:scucomp1.anu.edu.au:public_html/ScatteringSteps" :recursive t :publishing-function org-publish-attachment)
+	  ("org" :components
+	   ("org-notes" "org-static")))
+	 (projectile-project-compilation-cmd function org-publish-current-project)
+	 (projectile-project-name . "ScatSteps")
+	 (org-publish-project-alist
+	  ("org-notes" :base-directory "~/Dropbox/Physics/Students/ScatteringSteps/org" :base-extension "org" :publishing-directory "~/Dropbox/Physics/Students/ScatteringSteps/public_html/" :recursive t :publishing-function org-html-publish-to-html :headline-levels 4 :auto-preamble t)
+	  ("org-static" :base-directory "~/Dropbox/Physics/Students/ScatteringSteps/org" :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|svg" :publishing-directory "~/Dropbox/Physics/Students/ScatteringSteps/public_html/" :recursive t :publishing-function org-publish-attachment)
+	  ("org" :components
+	   ("org-notes" "org-static"))))))
  '(scroll-bar-mode nil)
  '(show-paren-mode t)
  '(tool-bar-mode nil))
@@ -132,7 +146,9 @@
 
 ;; (require 'projectile-direnv)
 ;; (add-hook 'projectile-mode-hook 'projectile-direnv-export-variables)
-;; (projectile-global-mode)
+(projectile-mode)
+(setq projectile-switch-project-action #'helm-projectile-find-file)
+(require 'helm-projectile)
 
 (require 'mmm-auto)
 (setq mmm-global-mode 'maybe)
@@ -281,8 +297,8 @@ See `comment-region' for behavior of a prefix arg."
 	(define-key (eval map) (kbd "RET") nil)
 	(define-key (eval map) (kbd " ") nil)
 
-	(define-key (eval map) (kbd "C-n") nil)
-	(define-key (eval map) (kbd "C-p") nil)
+	;; (define-key (eval map) (kbd "C-n") nil)
+	;; (define-key (eval map) (kbd "C-p") nil)
 
  (dolist (key '("C-x C-<space>" "C-x <space>" "C-l"))
    (define-key (eval map) (kbd key) 'recenter-top-bottom-with-clear))
@@ -304,6 +320,14 @@ See `comment-region' for behavior of a prefix arg."
 (setq evil-replace-state-cursor '("red" bar))
 (setq evil-operator-state-cursor '("red" hollow))
 
+; Redefine M-y to copy to clipboard and M-p to paste from clipboard
+(evil-define-operator danny-evil-clip-yank (beg end type register yank-handler)
+  (evil-yank beg end type ?+ yank-handler))
+(evil-define-operator danny-evil-clip-paste (count &optional register yank-handler)
+  (interactive "P<x>")
+  (evil-paste-after 1 ?+ yank-handler))
+(evil-define-key '(normal visual) 'global (kbd "M-y") 'danny-evil-clip-yank)
+(evil-define-key '(normal insert) 'global (kbd "M-p") 'danny-evil-clip-paste)
 
 (require 'evil-magit)
 
@@ -323,6 +347,9 @@ See `comment-region' for behavior of a prefix arg."
 
 (require 'evil-mc)
 (global-evil-mc-mode 1)
+(evil-define-key '(normal visual) evil-mc-key-map (kbd "C-p") nil)
+(evil-define-key '(normal visual) evil-mc-key-map (kbd "C-n") nil)
+
 
 (setq-default evil-mc-one-cursor-show-mode-line-text nil)
 
@@ -942,8 +969,19 @@ See `comment-region' for behavior of a prefix arg."
 (define-key danny-orgmode "j" 'org-clock-goto)
 (define-key danny-orgmode "o" 'org-clock-out)
 (define-key danny-orgmode "i" 'org-clock-in-last)
+(define-key danny-orgmode "r" 'remember)
+(define-key danny-orgmode "R" 'remember-notes)
+
+
+(define-prefix-command 'danny-projectile)
+(define-key danny-projectile (kbd "<f9>") 'helm-projectile-switch-project)
+(define-key danny-projectile "f" 'helm-projectile-find-file-dwim)
+(define-key danny-projectile "p" 'org-publish-current-project)
+(define-key danny-projectile "a" 'helm-projectile-ag)
 
 (global-set-key (kbd "<f7>") 'danny-orgmode)
+(global-set-key (kbd "<f9>") 'danny-projectile)
 (global-set-key (kbd "<f6>") 'magit-status)
 (global-set-key (kbd "<f12>") 'switch-to-minibuffer-window)
 (global-set-key (kbd "<f8>") 'sr-speedbar-toggle)
+
