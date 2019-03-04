@@ -127,7 +127,9 @@ function pacfull()
 	ignored=( $(cat /etc/pacman.conf | awk '/^IgnorePkg/ {split($0,a,"=");print a[2]}') )
 	# sudo pacman -Syu --needed "${ignored[@]}"
 	# sudo pacman -Syu --needed $ignored
-	yay -Syu --needed $ignored
+	#yay -Syu --needed $ignored
+	/bin/yes | sudo pacman -Syu --needed $ignored
+	yay -Syu
 }
 
 ############################
