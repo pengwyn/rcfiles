@@ -914,9 +914,15 @@ See `comment-region' for behavior of a prefix arg."
 (add-hook 'prog-mode-hook 'outline-minor-mode)
 (dim-minor-name 'outline-minor-mode nil)
 
-(set-face-attribute 'outline-1 nil :height 2.0 :family "Inconsolata" :foreground "black" :background "DarkSeaGreen1")
-(set-face-attribute 'outline-2 nil :height 1.5 :family "Inconsolata")
-(set-face-attribute 'outline-3 nil :height 1.2 :family "Inconsolata")
+;; (set-face-attribute 'outline-1 nil :height 2.0 :family "Inconsolata" :foreground "black" :background "DarkSeaGreen1")
+;; (set-face-attribute 'outline-2 nil :height 1.5 :family "Inconsolata")
+;; (set-face-attribute 'outline-3 nil :height 1.2 :family "Inconsolata")
+(set-face-attribute 'outline-1 nil :height 2.0 :family "Liberation Mono" :foreground "black" :background "DarkSeaGreen1")
+(set-face-attribute 'outline-2 nil :height 1.5 :family "Liberation Mono")
+(set-face-attribute 'outline-3 nil :height 1.2 :family "Liberation Mono")
+;; (set-face-attribute 'outline-1 nil :height 2.0 :foreground "black" :background "DarkSeaGreen1")
+;; (set-face-attribute 'outline-2 nil :height 1.5)
+;; (set-face-attribute 'outline-3 nil :height 1.2)
 
 (setq outshine-imenu-show-headlines-p nil)
 ; Need this to help with outshine-imenu
