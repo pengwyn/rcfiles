@@ -13,13 +13,13 @@ end
 atreplinit() do repl
     try
         @eval using Revise
-        @async Revise.wait_steal_repl_backend()
+		@async begin
+			Revise.wait_steal_repl_backend()
+			@eval using DanUtils
+		end
     catch
     end
 end
 
-atreplinit() do repl
-    @eval using DanUtils
-end
     
 
