@@ -41,7 +41,10 @@
  '(preview-auto-cache-preamble t)
  '(safe-local-variable-values
    (quote
-	((org-publish-project-alist
+	((projectile-project-name . "MonteCarlo")
+	 (org-publish-project-alist
+	  ("julia-mod" :base-directory "~/Dropbox/Physics/MonteCarlo/JuliaModules" :base-extension "org" :publishing-directory "/ssh:scucomp1.anu.edu.au:public_html/JuliaModules" :recursive t :publishing-function org-html-publish-to-html :headline-levels 4 :auto-preamble t))
+	 (org-publish-project-alist
 	  ("org-notes" :base-directory "~/Dropbox/Physics/Students/ScatteringSteps/org" :base-extension "org" :publishing-directory "/ssh:scucomp1.anu.edu.au:public_html/ScatteringSteps" :recursive t :publishing-function org-html-publish-to-html :headline-levels 4 :auto-preamble t)
 	  ("org-static" :base-directory "~/Dropbox/Physics/Students/ScatteringSteps/org" :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|svg" :publishing-directory "/ssh:scucomp1.anu.edu.au:public_html/ScatteringSteps" :recursive t :publishing-function org-publish-attachment)
 	  ("org" :components
@@ -798,6 +801,7 @@ See `comment-region' for behavior of a prefix arg."
 ;; * Org-mode stuff
 ;;------------------------------------------------
 (require 'org)
+(require 'ox-publish)
 
 (setq-default org-tags-column -100
               org-agenda-tags-column -100
@@ -849,9 +853,9 @@ See `comment-region' for behavior of a prefix arg."
 
 ;; (evil-set-initial-state 'org-agenda-mode 'normal)
 
-(set-face-attribute 'org-level-1 nil :height 1.5 :family "Inconsolata")
-(set-face-attribute 'org-level-2 nil :height 1.2 :family "Inconsolata")
-;; (set-face-attribute 'outline-3 nil :height 1.2 :family "Inconsolata")
+(set-face-attribute 'org-level-1 nil :height 1.5 :family "Liberation Mono")
+(set-face-attribute 'org-level-2 nil :height 1.2 :family "Liberation Mono")
+;; (set-face-attribute 'outline-3 nil :height 1.2 :family "Liberation Mono")
 
 (set-face-attribute 'org-agenda-dimmed-todo-face nil :foreground "grey20")
 
