@@ -18,55 +18,15 @@
 (package-initialize)
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; * Emacs customize stuff automatically added in below
-;;---------------------------------------------------
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   (quote
-	("04dd0236a367865e591927a3810f178e8d33c372ad5bfef48b5ce90d4b476481" "a0feb1322de9e26a4d209d1cfa236deaf64662bb604fa513cca6a057ddf0ef64" "7153b82e50b6f7452b4519097f880d968a6eaf6f6ef38cc45a144958e553fbc6" "5e3fc08bcadce4c6785fc49be686a4a82a356db569f55d411258984e952f194a" "b0ab5c9172ea02fba36b974bbd93bc26e9d26f379c9a29b84903c666a5fde837" "732b807b0543855541743429c9979ebfb363e27ec91e82f463c91e68c772f6e3" default)))
- '(fill-column 80)
- '(julia-max-block-lookback 50000)
- '(menu-bar-mode nil)
- '(minimap-width-fraction 0.1)
- '(minimap-window-location (quote right))
- '(org-agenda-files (quote ("~/Dropbox/org/notes.org")))
- '(package-selected-packages
-   (quote
-	(org-bullets helm-projectile htmlize wgrep-helm evil-avy evil-mc multiple-cursors sublimity julia-mode pkgbuild-mode yaml-mode minimap yasnippet-snippets mmm-mode company-php php-mode projectile projectile-direnv projectile-variable outshine outorg helm-navi navi-mode ess prettify-greek flycheck helm-flycheck dim which-key vdiff goto-chg auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes evil helm magit org powerline nlinum nlinum-relative)))
- '(preview-auto-cache-preamble t)
- '(safe-local-variable-values
-   (quote
-	((projectile-project-name . "MonteCarlo")
-	 (org-publish-project-alist
-	  ("julia-mod" :base-directory "~/Dropbox/Physics/MonteCarlo/JuliaModules" :base-extension "org" :publishing-directory "/ssh:scucomp1.anu.edu.au:public_html/JuliaModules" :recursive t :publishing-function org-html-publish-to-html :headline-levels 4 :auto-preamble t))
-	 (org-publish-project-alist
-	  ("org-notes" :base-directory "~/Dropbox/Physics/Students/ScatteringSteps/org" :base-extension "org" :publishing-directory "/ssh:scucomp1.anu.edu.au:public_html/ScatteringSteps" :recursive t :publishing-function org-html-publish-to-html :headline-levels 4 :auto-preamble t)
-	  ("org-static" :base-directory "~/Dropbox/Physics/Students/ScatteringSteps/org" :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|svg" :publishing-directory "/ssh:scucomp1.anu.edu.au:public_html/ScatteringSteps" :recursive t :publishing-function org-publish-attachment)
-	  ("org" :components
-	   ("org-notes" "org-static")))
-	 (projectile-project-compilation-cmd function org-publish-current-project)
-	 (projectile-project-name . "ScatSteps")
-	 (org-publish-project-alist
-	  ("org-notes" :base-directory "~/Dropbox/Physics/Students/ScatteringSteps/org" :base-extension "org" :publishing-directory "~/Dropbox/Physics/Students/ScatteringSteps/public_html/" :recursive t :publishing-function org-html-publish-to-html :headline-levels 4 :auto-preamble t)
-	  ("org-static" :base-directory "~/Dropbox/Physics/Students/ScatteringSteps/org" :base-extension "css\\|js\\|png\\|jpg\\|gif\\|pdf\\|svg" :publishing-directory "~/Dropbox/Physics/Students/ScatteringSteps/public_html/" :recursive t :publishing-function org-publish-attachment)
-	  ("org" :components
-	   ("org-notes" "org-static"))))))
- '(scroll-bar-mode nil)
- '(show-paren-mode t)
- '(tool-bar-mode nil))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; * Emacs customize
+;;----------------------------
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file)
 
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(minimap-font-face ((t (:height 20 :family "DejaVu Sans Mono"))))
- '(preview-face ((t (:inverse-video t)))))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; * Dim
+;;----------------------------
 
 
 ;; Put this at the start to allow removal of minor modes as we go
@@ -76,7 +36,8 @@
 (dim-minor-name 'undo-tree-mode nil 'undo-tree)
 (dim-minor-name 'abbrev-mode nil 'abbrev)
 (dim-minor-name 'auto-fill-function nil)
-
+(dim-minor-name 'outshine-mode nil 'outshine)
+(dim-minor-name 'auto-dim-other-buffers-mode nil 'auto-dim-other-buffers)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -156,6 +117,9 @@
 (require 'mmm-auto)
 (setq mmm-global-mode 'maybe)
 (mmm-add-mode-ext-class 'html-mode "\\.php\\'" 'html-php)
+
+(require 'auto-dim-other-buffers)
+(auto-dim-other-buffers-mode t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ** Commenting things
@@ -502,9 +466,9 @@ See `comment-region' for behavior of a prefix arg."
 (setq-default company-gtags-modes (append company-gtags-modes '(julia-mode-prog-mode)))
 
 ;; (define-key company-active-map (kbd "<return>") nil)
-(define-key company-mode-map (kbd "C-n") 'company-select-next)
-(define-key company-mode-map (kbd "C-p") 'company-select-previous)
-(define-key company-mode-map (kbd "C-<tab>") 'company-other-backend)
+;; (define-key company-mode-map (kbd "C-n") 'company-select-next)
+;; (define-key company-mode-map (kbd "C-p") 'company-select-previous)
+;; (define-key company-mode-map (kbd "C-<tab>") 'company-other-backend)
 
 
 ; Stolen from https://emacs.stackexchange.com/questions/13286/how-can-i-stop-the-enter-key-from-triggering-a-completion-in-company-mode
@@ -542,6 +506,8 @@ See `comment-region' for behavior of a prefix arg."
   ;; Company appears to override the above keymap based on company-auto-complete-chars.
   ;; Turning it off ensures we have full control.
   ;; (setq company-auto-complete-chars nil)
+(define-key company-active-map (kbd "C-<return>") #'company-complete-selection)
+(define-key company-active-map (kbd "C-RET") #'company-complete-selection)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ** Hippie-expand
@@ -620,12 +586,7 @@ See `comment-region' for behavior of a prefix arg."
 
 (helm-mode 1)
 
-(global-set-key (kbd "M-x") 'helm-M-x)
-(global-set-key (kbd "C-M-x") 'execute-extended-command)
 (setq-default helm-M-x-fuzzy-match t) ;; optional fuzzy matching for helm-M-x
-(global-set-key (kbd "C-x b") 'helm-mini)
-(global-set-key (kbd "C-x f") 'helm-find-files)
-(global-set-key (kbd "C-x C-f") 'helm-multi-files)
 (setq-default helm-semantic-fuzzy-match t
               helm-imenu-fuzzy-match    t)
 ;; (define-key evil-motion-state-map (kbd "M-p") 'helm-recentf)
@@ -655,8 +616,8 @@ See `comment-region' for behavior of a prefix arg."
 (define-key ggtags-mode-map (kbd "M-,") 'pop-tag-mark)
 (define-key ggtags-mode-map (kbd "C-M-,") 'ggtags-find-tag-continue)
 
-;(define-key evil-normal-state-map (kbd "M-.") 'ggtags-find-tag-dwim)
-(define-key evil-normal-state-map (kbd "M-.") nil)
+(define-key evil-normal-state-map (kbd "M-.") 'ggtags-find-tag-dwim)
+;; (define-key evil-normal-state-map (kbd "M-.") nil)
 
 
 
@@ -704,24 +665,6 @@ See `comment-region' for behavior of a prefix arg."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * My maps
 ;;----------------------------
-(define-prefix-command 'danny-completions)
-
-(define-key evil-insert-state-map (kbd "C-k") 'danny-completions)
-(define-key evil-normal-state-map (kbd "C-k") 'danny-completions)
-(define-key danny-completions (kbd "C-l") 'evil-complete-previous-line)
-(define-key danny-completions (kbd "C-o") 'helm-occur)
-(define-key danny-completions (kbd "C-k") 'helm-resume)
-(define-key danny-completions (kbd "C-a") 'helm-do-grep-ag)
-(define-key danny-completions (kbd "C-d") 'ggtags-find-definition)
-(define-key danny-completions (kbd "C-r") 'ggtags-find-reference)
-(define-key danny-completions (kbd "C-s") 'ggtags-find-other-symbol)
-(define-key danny-completions (kbd "C-h") 'helm-navi-headings)
-
-(define-key evil-visual-state-map (kbd "C-y") 'copy-and-comment-region)
-(define-key evil-insert-state-map (kbd "C-y") 'copy-and-comment-line)
-(define-key evil-normal-state-map (kbd "C-y") 'copy-and-comment-line)
-
-(define-key evil-normal-state-map (kbd "M-a") 'avy-goto-char-timer)
 
 ;; (define-prefix-command 'danny-utils)
 ;; (define-key evil-normal-state-map (kbd "C-y") 'danny-utils)
@@ -751,12 +694,12 @@ See `comment-region' for behavior of a prefix arg."
 
 (speedbar-add-supported-extension ".jl")
 
-;; (add-hook
-;;  'speedbar-timer-hook
-;;  (lambda ()
-;;     (save-excursion
-;;         (set-buffer speedbar-buffer)
-;;         (speedbar-expand-line))))
+(add-hook
+ 'speedbar-timer-hook
+ (lambda ()
+    (save-excursion
+        (set-buffer speedbar-buffer)
+        (speedbar-expand-line-descendants))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * GUD
@@ -954,7 +897,7 @@ See `comment-region' for behavior of a prefix arg."
 	`(
 		;("Function (_)" ,(concat macroprefix "[[:blank:]]*function[[:blank:]]+\\(_[^[:blank:]]*\\)") 1)
 		("Function" ,(concat macroprefix "[[:blank:]]*function[[:blank:]]+\\(.*)\\)[[:blank:]]*") 1)
-		("Function" ,(concat macroprefix "[[:blank:]]*\\([^[:blank:](]*(.*)\\)[[:blank:]]*=[^=]*") 1)
+		("Function" ,(concat macroprefix "[[:blank:]]*\\([^[:blank:](]*(.*)\\)[[:blank:]]*=[^=]+") 1)
 		("Const" "[ \t]*const \\([^ \t\n]*\\)" 1)
 		;; ("Type"  ,(concat macroprefix "^[ \t]*[a-zA-Z0-9_]*type[a-zA-Z0-9_]* \\([^ \t\n]*\\)") 1)
 		("Struct" ,(concat macroprefix "\\(?:[[:blank:]]*mutable\\)?[[:blank:]]+struct[[:blank:]]+\\([^{[:blank:]\n]+\\)") 1)
@@ -965,11 +908,14 @@ See `comment-region' for behavior of a prefix arg."
 
 (add-hook 'julia-mode-hook (lambda () (setq-local company-backends '( company-gtags company-dabbrev-code))))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; * Projectile
+;;----------------------------
+(setq-default projectile-mode-line-prefix " ")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Key bindings
 ;;----------------------------
-
 
 (define-prefix-command 'danny-orgmode)
 (define-key danny-orgmode (kbd "<f7>") 'danny-open-orgfile)
@@ -982,6 +928,7 @@ See `comment-region' for behavior of a prefix arg."
 (define-key danny-orgmode "i" 'org-clock-in-last)
 (define-key danny-orgmode "r" 'remember)
 (define-key danny-orgmode "R" 'remember-notes)
+(define-key danny-orgmode "m" 'outshine-imenu)
 
 
 (define-prefix-command 'danny-projectile)
@@ -990,9 +937,38 @@ See `comment-region' for behavior of a prefix arg."
 (define-key danny-projectile "p" 'org-publish-current-project)
 (define-key danny-projectile "a" 'helm-projectile-ag)
 
+(define-prefix-command 'danny-completions)
+
+(define-key evil-insert-state-map (kbd "C-k") 'danny-completions)
+(define-key evil-normal-state-map (kbd "C-k") 'danny-completions)
+(define-key danny-completions (kbd "C-l") 'evil-complete-previous-line)
+(define-key danny-completions (kbd "C-o") 'helm-occur)
+(define-key danny-completions (kbd "C-k") 'helm-resume)
+(define-key danny-completions (kbd "C-a") 'helm-do-grep-ag)
+(define-key danny-completions (kbd "C-d") 'ggtags-find-definition)
+(define-key danny-completions (kbd "C-r") 'ggtags-find-reference)
+(define-key danny-completions (kbd "C-s") 'ggtags-find-other-symbol)
+(define-key danny-completions (kbd "C-h") 'helm-navi-headings)
+(define-key danny-completions (kbd "C-c") 'company-complete)
+
+(define-key evil-visual-state-map (kbd "C-y") 'copy-and-comment-region)
+(define-key evil-insert-state-map (kbd "C-y") 'copy-and-comment-line)
+(define-key evil-normal-state-map (kbd "C-y") 'copy-and-comment-line)
+
+(define-key evil-normal-state-map (kbd "M-a") 'avy-goto-char-timer)
+
+
+
+(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "C-M-x") 'execute-extended-command)
+;; (global-set-key (kbd "C-x b") 'helm-mini)
+(global-set-key (kbd "C-x f") 'helm-find-files)
+(global-set-key (kbd "C-x C-f") 'helm-multi-files)
+
 (global-set-key (kbd "<f7>") 'danny-orgmode)
 (global-set-key (kbd "<f9>") 'danny-projectile)
 (global-set-key (kbd "<f6>") 'magit-status)
 (global-set-key (kbd "<f12>") 'switch-to-minibuffer-window)
 (global-set-key (kbd "<f8>") 'sr-speedbar-toggle)
+
 
