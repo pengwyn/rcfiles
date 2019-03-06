@@ -293,8 +293,8 @@ See `comment-region' for behavior of a prefix arg."
 (evil-define-operator danny-evil-clip-paste (count &optional register yank-handler)
   (interactive "P<x>")
   (evil-paste-after 1 ?+ yank-handler))
-(evil-define-key '(normal visual) 'global (kbd "M-y") 'danny-evil-clip-yank)
-(evil-define-key '(normal insert) 'global (kbd "M-p") 'danny-evil-clip-paste)
+(evil-define-key '(normal visual) 'global (kbd "C-M-y") 'danny-evil-clip-yank)
+(evil-define-key '(normal insert) 'global (kbd "C-M-p") 'danny-evil-clip-paste)
 
 (require 'evil-magit)
 
