@@ -211,6 +211,8 @@ See `comment-region' for behavior of a prefix arg."
 ; A cheat to disable copying to x clipboard.
 (setq evil-visual-x-select-timeout 999)
 
+(evil-add-hjkl-bindings org-agenda-mode-map 'emacs)
+
 (define-key evil-window-map (kbd "C-l") 'evil-window-right)
 (define-key evil-window-map (kbd "C-h") 'evil-window-left)
 (define-key evil-window-map (kbd "C-k") 'evil-window-up)
@@ -746,6 +748,10 @@ See `comment-region' for behavior of a prefix arg."
 (require 'org)
 (require 'ox-publish)
 
+(add-hook 'org-mode-hook 'auto-fill-mode)
+(add-hook 'org-mode-hook 'org-bullets-mode)
+(evil-add-hjkl-bindings org-agenda-mode-map 'emacs)
+
 (setq-default org-tags-column -100
               org-agenda-tags-column -100
               org-return-follows-link t
@@ -791,9 +797,6 @@ See `comment-region' for behavior of a prefix arg."
 	      ;(file "")
 		  ;"- [ ] %i%?\n\t%u"
 		  )))
-
-(add-hook 'org-mode-hook 'auto-fill-mode)
-(add-hook 'org-mode-hook 'org-bullets-mode)
 
 ;; (evil-set-initial-state 'org-agenda-mode 'normal)
 
@@ -885,6 +888,7 @@ See `comment-region' for behavior of a prefix arg."
 ;;----------------------------
 (require 'julia-mode)
 (add-hook 'julia-mode-hook 'ggtags-mode)
+(add-hook 'julia-mode-hook 'julia-math-mode)
 ;; (add-hook 'julia-mode-hook (lambda () (setq-local ggtags-process-environment '("GTAGSLABEL=juliactags"))))
 ; TODO: I should fix this up for that it uses something like the default julia-mode settings but handles my macro prefixes.
 ;; (add-hook 'julia-mode-hook (lambda () (setq-local imenu-create-index-function #'ggtags-build-imenu-index)))
