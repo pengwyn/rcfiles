@@ -40,32 +40,13 @@
 (dim-minor-name 'auto-fill-function nil)
 (dim-minor-name 'outshine-mode nil 'outshine)
 (dim-minor-name 'auto-dim-other-buffers-mode nil 'auto-dim-other-buffers)
+(dim-minor-name 'auto-revert-mode nil 'autorevert)
 
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; * Python stuff
-;;----------------------------
-;; (require 'elpy)
-;; (setq-default eply-remove-modeline_lighter nil)
-;; (delete 'elpy-module-highlight-indentation elpy-modules)
-;; (delete 'elpy-module-flymake elpy-modules)
-;; (setq-default elpy-rpc-python-command "python2")
-;; ;(elpy-use-ipython "ipython2 --pylab --profile math")
-;; (elpy-use-ipython "ipython2")
-;; ;(setq-default python-shell-interpreter "ipython2"
-;; ;    python-shell-interpreter-args "--simple-prompt -i")
-;; (setq-default python-shell-interpreter-args "--simple-prompt -i --pylab --profile math")
-;; 
-;; ;(elpy-enable)
-;; 
-;; (require 'ein)
-;; (add-hook 'ein:connect-mode-hook 'ein:jedi-setup)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * General stuff
 ;;----------------------------
 (setq-default inhibit-startup-message t) ;; hide the startup message
-(global-nlinum-relative-mode)
 
 (setq x-select-enable-clipboard nil)
 
@@ -85,10 +66,7 @@
 (setq-default split-height-threshold 20
 			  split-width-threshold 20)
 
-(global-auto-revert-mode t)
-(dim-minor-name 'auto-revert-mode nil 'autorevert)
-
-
+(setq-default fill-column 80)
 
 (setq-default recentf-max-saved-items 1000)
 
@@ -122,6 +100,18 @@
 
 (require 'auto-dim-other-buffers)
 (auto-dim-other-buffers-mode t)
+
+(require 'yasnippet)
+(yas-global-mode 1)
+
+
+(scroll-bar-mode -1)
+(show-paren-mode t)
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+(global-nlinum-relative-mode)
+(global-auto-revert-mode t)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ** Commenting things
@@ -213,7 +203,10 @@ See `comment-region' for behavior of a prefix arg."
 ; A cheat to disable copying to x clipboard.
 (setq evil-visual-x-select-timeout 999)
 
-(evil-add-hjkl-bindings org-agenda-mode-map 'emacs)
+(evil-add-hjkl-bindings package-menu-mode-map 'emacs
+  (kbd "/") 'evil-search-forward
+  (kbd "n") 'evil-search-next
+  (kbd "N") 'evil-search-previous)
 
 (define-key evil-window-map (kbd "C-l") 'evil-window-right)
 (define-key evil-window-map (kbd "C-h") 'evil-window-left)
@@ -412,16 +405,6 @@ See `comment-region' for behavior of a prefix arg."
   (evil-define-key 'visual global-map "gI" 'evil-mc-insert-vertical-cursors)
   (evil-define-key 'visual global-map "gA" 'evil-mc-append-vertical-cursors)
 
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; * Yasnippet
-;;----------------------------
-
-(require 'yasnippet)
-(yas-global-mode 1)
-(define-key yas-minor-mode-map (kbd "C-M-y") 'yas-expand)
-
-
 ;;;;;;;;;;;;;;;;
 ;; * Company stuff
 
@@ -613,22 +596,6 @@ See `comment-region' for behavior of a prefix arg."
             (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
               (ggtags-mode 1))))
 
-(define-key ggtags-mode-map (kbd "C-c g s") 'ggtags-find-other-symbol)
-(define-key ggtags-mode-map (kbd "C-c g h") 'ggtags-view-tag-history)
-(define-key ggtags-mode-map (kbd "C-c g r") 'ggtags-find-reference)
-(define-key ggtags-mode-map (kbd "C-c g f") 'ggtags-find-file)
-(define-key ggtags-mode-map (kbd "C-c g c") 'ggtags-create-tags)
-(define-key ggtags-mode-map (kbd "C-c g u") 'ggtags-update-tags)
-
-(define-key ggtags-mode-map (kbd "M-,") 'pop-tag-mark)
-(define-key ggtags-mode-map (kbd "C-M-,") 'ggtags-find-tag-continue)
-
-(define-key evil-normal-state-map (kbd "M-.") 'ggtags-find-tag-dwim)
-;; (define-key evil-normal-state-map (kbd "M-.") nil)
-
-
-
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * C Stuff
 ;;----------------------------
@@ -670,13 +637,8 @@ See `comment-region' for behavior of a prefix arg."
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; * My maps
+;; * Need to write this
 ;;----------------------------
-
-;; (define-prefix-command 'danny-utils)
-;; (define-key evil-normal-state-map (kbd "C-y") 'danny-utils)
-;; (define-key danny-utils (kbd "C-y") 'copy-and-comment-region)
-
 
 
 ;; TODO I want to come back to this and have a binding that closes all *...* windows
@@ -917,6 +879,8 @@ See `comment-region' for behavior of a prefix arg."
 
 (add-hook 'julia-mode-hook (lambda () (setq-local company-backends '( company-gtags company-dabbrev-code))))
 
+(setq-default julia-max-block-lookback 50000)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Projectile
 ;;----------------------------
@@ -967,6 +931,23 @@ See `comment-region' for behavior of a prefix arg."
 (define-key evil-normal-state-map (kbd "C-y") 'copy-and-comment-line)
 
 (define-key evil-normal-state-map (kbd "M-a") 'avy-goto-char-timer)
+
+(define-key yas-minor-mode-map (kbd "C-M-y") 'yas-expand)
+
+(define-key ggtags-mode-map (kbd "C-c g s") 'ggtags-find-other-symbol)
+(define-key ggtags-mode-map (kbd "C-c g h") 'ggtags-view-tag-history)
+(define-key ggtags-mode-map (kbd "C-c g r") 'ggtags-find-reference)
+(define-key ggtags-mode-map (kbd "C-c g f") 'ggtags-find-file)
+(define-key ggtags-mode-map (kbd "C-c g c") 'ggtags-create-tags)
+(define-key ggtags-mode-map (kbd "C-c g u") 'ggtags-update-tags)
+
+(define-key ggtags-mode-map (kbd "M-,") 'pop-tag-mark)
+(define-key ggtags-mode-map (kbd "C-M-,") 'ggtags-find-tag-continue)
+
+(define-key evil-normal-state-map (kbd "M-.") 'ggtags-find-tag-dwim)
+;; (define-key evil-normal-state-map (kbd "M-.") nil)
+
+
 
 
 
