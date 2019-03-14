@@ -936,6 +936,8 @@ See `comment-region' for behavior of a prefix arg."
 (define-key danny-orgmode "R" 'remember-notes)
 (define-key danny-orgmode "m" 'outshine-imenu)
 
+(define-key org-mode-map (kbd "C-4") 'org-archive-subtree)
+
 
 (define-prefix-command 'danny-projectile)
 (define-key danny-projectile (kbd "<f9>") 'helm-projectile-switch-project)
