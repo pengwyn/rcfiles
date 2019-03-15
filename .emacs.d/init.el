@@ -739,6 +739,10 @@ See `comment-region' for behavior of a prefix arg."
 
 (eval-after-load "org" '(setq-default org-modules (append org-modules '(org-habit org-mouse))))
 
+;; (add-hook 'org-capture-mode-hook 'evil-insert-state)
+(add-hook 'org-mode-hook (lambda () (when (equal (buffer-name) "*Org Note*") (evil-insert-state) (print "In here"))))
+(add-hook 'LaTeX-mode-hook (lambda () (load-theme 'material-light)))
+
 (danny-add-prettify-greek 'org-mode-hook)
 
 
