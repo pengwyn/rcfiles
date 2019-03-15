@@ -300,6 +300,9 @@ See `comment-region' for behavior of a prefix arg."
 (evil-define-key '(normal visual) 'global (kbd "C-M-y") 'danny-evil-clip-yank)
 (evil-define-key '(normal insert) 'global (kbd "C-M-p") 'danny-evil-clip-paste)
 
+(dolist (map '(minibuffer-local-map minibuffer-local-ns-map minibuffer-local-completion-map minibuffer-local-must-match-map minibuffer-local-isearch-map))
+			 (define-key (eval map) (kbd "C-R") 'evil-paste-from-register))
+
 (require 'evil-magit)
 
 (require 'evil-surround)
