@@ -261,6 +261,9 @@ See `comment-region' for behavior of a prefix arg."
 	(define-key (eval map) (kbd "RET") nil)
 	(define-key (eval map) (kbd " ") nil)
 
+	(define-key (eval map) (kbd "C-.") nil)
+	(define-key (eval map) (kbd "M-.") nil)
+
 	;; (define-key (eval map) (kbd "C-n") nil)
 	;; (define-key (eval map) (kbd "C-p") nil)
 
@@ -316,7 +319,6 @@ See `comment-region' for behavior of a prefix arg."
 (global-evil-mc-mode 1)
 (evil-define-key '(normal visual) evil-mc-key-map (kbd "C-p") nil)
 (evil-define-key '(normal visual) evil-mc-key-map (kbd "C-n") nil)
-
 
 (setq-default evil-mc-one-cursor-show-mode-line-text nil)
 
@@ -594,7 +596,9 @@ See `comment-region' for behavior of a prefix arg."
 (add-hook 'c-mode-common-hook
           (lambda ()
             (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
-              (ggtags-mode 1))))
+              (progn (ggtags-mode 1)
+					 (evil-define-key 'normal (current-local-map) (kbd "M-.") 'ggtags-find-tag-dwim))
+			)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * C Stuff
@@ -928,7 +932,9 @@ See `comment-region' for behavior of a prefix arg."
 (define-key danny-completions (kbd "C-o") 'helm-occur)
 (define-key danny-completions (kbd "C-k") 'helm-resume)
 (define-key danny-completions (kbd "C-a") 'helm-do-grep-ag)
-(define-key danny-completions (kbd "C-d") 'ggtags-find-definition)
+;; (define-key danny-completions (kbd "C-d") 'ggtags-find-definition)
+(define-key danny-completions (kbd "C-d") (lambda () (let ((current-prefix-arg 4))
+														   (call-interactively #'ggtags-find-definition))))
 (define-key danny-completions (kbd "C-r") 'ggtags-find-reference)
 (define-key danny-completions (kbd "C-s") 'ggtags-find-other-symbol)
 (define-key danny-completions (kbd "C-h") 'helm-navi-headings)
@@ -952,7 +958,7 @@ See `comment-region' for behavior of a prefix arg."
 (define-key ggtags-mode-map (kbd "M-,") 'pop-tag-mark)
 (define-key ggtags-mode-map (kbd "C-M-,") 'ggtags-find-tag-continue)
 
-(define-key evil-normal-state-map (kbd "M-.") 'ggtags-find-tag-dwim)
+;; (define-key evil-normal-state-map (kbd "M-.") 'ggtags-find-tag-dwim)
 ;; (define-key evil-normal-state-map (kbd "M-.") nil)
 
 
@@ -970,5 +976,3 @@ See `comment-region' for behavior of a prefix arg."
 (global-set-key (kbd "<f6>") 'magit-status)
 (global-set-key (kbd "<f12>") 'switch-to-minibuffer-window)
 (global-set-key (kbd "<f8>") 'sr-speedbar-toggle)
-
-
