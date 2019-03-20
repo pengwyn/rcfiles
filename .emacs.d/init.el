@@ -781,6 +781,34 @@ See `comment-region' for behavior of a prefix arg."
 
 (set-face-attribute 'org-agenda-dimmed-todo-face nil :foreground "grey20")
 
+(setq-default org-confirm-babel-evaluate nil)
+
+(require 'ob-ipython)
+(ob-ipython-auto-configure-kernels)
+;;; display/update images in the buffer after I evaluate
+(add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
+(setq-default org-babel-default-header-args:jupyter-julia '((:exports . "both")
+														    (:results . "output")
+														    (:async . "t")
+															(:kernel . "julia-1.1")
+															(:eval . "never-export")))
+
+;; (defun my-remove-async (text backend info)
+;;   "Get rid of async t in the src blocks"
+;;   (replace-regexp-in-string "BEGIN_SRC jupyter-julia" "BEGIN_SRC jupyter-julia :async f" text)
+;;   (message "%s" text))
+;; (add-to-list 'org-export-filter-src-block-functions 'my-remove-async)
+
+
+
+;; (require 'ein)
+;; (require 'ob-ein)
+;; (ein:org-register-lang-mode "ein-julia" 'julia)
+;; (setq-default org-babel-default-header-args:ein-julia '((:exports . "both")
+;; 														(:kernelspec . "julia-1.1")
+;; 														(:results . "output raw drawer")
+;; 														(:session . "localhost")))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Latex stuff
 ;;----------------------------
@@ -933,7 +961,8 @@ See `comment-region' for behavior of a prefix arg."
 (define-key danny-completions (kbd "C-k") 'helm-resume)
 (define-key danny-completions (kbd "C-a") 'helm-do-grep-ag)
 ;; (define-key danny-completions (kbd "C-d") 'ggtags-find-definition)
-(define-key danny-completions (kbd "C-d") (lambda () (let ((current-prefix-arg 4))
+(define-key danny-completions (kbd "C-d") (lambda () (interactive)
+													 (let ((current-prefix-arg 4))
 														   (call-interactively #'ggtags-find-definition))))
 (define-key danny-completions (kbd "C-r") 'ggtags-find-reference)
 (define-key danny-completions (kbd "C-s") 'ggtags-find-other-symbol)
