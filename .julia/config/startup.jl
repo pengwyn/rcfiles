@@ -12,10 +12,10 @@ end
 
 atreplinit() do repl
     try
-        @eval using Revise
+        @time @eval using Revise
 		@async begin
 			Revise.wait_steal_repl_backend()
-			@eval using DanUtils
+			@time @eval using DanUtils
 		end
     catch
     end
