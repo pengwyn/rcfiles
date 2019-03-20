@@ -966,10 +966,11 @@ See `comment-region' for behavior of a prefix arg."
 
 
 (global-set-key (kbd "M-x") 'helm-M-x)
-(global-set-key (kbd "C-M-x") 'execute-extended-command)
+;; (global-set-key (kbd "C-M-x") 'execute-extended-command)
 ;; (global-set-key (kbd "C-x b") 'helm-mini)
 (global-set-key (kbd "C-x f") 'helm-find-files)
 (global-set-key (kbd "C-x C-f") 'helm-multi-files)
+(global-set-key (kbd "C-x b") 'helm-buffers-list)
 
 (global-set-key (kbd "<f7>") 'danny-orgmode)
 (global-set-key (kbd "<f9>") 'danny-projectile)
