@@ -922,7 +922,7 @@ See `comment-region' for behavior of a prefix arg."
 
 (setq-default julia-max-block-lookback 50000)
 
-(setq-default julia-repl-switches "--startup-file=no")
+;; (setq-default julia-repl-switches "--startup-file=no")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Projectile

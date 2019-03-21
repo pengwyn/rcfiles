@@ -13,6 +13,7 @@ end
 atreplinit() do repl
     try
         @time @eval using Revise
+		@time @eval using Constants
 		@async begin
 			Revise.wait_steal_repl_backend()
 			@time @eval using DanUtils
