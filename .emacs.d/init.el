@@ -297,7 +297,7 @@ See `comment-region' for behavior of a prefix arg."
 (evil-define-key '(normal insert) 'global (kbd "C-M-p") 'danny-evil-clip-paste)
 
 (dolist (map '(minibuffer-local-map minibuffer-local-ns-map minibuffer-local-completion-map minibuffer-local-must-match-map minibuffer-local-isearch-map))
-			 (define-key (eval map) (kbd "C-R") 'evil-paste-from-register))
+			 (define-key (eval map) (kbd "C-r") 'evil-paste-from-register))
 
 (require 'evil-magit)
 
@@ -896,6 +896,7 @@ See `comment-region' for behavior of a prefix arg."
 (require 'julia-mode)
 (add-hook 'julia-mode-hook 'ggtags-mode)
 (add-hook 'julia-mode-hook 'julia-math-mode)
+(add-hook 'julia-mode-hook 'julia-repl-mode)
 ;; (add-hook 'julia-mode-hook (lambda () (setq-local ggtags-process-environment '("GTAGSLABEL=juliactags"))))
 ; TODO: I should fix this up for that it uses something like the default julia-mode settings but handles my macro prefixes.
 ;; (add-hook 'julia-mode-hook (lambda () (setq-local imenu-create-index-function #'ggtags-build-imenu-index)))
@@ -920,6 +921,8 @@ See `comment-region' for behavior of a prefix arg."
 (add-hook 'julia-mode-hook (lambda () (setq-local company-backends '( company-gtags company-dabbrev-code))))
 
 (setq-default julia-max-block-lookback 50000)
+
+(setq-default julia-repl-switches "--startup-file=no")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Projectile
@@ -990,13 +993,28 @@ See `comment-region' for behavior of a prefix arg."
 ;; (define-key evil-normal-state-map (kbd "M-.") 'ggtags-find-tag-dwim)
 ;; (define-key evil-normal-state-map (kbd "M-.") nil)
 
-
 (define-key julia-mode-map (kbd "<f5>") 'julia-repl)
 
-;; WHY DOESN"T THIS WORK!
-(define-key term-mode-map (kbd "<f5>") 'evil-window-mru)
-(define-key term-mode-map (kbd "C-w") 'evil-window-mru)
 
+
+
+(defvar my-term-mode-map (make-sparse-keymap))
+(define-minor-mode my-term-mode
+  :init nil
+  :keymap my-term-mode-map)
+
+(add-hook 'term-mode-hook 'my-term-mode)
+
+(require 'term)
+(evil-set-initial-state 'term-mode 'emacs)
+
+(define-key my-term-mode-map (kbd "<f5>") 'evil-window-mru)
+(define-key my-term-mode-map (kbd "C-w") 'evil-window-map)
+(define-key my-term-mode-map (kbd "C-d") 'term-send-eof)
+(define-key my-term-mode-map (kbd "C-x C-c") 'save-buffers-kill-terminal)
+(define-key my-term-mode-map (kbd "C-c") 'term-interrupt-subjob)
+
+;; (provide 'my-mode)
 
 
 
