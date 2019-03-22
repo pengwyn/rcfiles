@@ -219,7 +219,7 @@ See `comment-region' for behavior of a prefix arg."
 	(define-key (eval map) (kbd "M-k") 'evil-previous-line)
 	(define-key (eval map) (kbd "M-j") 'evil-next-line))
 
-(dolist (map '(evil-motion-state-map evil-emacs-state-map))
+(dolist (map '(evil-motion-state-map evil-emacs-state-map evil-insert-state-map))
 	(define-key (eval map) (kbd "C-w") 'evil-window-map)
 	(define-key (eval map) (kbd "C-M-r") 'helm-recentf))
 
@@ -646,6 +646,7 @@ See `comment-region' for behavior of a prefix arg."
 
 
 ;; TODO I want to come back to this and have a binding that closes all *...* windows
+;; make it set to C-k C-q
 
  ;; (defun kill-dired-buffers ()
  ;; 	 (interactive)
@@ -918,7 +919,7 @@ See `comment-region' for behavior of a prefix arg."
 		("Using"      ,(concat macroprefix "[[:blank:]]*using[[:blank:]]*\\(.*\\)") 1)
 		)))
 
-(add-hook 'julia-mode-hook (lambda () (setq-local company-backends '( company-gtags company-dabbrev-code))))
+(add-hook 'julia-mode-hook (lambda () (setq-local company-backends '( company-gtags company-dabbrev-code company-dabbrev))))
 
 (setq-default julia-max-block-lookback 50000)
 
@@ -971,6 +972,7 @@ See `comment-region' for behavior of a prefix arg."
 (define-key danny-completions (kbd "C-s") 'ggtags-find-other-symbol)
 (define-key danny-completions (kbd "C-h") 'helm-navi-headings)
 (define-key danny-completions (kbd "C-c") 'company-complete)
+(define-key danny-completions (kbd "C-f") 'company-files)
 
 (define-key evil-visual-state-map (kbd "C-y") 'copy-and-comment-region)
 (define-key evil-insert-state-map (kbd "C-y") 'copy-and-comment-line)
