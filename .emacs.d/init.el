@@ -109,7 +109,9 @@
 (show-paren-mode t)
 (tool-bar-mode -1)
 (menu-bar-mode -1)
-(global-nlinum-relative-mode)
+;; (global-nlinum-relative-mode)
+(global-display-line-numbers-mode t)
+(setq-default display-line-numbers 'visual)
 (global-auto-revert-mode t)
 
 
