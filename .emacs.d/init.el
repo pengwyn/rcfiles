@@ -754,10 +754,25 @@ you want to quit windows on all frames."
 ;;------------------------------------------------
 (require 'org)
 (require 'ox-publish)
+(require 'org-agenda)
 
 (add-hook 'org-mode-hook 'auto-fill-mode)
 (add-hook 'org-mode-hook 'org-bullets-mode)
-(evil-add-hjkl-bindings org-agenda-mode-map 'emacs)
+(evil-add-hjkl-bindings org-agenda-mode-map 'emacs
+  (kbd "/") 'evil-search-forward
+  (kbd "n") 'evil-search-next
+  (kbd "N") 'evil-search-previous)
+;; (define-key org-agenda-mode-map (kbd "M-S-<left>") (lambda (arg) (interactive "P") (org-agenda-schedule arg "-1w")))
+;; (define-key org-agenda-mode-map (kbd "M-S-<right>") (lambda (arg) (interactive "P") (org-agenda-schedule arg "+1w")))
+(define-key org-agenda-mode-map (kbd "M-S-<left>") (lambda () (interactive) (org-agenda-date-earlier 7)))
+(define-key org-agenda-mode-map (kbd "M-S-<right>") (lambda () (interactive) (org-agenda-date-later 7)))
+
+(define-key org-agenda-mode-map (kbd "H") (lambda () (interactive) (org-agenda-date-earlier 1)))
+(define-key org-agenda-mode-map (kbd "L") (lambda () (interactive) (org-agenda-date-later 1)))
+(define-key org-agenda-mode-map (kbd "M-H") (lambda () (interactive) (org-agenda-date-earlier 7)))
+(define-key org-agenda-mode-map (kbd "M-L") (lambda () (interactive) (org-agenda-date-later 7)))
+
+
 
 (setq-default org-tags-column -100
               org-agenda-tags-column -100
