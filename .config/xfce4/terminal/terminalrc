@@ -1,5 +1,5 @@
 [Configuration]
-FontName=Gohu GohuFont 11
+FontName=GohuFont weight=101 14
 MiscAlwaysShowTabs=FALSE
 MiscBell=FALSE
 MiscBellUrgent=FALSE

@@ -18,7 +18,7 @@
 (package-initialize)
 
 (setq package-selected-packages
-	'(julia-repl ob-ipython evil-org auto-dim-other-buffers org-bullets helm-projectile htmlize wgrep-helm evil-avy evil-mc multiple-cursors sublimity julia-mode pkgbuild-mode yaml-mode minimap yasnippet-snippets mmm-mode company-php php-mode projectile projectile-direnv projectile-variable outshine outorg helm-navi navi-mode ess prettify-greek flycheck helm-flycheck dim which-key vdiff goto-chg auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes evil helm magit org powerline nlinum nlinum-relative))
+	'(ace-window sudo-edit julia-repl ob-ipython evil-org auto-dim-other-buffers org-bullets helm-projectile htmlize wgrep-helm evil-avy evil-mc multiple-cursors sublimity julia-mode pkgbuild-mode yaml-mode minimap yasnippet-snippets mmm-mode company-php php-mode projectile projectile-direnv projectile-variable outshine outorg helm-navi navi-mode ess prettify-greek flycheck helm-flycheck dim which-key vdiff goto-chg auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes evil helm magit org powerline nlinum nlinum-relative))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Emacs customize
@@ -70,6 +70,7 @@
 
 (setq-default recentf-max-saved-items 1000)
 
+(setq-default help-window-select t)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -214,6 +215,8 @@ See `comment-region' for behavior of a prefix arg."
 (define-key evil-window-map (kbd "C-h") 'evil-window-left)
 (define-key evil-window-map (kbd "C-k") 'evil-window-up)
 (define-key evil-window-map (kbd "C-j") 'evil-window-down)
+(define-key evil-window-map (kbd "C-w") 'evil-window-mru)
+(define-key evil-window-map (kbd "C-a") 'ace-window)
 
 (dolist (map '(evil-normal-state-map evil-insert-state-map evil-motion-state-map evil-emacs-state-map))
 	(define-key (eval map) (kbd "M-l") 'evil-forward-char)
@@ -657,6 +660,36 @@ See `comment-region' for behavior of a prefix arg."
  ;;             (kill-buffer buffer))) 
  ;;         (buffer-list)))
 
+(defvar my/help-window-names
+  '(
+    ;; Ubiquitous help buffers
+    "*Help*"
+    "*Apropos*"
+    "*Messages*"
+    "*Completions*"
+    ;; Other general buffers
+    "*Command History*"
+    "*Compile-Log*"
+    "*disabled command*")
+  "Names of buffers that `my/quit-help-windows' should quit.")
+
+(defun my/quit-help-windows (&optional kill frame)
+  "Quit all windows with help-like buffers.
+
+Call `quit-windows-on' for every buffer named in
+`my/help-windows-name'.  The optional parameters KILL and FRAME
+are just as in `quit-windows-on', except FRAME defaults to t (so
+that only windows on the selected frame are considered).
+
+Note that a nil value for FRAME cannot be distinguished from an
+omitted parameter and will be ignored; use some other value if
+you want to quit windows on all frames."
+  (interactive)
+  (let ((frame (or frame t)))
+    (dolist (name my/help-window-names)
+      (ignore-errors
+        (quit-windows-on name kill frame)))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Speedbar
 ;;----------------------------
@@ -1028,6 +1061,8 @@ See `comment-region' for behavior of a prefix arg."
 (global-set-key (kbd "C-x f") 'helm-find-files)
 (global-set-key (kbd "C-x C-f") 'helm-multi-files)
 (global-set-key (kbd "C-x b") 'helm-buffers-list)
+
+(global-set-key (kbd "C-x q") 'my/quit-help-windows)
 
 (global-set-key (kbd "<f7>") 'danny-orgmode)
 (global-set-key (kbd "<f9>") 'danny-projectile)
