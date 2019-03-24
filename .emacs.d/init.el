@@ -50,10 +50,6 @@
 
 (setq x-select-enable-clipboard nil)
 
-(when (display-graphic-p)
-	(load-theme 'alect-black t) ;; load material theme
-	)
-
 ;(setq-default mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
 (setq-default mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
 (setq-default mouse-wheel-follow-mouse 't) ;; scroll window under mouse
@@ -839,15 +835,28 @@ you want to quit windows on all frames."
 
 (setq-default org-confirm-babel-evaluate nil)
 
-(require 'ob-ipython)
-(ignore-errors (ob-ipython-auto-configure-kernels))
-;;; display/update images in the buffer after I evaluate
-(add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
+;; (require 'ob-ipython)
+;; (ignore-errors (ob-ipython-auto-configure-kernels))
+;; ;;; display/update images in the buffer after I evaluate
+;; (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
+;; (setq-default org-babel-default-header-args:jupyter-julia '((:exports . "both")
+;; 														    (:results . "output")
+;; 														    (:async . "t")
+;; 															(:kernel . "julia-1.1")
+;; 															(:eval . "never-export")))
+
+
+;; ob-jupyter requires ob-python for some things as defaults.
+(require 'ob-python)
+;; (add-to-list 'org-babel-load-languages '(jupyter . t))
+(org-babel-do-load-languages 'org-babel-load-languages '((jupyter . t)))
 (setq-default org-babel-default-header-args:jupyter-julia '((:exports . "both")
-														    (:results . "output")
-														    (:async . "t")
+															(:results . "output")
+														    (:session . "defaultdanny")
+														    (:async . "nil")
 															(:kernel . "julia-1.1")
 															(:eval . "never-export")))
+;; (setq-default org-babel-default-header-args:jupyter-julia '((:session . "juliasession")))
 
 ;; (defun my-remove-async (text backend info)
 ;;   "Get rid of async t in the src blocks"
@@ -983,7 +992,7 @@ you want to quit windows on all frames."
 (require 'ein)
 (setq-default ein:completion-backend 'ein:company-backend)
 (setq-default ein:cell-traceback-level nil)
-(add-hook 'ein:notebook-multilang-mode-hook (lambda () (setq-local company-idle-delay 2.0)))
+(add-hook 'ein:notebook-multilang-mode-hook (lambda () (setq-local company-idle-delay nil)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Projectile
@@ -1094,3 +1103,18 @@ you want to quit windows on all frames."
 (global-set-key (kbd "<f6>") 'magit-status)
 (global-set-key (kbd "<f12>") 'switch-to-minibuffer-window)
 (global-set-key (kbd "<f8>") 'sr-speedbar-toggle)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; * THEME
+;;----------------------------
+
+;; (require 'grandshell-theme)
+(require 'moe-theme)
+;; (require 'poet-theme)
+(when (display-graphic-p)
+	;; (load-theme 'alect-black t) ;; load material theme
+	;; (load-theme 'grandshell t)
+	(load-theme 'moe-dark t)
+	(set-background-color "black")
+	)
