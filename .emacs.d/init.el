@@ -111,7 +111,7 @@
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 ;; (global-nlinum-relative-mode)
-(global-display-line-numbers-mode t)
+;; (global-display-line-numbers-mode 'visual)
 (setq-default display-line-numbers 'visual)
 (global-auto-revert-mode t)
 
@@ -758,22 +758,6 @@ you want to quit windows on all frames."
 
 (add-hook 'org-mode-hook 'auto-fill-mode)
 (add-hook 'org-mode-hook 'org-bullets-mode)
-(evil-add-hjkl-bindings org-agenda-mode-map 'emacs
-  (kbd "/") 'evil-search-forward
-  (kbd "n") 'evil-search-next
-  (kbd "N") 'evil-search-previous)
-;; (define-key org-agenda-mode-map (kbd "M-S-<left>") (lambda (arg) (interactive "P") (org-agenda-schedule arg "-1w")))
-;; (define-key org-agenda-mode-map (kbd "M-S-<right>") (lambda (arg) (interactive "P") (org-agenda-schedule arg "+1w")))
-(define-key org-agenda-mode-map (kbd "M-S-<left>") (lambda () (interactive) (org-agenda-date-earlier 7)))
-(define-key org-agenda-mode-map (kbd "M-S-<right>") (lambda () (interactive) (org-agenda-date-later 7)))
-
-(define-key org-agenda-mode-map (kbd "H") (lambda () (interactive) (org-agenda-date-earlier 1)))
-(define-key org-agenda-mode-map (kbd "L") (lambda () (interactive) (org-agenda-date-later 1)))
-(define-key org-agenda-mode-map (kbd "M-H") (lambda () (interactive) (org-agenda-date-earlier 7)))
-(define-key org-agenda-mode-map (kbd "M-L") (lambda () (interactive) (org-agenda-date-later 7)))
-
-
-
 (setq-default org-tags-column -100
               org-agenda-tags-column -100
               org-return-follows-link t
@@ -796,7 +780,6 @@ you want to quit windows on all frames."
 
 ;; (add-hook 'org-capture-mode-hook 'evil-insert-state)
 (add-hook 'org-mode-hook (lambda () (when (equal (buffer-name) "*Org Note*") (evil-insert-state) (print "In here"))))
-(add-hook 'LaTeX-mode-hook (lambda () (load-theme 'material-light)))
 
 (danny-add-prettify-greek 'org-mode-hook)
 
@@ -824,6 +807,25 @@ you want to quit windows on all frames."
 		  ;"- [ ] %i%?\n\t%u"
 		  )))
 
+;; ** Agenda
+(evil-add-hjkl-bindings org-agenda-mode-map 'emacs
+  (kbd "/") 'evil-search-forward
+  (kbd "n") 'evil-search-next
+  (kbd "N") 'evil-search-previous)
+;; (define-key org-agenda-mode-map (kbd "M-S-<left>") (lambda (arg) (interactive "P") (org-agenda-schedule arg "-1w")))
+;; (define-key org-agenda-mode-map (kbd "M-S-<right>") (lambda (arg) (interactive "P") (org-agenda-schedule arg "+1w")))
+(define-key org-agenda-mode-map (kbd "M-S-<left>") (lambda () (interactive) (org-agenda-date-earlier 7)))
+(define-key org-agenda-mode-map (kbd "M-S-<right>") (lambda () (interactive) (org-agenda-date-later 7)))
+
+(define-key org-agenda-mode-map (kbd "H") (lambda () (interactive) (org-agenda-date-earlier 1)))
+(define-key org-agenda-mode-map (kbd "L") (lambda () (interactive) (org-agenda-date-later 1)))
+(define-key org-agenda-mode-map (kbd "M-H") (lambda () (interactive) (org-agenda-date-earlier 7)))
+(define-key org-agenda-mode-map (kbd "M-L") (lambda () (interactive) (org-agenda-date-later 7)))
+
+(add-to-list 'org-agenda-custom-commands '("d" "Day+Stuck" ((agenda "" '(org-agenda-span 'day))
+														(stuck))))
+
+;; ** Fonts
 ;; (evil-set-initial-state 'org-agenda-mode 'normal)
 
 (set-face-attribute 'org-level-1 nil :height 1.5 :family "Liberation Mono")
@@ -831,6 +833,9 @@ you want to quit windows on all frames."
 ;; (set-face-attribute 'outline-3 nil :height 1.2 :family "Liberation Mono")
 
 (set-face-attribute 'org-agenda-dimmed-todo-face nil :foreground "grey20")
+
+
+;; ** Code stuff
 
 (setq-default org-confirm-babel-evaluate nil)
 
@@ -974,6 +979,11 @@ you want to quit windows on all frames."
 (setq-default julia-max-block-lookback 50000)
 
 ;; (setq-default julia-repl-switches "--startup-file=no")
+
+(require 'ein)
+(setq-default ein:completion-backend 'ein:company-backend)
+(setq-default ein:cell-traceback-level nil)
+(add-hook 'ein:notebook-multilang-mode-hook (lambda () (setq-local company-idle-delay 2.0)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Projectile
