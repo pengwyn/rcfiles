@@ -905,8 +905,11 @@ you want to quit windows on all frames."
 (when (string= (system-name) "pengix")
 	(setq-default preview-orientation 'below))
 
+;; (require 'LaTeX-preview)
 ; Hopefully fix being able to read font in error regions
-(add-hook 'LaTeX-mode-hook (lambda () (set-face-attribute 'preview-face nil :inverse-video t)))
+;; (add-hook 'LaTeX-mode-hook (lambda () (set-face-attribute 'preview-face nil :inverse-video t)))
+
+(add-hook 'doc-view-mode-hook (lambda () (setq-local display-line-numbers nil)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Ediff stuff
