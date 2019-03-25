@@ -777,7 +777,8 @@ you want to quit windows on all frames."
 			  org-deadline-warning-days 5
 			  org-stuck-projects '("TODO={.+}/-DONE" nil nil "SCHEDULED:\\|DEADLINE:")
 			  org-agenda-skip-deadline-if-done t
-			  org-agenda-skip-scheduled-if-done t)
+			  org-agenda-skip-scheduled-if-done t
+			  org-clock-out-when-done '("WAITING" "DONE" "CANCELLED"))
 
 (eval-after-load "org" '(setq-default org-modules (append org-modules '(org-habit org-mouse))))
 
@@ -838,9 +839,11 @@ you want to quit windows on all frames."
 (set-face-attribute 'org-agenda-dimmed-todo-face nil :foreground "grey20")
 
 
-;; ** Code stuff
+;; ** Babel
 
+(require 'org-babel)
 (setq-default org-confirm-babel-evaluate nil)
+(define-key org-babel-map (kbd "C-c") 'org-babel-hide-result-toggle)
 
 ;; (setq org-html-htmlize-output-type 'css) ; default: 'inline-css
 ;; (setq org-html-htmlize-font-prefix "org-") ; default: "org-"
