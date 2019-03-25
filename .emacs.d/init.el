@@ -18,7 +18,7 @@
 (package-initialize)
 
 (setq package-selected-packages
-	'(ace-window sudo-edit julia-repl ob-ipython evil-org auto-dim-other-buffers org-bullets helm-projectile htmlize wgrep-helm evil-avy evil-mc multiple-cursors sublimity julia-mode pkgbuild-mode yaml-mode minimap yasnippet-snippets mmm-mode company-php php-mode projectile projectile-direnv projectile-variable outshine outorg helm-navi navi-mode ess prettify-greek flycheck helm-flycheck dim which-key vdiff goto-chg auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes evil helm magit org powerline nlinum nlinum-relative))
+	'(moe-theme jupyter ace-window sudo-edit julia-repl ob-ipython evil-org auto-dim-other-buffers org-bullets helm-projectile htmlize wgrep-helm evil-avy evil-mc multiple-cursors sublimity julia-mode pkgbuild-mode yaml-mode minimap yasnippet-snippets mmm-mode company-php php-mode projectile projectile-direnv projectile-variable outshine outorg helm-navi navi-mode ess prettify-greek flycheck helm-flycheck dim which-key vdiff goto-chg auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes evil helm magit org powerline nlinum nlinum-relative))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Emacs customize
@@ -58,6 +58,7 @@
 (setq-default scroll-margin 3)
 
 (set-frame-font "GohuFont-11")
+;; (set-frame-font "Hack Nerd Font Mono-11")
 
 (setq-default split-height-threshold 20
 			  split-width-threshold 20)
@@ -190,7 +191,6 @@ See `comment-region' for behavior of a prefix arg."
   (when (active-minibuffer-window)
     (select-frame-set-input-focus (window-frame (active-minibuffer-window)))
     (select-window (active-minibuffer-window))))
-
 
 ;;;;;;;;;;;;;;;
 ;; * Evil stuff
@@ -407,6 +407,13 @@ See `comment-region' for behavior of a prefix arg."
 
   (evil-define-key 'visual global-map "gI" 'evil-mc-insert-vertical-cursors)
   (evil-define-key 'visual global-map "gA" 'evil-mc-append-vertical-cursors)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; * Elisp
+;;----------------------------
+
+(evil-define-key 'visual lisp-mode-shared-map (kbd "C-M-x") 'eval-region)
 
 ;;;;;;;;;;;;;;;;
 ;; * Company stuff
@@ -835,6 +842,9 @@ you want to quit windows on all frames."
 
 (setq-default org-confirm-babel-evaluate nil)
 
+;; (setq org-html-htmlize-output-type 'css) ; default: 'inline-css
+;; (setq org-html-htmlize-font-prefix "org-") ; default: "org-"
+
 ;; (require 'ob-ipython)
 ;; (ignore-errors (ob-ipython-auto-configure-kernels))
 ;; ;;; display/update images in the buffer after I evaluate
@@ -846,6 +856,7 @@ you want to quit windows on all frames."
 ;; 															(:eval . "never-export")))
 
 
+(require 'ob-jupyter)
 ;; ob-jupyter requires ob-python for some things as defaults.
 (require 'ob-python)
 ;; (add-to-list 'org-babel-load-languages '(jupyter . t))
@@ -853,10 +864,13 @@ you want to quit windows on all frames."
 (setq-default org-babel-default-header-args:jupyter-julia '((:exports . "both")
 															(:results . "output")
 														    (:session . "defaultdanny")
-														    (:async . "nil")
+														    (:async . "yes")
 															(:kernel . "julia-1.1")
 															(:eval . "never-export")))
 ;; (setq-default org-babel-default-header-args:jupyter-julia '((:session . "juliasession")))
+(add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+
+(evil-define-key 'insert 'jupyter-org-interaction-mode-map (kbd "M-i") (lambda () (interactive) (insert-tab)))
 
 ;; (defun my-remove-async (text backend info)
 ;;   "Get rid of async t in the src blocks"

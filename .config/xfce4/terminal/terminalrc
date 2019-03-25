@@ -1,5 +1,5 @@
 [Configuration]
-FontName=GohuFont weight=101 14
+FontName=Fira Code 10
 MiscAlwaysShowTabs=FALSE
 MiscBell=FALSE
 MiscBellUrgent=FALSE
@@ -29,7 +29,7 @@ ShortcutsNoMenukey=TRUE
 ShortcutsNoMnemonics=TRUE
 ShortcutsNoHelpkey=TRUE
 ScrollingOnOutput=FALSE
-ColorPalette=rgb(0,0,0);rgb(170,0,0);rgb(0,170,0);rgb(203,102,0);rgb(0,48,255);rgb(170,0,170);rgb(0,170,170);rgb(170,170,170);rgb(85,85,85);rgb(255,85,85);rgb(85,255,85);rgb(255,255,85);rgb(130,130,255);rgb(255,85,255);rgb(85,255,255);rgb(255,255,255)
+ColorPalette=rgb(0,0,0);rgb(211,0,0);rgb(0,203,0);rgb(228,114,0);rgb(37,78,255);rgb(189,0,255);rgb(0,207,207);rgb(170,170,170);rgb(85,85,85);rgb(255,85,85);rgb(85,255,85);rgb(255,255,85);rgb(130,130,255);rgb(255,85,255);rgb(85,255,255);rgb(255,255,255)
 MiscNewTabAdjacent=FALSE
 MiscShowRelaunchDialog=TRUE
 
