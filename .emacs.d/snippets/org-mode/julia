@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: julia
+# key: julia
+##+BEGIN_SRC jupyter-julia :file ${1:$$(concat (make-temp-name "./ipython-") ".png")}
+# --
+#+BEGIN_SRC jupyter-julia
+$0
+#+END_SRC
