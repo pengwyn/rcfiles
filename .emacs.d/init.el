@@ -508,6 +508,10 @@ See `comment-region' for behavior of a prefix arg."
   ;; (setq company-auto-complete-chars nil)
 (define-key company-active-map (kbd "C-<return>") #'company-complete-selection)
 (define-key company-active-map (kbd "C-RET") #'company-complete-selection)
+;; (define-key company-active-map (kbd "C-TAB") #'company-complete-common)
+;; (define-key company-active-map [?\C-\t] #'company-complete-common)
+;; (define-key company-active-map (kbd "TAB") nil)
+;; (define-key company-active-map [tab] nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ** Hippie-expand
@@ -841,7 +845,7 @@ you want to quit windows on all frames."
 
 ;; ** Babel
 
-(require 'org-babel)
+;; (require 'org-babel)
 (setq-default org-confirm-babel-evaluate nil)
 (define-key org-babel-map (kbd "C-c") 'org-babel-hide-result-toggle)
 
@@ -865,7 +869,7 @@ you want to quit windows on all frames."
 ;; (add-to-list 'org-babel-load-languages '(jupyter . t))
 (org-babel-do-load-languages 'org-babel-load-languages '((jupyter . t)))
 (setq-default org-babel-default-header-args:jupyter-julia '((:exports . "both")
-															(:results . "output")
+															(:results . "output verbatim drawer")
 														    (:session . "defaultdanny")
 														    (:async . "yes")
 															(:kernel . "julia-1.1")
