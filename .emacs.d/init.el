@@ -840,7 +840,7 @@ you want to quit windows on all frames."
 (setq-default org-confirm-babel-evaluate nil)
 
 (require 'ob-ipython)
-(ob-ipython-auto-configure-kernels)
+(ignore-errors (ob-ipython-auto-configure-kernels))
 ;;; display/update images in the buffer after I evaluate
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
 (setq-default org-babel-default-header-args:jupyter-julia '((:exports . "both")
