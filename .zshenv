@@ -15,6 +15,8 @@ alias ipython2r='MPLCONFIGDIR=$HOME/.config/matplotlib/nodisplay ipython2'
 #alias netstat='netstat --numeric-hosts --inet -a'
 alias ..='cd ..'
 
+alias julia='julia -J /home/pengwyn/.julia/packages/PackageCompiler/*/sysimg/sys.so'
+
 function gitpullall() {
 	gpg-connect-agent updatestartuptty /bye
 
