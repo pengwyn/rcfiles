@@ -880,23 +880,31 @@ you want to quit windows on all frames."
 ;; (setq-default org-babel-default-header-args:jupyter-julia '((:session . "juliasession")))
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 
+
+(defvar my-org-src-mode-map (make-sparse-keymap))
+(define-minor-mode my-org-src-mode
+  :init nil
+  :keymap my-org-src-mode-map)
+(add-hook 'org-src-mode-hook 'my-org-src-mode)
+(define-key my-org-src-mode-map (kbd "C-c C-c") 'jupyter-eval-buffer)
+
 (evil-define-key 'insert 'jupyter-org-interaction-mode-map (kbd "M-i") (lambda () (interactive) (insert-tab)))
 
-;; (defun my-remove-async (text backend info)
-;;   "Get rid of async t in the src blocks"
-;;   (replace-regexp-in-string "BEGIN_SRC jupyter-julia" "BEGIN_SRC jupyter-julia :async f" text)
-;;   (message "%s" text))
-;; (add-to-list 'org-export-filter-src-block-functions 'my-remove-async)
 
-
-
-;; (require 'ein)
-;; (require 'ob-ein)
-;; (ein:org-register-lang-mode "ein-julia" 'julia)
-;; (setq-default org-babel-default-header-args:ein-julia '((:exports . "both")
-;; 														(:kernelspec . "julia-1.1")
-;; 														(:results . "output raw drawer")
-;; 														(:session . "localhost")))
+(defun my-execute-and-next (key)
+  "Do something, unless last event was backspace."
+  (interactive "k")
+  (if (equal last-input-event 'backspace)
+      (let* ((my-org-block-mode nil)
+             (original-func (key-binding key)))
+        (call-interactively original-func))
+    (message "Here's my minor mode behavior!")))
+(defvar my-org-block-mode-map (make-sparse-keymap))
+(define-minor-mode my-org-block-mode
+  :init nil
+  :keymap my-org-block-mode-map)
+(add-hook 'org-mode 'my-org-block-mode-map)
+(define-key my-org-block-mode-map (kbd "M-<return>") 'my-execute-and-next)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Latex stuff
