@@ -1,0 +1,17 @@
+{
+  "display_name": "Julia 1.1.0 Danny precompiled",
+  "argv": [
+    "/usr/bin/julia",
+	"--sysimage",
+	"/home/pengwyn/.julia/dev/PackageCompiler/sysimg/sys.so",
+    "-i",
+    "--startup-file=yes",
+    "--color=yes",
+    "--project=@.",
+    "/home/pengwyn/.julia/packages/IJulia/9ajf8/src/kernel.jl",
+    "{connection_file}"
+  ],
+  "language": "julia",
+  "env": {},
+  "interrupt_mode": "signal"
+}

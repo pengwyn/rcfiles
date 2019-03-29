@@ -782,7 +782,7 @@ you want to quit windows on all frames."
 			  org-enforce-todo-dependencies t
 			  org-agenda-skip-deadline-prewarning-if-scheduled t
 			  org-deadline-warning-days 5
-			  org-stuck-projects '("TODO={.+}/-DONE" nil nil "SCHEDULED:\\|DEADLINE:")
+			  org-stuck-projects '("TODO={.+}/-DONE" ("CANCELLED") nil "SCHEDULED:\\|DEADLINE:")
 			  org-agenda-skip-deadline-if-done t
 			  org-agenda-skip-scheduled-if-done t
 			  org-clock-out-when-done '("WAITING" "DONE" "CANCELLED"))
@@ -875,7 +875,7 @@ you want to quit windows on all frames."
 															(:results . "output verbatim drawer")
 														    (:session . "defaultdanny")
 														    (:async . "yes")
-															(:kernel . "julia-1.1")
+															(:kernel . "julia-1.1_pre")
 															(:eval . "never-export")))
 ;; (setq-default org-babel-default-header-args:jupyter-julia '((:session . "juliasession")))
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
