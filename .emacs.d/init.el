@@ -18,7 +18,7 @@
 (package-initialize)
 
 (setq package-selected-packages
-	'(mode-icons moe-theme jupyter ace-window sudo-edit julia-repl ob-ipython evil-org auto-dim-other-buffers org-bullets helm-projectile htmlize wgrep-helm evil-avy evil-mc multiple-cursors sublimity julia-mode pkgbuild-mode yaml-mode minimap yasnippet-snippets mmm-mode company-php php-mode projectile projectile-direnv projectile-variable outshine outorg helm-navi navi-mode ess prettify-greek flycheck helm-flycheck dim which-key vdiff goto-chg auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes evil helm magit org powerline nlinum nlinum-relative))
+	'(hydra mode-icons moe-theme jupyter ace-window sudo-edit julia-repl ob-ipython evil-org auto-dim-other-buffers org-bullets helm-projectile htmlize wgrep-helm evil-avy evil-mc multiple-cursors sublimity julia-mode pkgbuild-mode yaml-mode minimap yasnippet-snippets mmm-mode company-php php-mode projectile projectile-direnv projectile-variable outshine outorg helm-navi navi-mode ess prettify-greek flycheck helm-flycheck dim which-key vdiff goto-chg auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes evil helm magit org powerline nlinum nlinum-relative))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Emacs customize
@@ -323,6 +323,21 @@ See `comment-region' for behavior of a prefix arg."
 (global-evil-mc-mode 1)
 (evil-define-key '(normal visual) evil-mc-key-map (kbd "C-p") nil)
 (evil-define-key '(normal visual) evil-mc-key-map (kbd "C-n") nil)
+
+(defhydra hydra-evil-mc-keys ()
+  "evilmckeys"
+  ("\C-n" evil-mc-make-and-goto-next-match "make and next")
+  ("\C-p" evil-mc-make-and-goto-prev-match "make and prev")
+  ("M-n" evil-mc-skip-and-goto-next-match "skip and next")
+  ("M-p" evil-mc-skip-and-goto-prev-match "skip and prev")
+  ("q" evil-mc-undo-all-cursors "undo all" :exit t)
+  ("n" evil-mc-make-and-goto-next-cursor "make and find next cursor")
+  ("p" evil-mc-make-and-goto-prev-cursor "make and find prev cursor")
+  ("N" evil-mc-skip-and-goto-next-cursor "skip and find next cursor")
+  ("P" evil-mc-skip-and-goto-prev-cursor "skip and find prev cursor")
+  )
+(evil-define-key '(normal visual) evil-mc-key-map (kbd "g r") 'hydra-evil-mc-keys/body)
+							   
 
 (setq-default evil-mc-one-cursor-show-mode-line-text nil)
 
