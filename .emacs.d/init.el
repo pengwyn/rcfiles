@@ -18,7 +18,7 @@
 (package-initialize)
 
 (setq package-selected-packages
-	'(hydra mode-icons moe-theme jupyter ace-window sudo-edit julia-repl ob-ipython evil-org auto-dim-other-buffers org-bullets helm-projectile htmlize wgrep-helm evil-avy evil-mc multiple-cursors sublimity julia-mode pkgbuild-mode yaml-mode minimap yasnippet-snippets mmm-mode company-php php-mode projectile projectile-direnv projectile-variable outshine outorg helm-navi navi-mode ess prettify-greek flycheck helm-flycheck dim which-key vdiff goto-chg auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes evil helm magit org powerline nlinum nlinum-relative))
+	'(treemacs treemacs-evil treemacs-projectile treemacs-magit hydra mode-icons moe-theme jupyter ace-window sudo-edit julia-repl ob-ipython evil-org auto-dim-other-buffers org-bullets helm-projectile htmlize wgrep-helm evil-avy evil-mc multiple-cursors sublimity julia-mode pkgbuild-mode yaml-mode minimap yasnippet-snippets mmm-mode company-php php-mode projectile projectile-direnv projectile-variable outshine outorg helm-navi navi-mode ess prettify-greek flycheck helm-flycheck dim which-key vdiff goto-chg auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes evil helm magit org powerline nlinum nlinum-relative))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Emacs customize
@@ -68,6 +68,30 @@
 (setq-default recentf-max-saved-items 1000)
 
 (setq-default help-window-select t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ** Util functions
+;;----------------------------
+
+; Stolen from somewhere.
+(defmacro define-key-with-fallback (keymap key def condition &optional mode)
+  "Define key with fallback. Binds KEY to definition DEF in keymap KEYMAP, 
+   the binding is active when the CONDITION is true. Otherwise turns MODE off 
+   and re-enables previous definition for KEY. If MODE is nil, tries to recover 
+   it by stripping off \"-map\" from KEYMAP name."
+  `(define-key ,keymap ,key
+     (lambda () (interactive)
+        (if ,condition ,def
+          (let* ((,(if mode mode
+                     (let* ((keymap-str (symbol-name keymap))
+                            (mode-name-end (- (string-width keymap-str) 4)))
+                       (if (string= "-map" (substring keymap-str mode-name-end))
+                           (intern (substring keymap-str 0 mode-name-end))
+                         (error "Could not deduce mode name from keymap name (\"-map\" missing?)")))) 
+                  nil)
+                 (original-func (key-binding ,key)))
+            (message "About to call %s" original-func)
+			(call-interactively original-func))))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -195,8 +219,10 @@ See `comment-region' for behavior of a prefix arg."
     (select-frame-set-input-focus (window-frame (active-minibuffer-window)))
     (select-window (active-minibuffer-window))))
 
-;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Evil stuff
+;;----------------------------
+
 
 (require 'evil)
 (evil-mode 1)
@@ -715,25 +741,35 @@ you want to quit windows on all frames."
       (ignore-errors
         (quit-windows-on name kill frame)))))
 
+;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ;; * Speedbar
+;; ;;----------------------------
+
+;; (require 'sr-speedbar)
+;; ;(setq-default speedbar-show-unknown-files t) ; show all files
+;; (setq-default speedbar-use-images nil) ; use text for buttons
+;; ;(setq-default sr-speedbar-right-side nil) ; put on left side
+;; (setq-default speedbar-hide-button-brackets-flag t)
+;; (setq-default speedbar-tag-hierarchy-method '(speedbar-sort-tag-hierarchy))
+
+;; (speedbar-add-supported-extension ".jl")
+
+;; ;; (add-hook
+;; ;;  'speedbar-timer-hook
+;; ;;  (lambda ()
+;; ;;     (save-excursion
+;; ;;         (set-buffer speedbar-buffer)
+;; ;;         (speedbar-expand-line-descendants))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; * Speedbar
+;; * Treemacs
 ;;----------------------------
+(require 'treemacs)
+(require 'treemacs-evil)
+(require 'treemacs-projectile)
+(require 'treemacs-magit)
+(define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action)
 
-(require 'sr-speedbar)
-;(setq-default speedbar-show-unknown-files t) ; show all files
-(setq-default speedbar-use-images nil) ; use text for buttons
-;(setq-default sr-speedbar-right-side nil) ; put on left side
-(setq-default speedbar-hide-button-brackets-flag t)
-(setq-default speedbar-tag-hierarchy-method '(speedbar-sort-tag-hierarchy))
-
-(speedbar-add-supported-extension ".jl")
-
-(add-hook
- 'speedbar-timer-hook
- (lambda ()
-    (save-excursion
-        (set-buffer speedbar-buffer)
-        (speedbar-expand-line-descendants))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * GUD
@@ -800,12 +836,10 @@ you want to quit windows on all frames."
 			  org-stuck-projects '("TODO={.+}/-DONE" ("CANCELLED") nil "SCHEDULED:\\|DEADLINE:")
 			  org-agenda-skip-deadline-if-done t
 			  org-agenda-skip-scheduled-if-done t
-			  org-clock-out-when-done '("WAITING" "DONE" "CANCELLED"))
+			  org-clock-out-when-done '("WAITING" "DONE" "CANCELLED")
+			  org-insert-heading-respect-content t)
 
 (eval-after-load "org" '(setq-default org-modules (append org-modules '(org-habit org-mouse))))
-
-;; (add-hook 'org-capture-mode-hook 'evil-insert-state)
-(add-hook 'org-mode-hook (lambda () (when (equal (buffer-name) "*Org Note*") (evil-insert-state) (print "In here"))))
 
 (danny-add-prettify-greek 'org-mode-hook)
 
@@ -838,6 +872,7 @@ you want to quit windows on all frames."
   (kbd "/") 'evil-search-forward
   (kbd "n") 'evil-search-next
   (kbd "N") 'evil-search-previous)
+
 ;; (define-key org-agenda-mode-map (kbd "M-S-<left>") (lambda (arg) (interactive "P") (org-agenda-schedule arg "-1w")))
 ;; (define-key org-agenda-mode-map (kbd "M-S-<right>") (lambda (arg) (interactive "P") (org-agenda-schedule arg "+1w")))
 (define-key org-agenda-mode-map (kbd "M-S-<left>") (lambda () (interactive) (org-agenda-date-earlier 7)))
@@ -898,28 +933,31 @@ you want to quit windows on all frames."
 
 (defvar my-org-src-mode-map (make-sparse-keymap))
 (define-minor-mode my-org-src-mode
-  :init nil
   :keymap my-org-src-mode-map)
 (add-hook 'org-src-mode-hook 'my-org-src-mode)
 (define-key my-org-src-mode-map (kbd "C-c C-c") 'jupyter-eval-buffer)
 
 (evil-define-key 'insert 'jupyter-org-interaction-mode-map (kbd "M-i") (lambda () (interactive) (insert-tab)))
 
-
-(defun my-execute-and-next (key)
-  "Do something, unless last event was backspace."
-  (interactive "k")
-  (if (equal last-input-event 'backspace)
-      (let* ((my-org-block-mode nil)
-             (original-func (key-binding key)))
-        (call-interactively original-func))
-    (message "Here's my minor mode behavior!")))
 (defvar my-org-block-mode-map (make-sparse-keymap))
 (define-minor-mode my-org-block-mode
-  :init nil
   :keymap my-org-block-mode-map)
-(add-hook 'org-mode 'my-org-block-mode-map)
-(define-key my-org-block-mode-map (kbd "M-<return>") 'my-execute-and-next)
+(add-hook 'org-mode 'my-org-block-mode)
+
+(defun my-org-execute-and-next ()
+  (interactive)
+  (message "Huh? %s" (this-single-command-keys))
+  (message "Huh? %s" (yas--fallback-translate-input (this-single-command-keys)))
+  (message "Huh? %s" last-input-event)
+  (let* ((my-org-block-mode nil)
+		 (key (this-single-command-keys))
+		 (binding (key-binding key t)))
+	(message "Huh? %s" binding)
+	(message "Huh? %s" binding))
+  (org-babel-execute-src-block)
+  (org-babel-next-src-block))
+   
+(define-key-with-fallback my-org-block-mode-map (kbd "M-RET") (my-org-execute-and-next) (org-in-src-block-p))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Latex stuff
@@ -1037,7 +1075,7 @@ you want to quit windows on all frames."
 
 (setq-default julia-max-block-lookback 50000)
 
-;; (setq-default julia-repl-switches "--startup-file=no")
+(setq-default julia-repl-switches "-J /home/pengwyn/.julia/dev/PackageCompiler/sysimg/sys.so")
 
 (require 'ein)
 (setq-default ein:completion-backend 'ein:company-backend)
@@ -1066,8 +1104,8 @@ you want to quit windows on all frames."
 (define-key danny-orgmode "R" 'remember-notes)
 (define-key danny-orgmode "m" 'outshine-imenu)
 
+(define-key org-mode-map (kbd "<C-M-return>") 'org-insert-todo-subheading)
 (define-key org-mode-map (kbd "C-4") 'org-archive-subtree)
-
 
 (define-prefix-command 'danny-projectile)
 (define-key danny-projectile (kbd "<f9>") 'helm-projectile-switch-project)
@@ -1152,7 +1190,8 @@ you want to quit windows on all frames."
 (global-set-key (kbd "<f9>") 'danny-projectile)
 (global-set-key (kbd "<f6>") 'magit-status)
 (global-set-key (kbd "<f12>") 'switch-to-minibuffer-window)
-(global-set-key (kbd "<f8>") 'sr-speedbar-toggle)
+;; (global-set-key (kbd "<f8>") 'sr-speedbar-toggle)
+(global-set-key (kbd "<f8>") 'treemacs)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
