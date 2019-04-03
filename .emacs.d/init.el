@@ -956,6 +956,7 @@ you want to quit windows on all frames."
 
 (defvar my-org-src-mode-map (make-sparse-keymap))
 (define-minor-mode my-org-src-mode
+  :init-value nil
   :keymap my-org-src-mode-map)
 (add-hook 'org-src-mode-hook 'my-org-src-mode)
 (define-key my-org-src-mode-map (kbd "C-c C-c") 'jupyter-eval-buffer)
