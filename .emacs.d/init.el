@@ -1,7 +1,10 @@
 ;; * init.el --- Emacs configuration
 
-
-;; (define-obsolete-function-alias 'danny-load-all-packages 'package-install-selected-packages)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; * Emacs customize
+;;----------------------------
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file)
 
 ;; INSTALL PACKAGES
 ;; --------------------------------------
@@ -21,15 +24,21 @@
 	'(treemacs treemacs-evil treemacs-projectile treemacs-magit hydra mode-icons moe-theme jupyter ace-window sudo-edit julia-repl ob-ipython evil-org auto-dim-other-buffers org-bullets helm-projectile htmlize wgrep-helm evil-avy evil-mc multiple-cursors sublimity julia-mode pkgbuild-mode yaml-mode minimap yasnippet-snippets mmm-mode company-php php-mode projectile projectile-direnv projectile-variable outshine outorg helm-navi navi-mode ess prettify-greek flycheck helm-flycheck dim which-key vdiff goto-chg auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes evil helm magit org powerline nlinum nlinum-relative))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; * Emacs customize
+;; * Use package setup
 ;;----------------------------
-(setq custom-file "~/.emacs.d/custom.el")
-(load custom-file)
+
+(eval-when-compile
+  (require 'use-package))
+(require 'diminish)                ;; if you use :diminish
+(require 'bind-key)                ;; if you use any :bind variant
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Dim
 ;;----------------------------
 
+;; TODO Convert this to diminish
 
 ;; Put this at the start to allow removal of minor modes as we go
 (require 'dim)
@@ -129,6 +138,12 @@
 
 (when (display-graphic-p)
 	(require 'mode-icons)
+	(setq mode-icons (delete (seq-find (lambda (x) (let ((y (pop x)))
+														(and (string-or-null-p y)
+															(string-match-p (regexp-quote "company") y))))
+								mode-icons)
+					mode-icons))
+	(add-to-list 'mode-icons '("company-box"  61869 FontAwesome))
 	(mode-icons-mode))
 
 (scroll-bar-mode -1)
@@ -508,6 +523,11 @@ See `comment-region' for behavior of a prefix arg."
 (require 'company-quickhelp)
 (company-quickhelp-mode t)
 
+(use-package company-box
+  :hook (company-mode . company-box-mode)
+  ;; :diminish company-box-mode
+  )
+
 (require 'company-gtags)
 (setq-default company-gtags-modes (append company-gtags-modes '(julia-mode-prog-mode)))
 
@@ -741,7 +761,8 @@ you want to quit windows on all frames."
   (let ((frame (or frame t)))
     (dolist (name my/help-window-names)
       (ignore-errors
-        (quit-windows-on name kill frame)))))
+        ;; (delete-windows-on name kill frame)))))
+		(delete-windows-on name frame)))))
 
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ;; * Speedbar
@@ -1186,7 +1207,8 @@ you want to quit windows on all frames."
 (global-set-key (kbd "C-x C-f") 'helm-multi-files)
 (global-set-key (kbd "C-x b") 'helm-buffers-list)
 
-(global-set-key (kbd "C-x q") 'my/quit-help-windows)
+(define-key evil-window-map "r" 'my/quit-help-windows)
+(define-key evil-window-map "C-r" 'my/quit-help-windows)
 
 (global-set-key (kbd "<f7>") 'danny-orgmode)
 (global-set-key (kbd "<f9>") 'danny-projectile)
