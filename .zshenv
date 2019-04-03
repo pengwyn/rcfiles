@@ -260,5 +260,10 @@ END { print cnt }
 	alias emacs='emacs -nw'
 
 	export NO_JULIA_PACKAGE_CHECK=nocheck
+
+	function mkmachinefile() {
+		result=$(srun zsh -c 'echo hostname $(hostname -s)' | grep hostname | awk '{ print $2 }' | sort)
+		echo $result
+	}
 fi
 
