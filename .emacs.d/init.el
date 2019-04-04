@@ -120,14 +120,16 @@
 (setq mmm-global-mode 'maybe)
 (mmm-add-mode-ext-class 'html-mode "\\.php\\'" 'html-php)
 
-(require 'auto-dim-other-buffers)
-(auto-dim-other-buffers-mode t)
+(when (display-graphic-p)
+	(require 'auto-dim-other-buffers)
+	(auto-dim-other-buffers-mode t))
 
 (require 'yasnippet)
 (yas-global-mode 1)
 
-(require 'mode-icons)
-(mode-icons-mode)
+(when (display-graphic-p)
+	(require 'mode-icons)
+	(mode-icons-mode))
 
 (scroll-bar-mode -1)
 (show-paren-mode t)
