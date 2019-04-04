@@ -1226,9 +1226,30 @@ you want to quit windows on all frames."
 ;; (require 'grandshell-theme)
 (require 'moe-theme)
 ;; (require 'poet-theme)
-(when (display-graphic-p)
-	;; (load-theme 'alect-black t) ;; load material theme
-	;; (load-theme 'grandshell t)
-	(load-theme 'moe-dark t)
-	(set-background-color "black")
-	)
+;; (when (display-graphic-p)
+;; 	;; (load-theme 'alect-black t) ;; load material theme
+;; 	;; (load-theme 'grandshell t)
+;;   (add-hook 'after-make-frame-hook (lambda (frame)
+;; 	(load-theme 'moe-dark t)
+;; 	(set-background-color "black")
+;; 	)))
+
+;; (require 'color-theme)
+;; (color-theme-initialize)
+
+(defun apply-color-theme (frame)
+  "Apply color theme to a frame based on whether its a 'real'
+   window or a console window."
+  (select-frame frame)
+  ;; (if (window-system frame)
+  ;;     (color-theme-tango)
+  ;;   (color-theme-tango-black)))
+  ;; (load-theme 'moe-dark t)
+  (set-background-color "black")
+  (print "Taswerarwerasdfwaer"))
+
+;; (setq color-theme-is-global nil)
+(add-hook 'after-make-frame-functions 'apply-color-theme)
+
+(load-theme 'moe-dark t)
+(apply-color-theme (selected-frame))
