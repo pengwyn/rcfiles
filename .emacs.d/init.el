@@ -343,7 +343,7 @@ See `comment-region' for behavior of a prefix arg."
 (evil-define-key '(normal visual) 'global (kbd "C-M-y") 'danny-evil-clip-yank)
 (evil-define-key '(normal insert) 'global (kbd "C-M-p") 'danny-evil-clip-paste)
 
-(dolist (map '(minibuffer-local-map minibuffer-local-ns-map minibuffer-local-completion-map minibuffer-local-must-match-map minibuffer-local-isearch-map))
+(dolist (map '(minibuffer-local-map minibuffer-local-ns-map minibuffer-local-completion-map minibuffer-local-must-match-map minibuffer-local-isearch-map minibuffer-local-shell-command-map))
 			 (define-key (eval map) (kbd "C-r") 'evil-paste-from-register))
 
 (require 'evil-magit)
@@ -787,11 +787,21 @@ you want to quit windows on all frames."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Treemacs
 ;;----------------------------
-(require 'treemacs)
-(require 'treemacs-evil)
-(require 'treemacs-projectile)
-(require 'treemacs-magit)
-(define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action)
+(use-package treemacs
+  :defer t
+  :config
+  (use-package treemacs-evil)
+  (use-package treemacs-projectile)
+  (use-package treemacs-magit)
+  (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action)
+  (add-to-list 'treemacs-pre-file-insert-predicates #'treemacs-is-file-git-ignored?)
+  ;; (add-to-list 'treemacs-pre-file-insert-predicates #'treemacs-file-tracked-p)
+)
+
+(defun treemacs-file-tracked-p (file git-info)
+  "Determined if FILE is tracked by git by means of GIT-INFO."
+  (declare (side-effect-free t))
+  (not (string= "?" (ht-get git-info file))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -948,7 +958,8 @@ you want to quit windows on all frames."
 															(:results . "output verbatim drawer")
 														    (:session . "defaultdanny")
 														    (:async . "yes")
-															(:kernel . "julia-1.1_pre")
+															;; (:kernel . "julia-1.1_pre")
+															(:kernel . "julia-1.1")
 															(:eval . "never-export")))
 ;; (setq-default org-babel-default-header-args:jupyter-julia '((:session . "juliasession")))
 (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
@@ -1099,7 +1110,7 @@ you want to quit windows on all frames."
 
 (setq-default julia-max-block-lookback 50000)
 
-(setq-default julia-repl-switches "-J /home/pengwyn/.julia/dev/PackageCompiler/sysimg/sys.so")
+;; (setq-default julia-repl-switches "-J /home/pengwyn/.julia/dev/PackageCompiler/sysimg/sys.so")
 
 (require 'ein)
 (setq-default ein:completion-backend 'ein:company-backend)

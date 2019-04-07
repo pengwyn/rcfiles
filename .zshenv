@@ -17,7 +17,7 @@ alias ..='cd ..'
 
 if [[ $(hostname) != "mixologist" ]]
 then
-	alias julia='julia -J /home/pengwyn/.julia/dev/PackageCompiler/sysimg/sys.so'
+	#alias julia='julia -J /home/pengwyn/.julia/dev/PackageCompiler/sysimg/sys.so'
 fi
 
 function gitpullall() {
