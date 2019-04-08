@@ -546,10 +546,12 @@ See `comment-region' for behavior of a prefix arg."
   ;; (setq company-auto-complete-chars nil)
   (define-key company-active-map (kbd "C-<return>") #'company-complete-selection)
   (define-key company-active-map (kbd "C-RET") #'company-complete-selection)
-  ;; (define-key company-active-map (kbd "C-TAB") #'company-complete-common)
+  (define-key company-active-map (kbd "S-TAB") #'company-complete-common)
+  (define-key company-active-map [backtab] #'company-complete-common)
+  (define-key company-active-map [S-iso-lefttab] #'company-complete-common)
   ;; (define-key company-active-map [?\C-\t] #'company-complete-common)
-  ;; (define-key company-active-map (kbd "TAB") nil)
-  ;; (define-key company-active-map [tab] nil)
+  (define-key company-active-map (kbd "TAB") nil)
+  (define-key company-active-map [tab] nil)
   (use-package company-quickhelp
 	:config
 	(company-quickhelp-mode t))
