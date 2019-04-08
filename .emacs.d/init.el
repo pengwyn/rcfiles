@@ -4,7 +4,8 @@
 ;; * Emacs customize
 ;;----------------------------
 (setq custom-file "~/.emacs.d/custom.el")
-(load custom-file)
+(when (file-exists-p custom-file)
+	  (load custom-file))
 
 ;; INSTALL PACKAGES
 ;; --------------------------------------
@@ -21,7 +22,7 @@
 (package-initialize)
 
 (setq package-selected-packages
-	'(use-package bind-key diminish treemacs treemacs-evil treemacs-projectile treemacs-magit hydra mode-icons moe-theme jupyter ace-window sudo-edit julia-repl ob-ipython evil-org auto-dim-other-buffers org-bullets helm-projectile htmlize wgrep-helm evil-avy evil-mc multiple-cursors sublimity julia-mode pkgbuild-mode yaml-mode minimap yasnippet-snippets mmm-mode company-php php-mode projectile projectile-direnv projectile-variable outshine outorg helm-navi navi-mode ess prettify-greek flycheck helm-flycheck dim which-key vdiff goto-chg auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes evil helm magit org powerline nlinum nlinum-relative))
+	'(use-package treemacs treemacs-evil treemacs-projectile treemacs-magit hydra moe-theme jupyter ace-window sudo-edit julia-repl ob-ipython evil-org org-bullets htmlize wgrep-helm evil-avy evil-mc multiple-cursors sublimity julia-mode pkgbuild-mode yaml-mode minimap yasnippet-snippets mmm-mode company-php php-mode projectile projectile-direnv projectile-variable outshine outorg helm-navi navi-mode ess prettify-greek flycheck helm-flycheck dim which-key vdiff goto-chg auctex latex-math-preview latex-pretty-symbols latex-preview-pane julia-shell sr-speedbar rtags relative-line-numbers rainbow-delimiters powerline-evil material-theme list-processes+ helm-ag ggtags evil-visualstar evil-surround evil-search-highlight-persist evil-numbers evil-magit evil-exchange elpy ein company-quickhelp better-defaults badger-theme alect-themes evil helm magit org powerline nlinum nlinum-relative))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Use package setup
@@ -29,12 +30,12 @@
 
 (eval-when-compile
   (require 'use-package))
-(require 'diminish)                ;; if you use :diminish
-(require 'bind-key)                ;; if you use any :bind variant
 
 (require 'use-package-ensure)
 (setq use-package-always-ensure t)
 
+(use-package diminish)
+(use-package bind-key)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Dim
@@ -45,40 +46,42 @@
 ;; Put this at the start to allow removal of minor modes as we go
 (require 'dim)
 ;; Some common ones
-(dim-minor-name 'yas-minor-mode nil 'yasnippet)
+;; (dim-minor-name 'yas-minor-mode nil 'yasnippet)
 (dim-minor-name 'undo-tree-mode nil 'undo-tree)
 (dim-minor-name 'abbrev-mode nil 'abbrev)
 (dim-minor-name 'auto-fill-function nil)
 (dim-minor-name 'outshine-mode nil 'outshine)
-(dim-minor-name 'auto-dim-other-buffers-mode nil 'auto-dim-other-buffers)
+;; (dim-minor-name 'auto-dim-other-buffers-mode nil 'auto-dim-other-buffers)
 (dim-minor-name 'auto-revert-mode nil 'autorevert)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * General stuff
 ;;----------------------------
-(setq-default inhibit-startup-message t) ;; hide the startup message
 
 (setq x-select-enable-clipboard nil)
 
-;(setq-default mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
-(setq-default mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
-(setq-default mouse-wheel-follow-mouse 't) ;; scroll window under mouse
-;; (setq-default scroll-step 1) ;; keyboard scroll one line at a time
-(setq-default scroll-conservatively 101) ;; keyboard scroll one line at a time
-(setq-default scroll-margin 3)
+(setq-default inhibit-startup-message t ;; hide the startup message
+              ;; mouse-wheel-scroll-amount '(1 ((shift) . 1)) ;; one line at a time
+              mouse-wheel-progressive-speed nil ;; don't accelerate scrolling
+              mouse-wheel-follow-mouse 't ;; scroll window under mouse
+              ;; scroll-step 1 ;; keyboard scroll one line at a time
+              scroll-conservatively 101 ;; keyboard scroll one line at a time
+              scroll-margin 3
+              split-height-threshold 2
+			  split-width-threshold 20
+              fill-column 80
+              recentf-max-saved-items 1000
+              help-window-select t
+			  display-line-numbers 'visual)
+
+
+(scroll-bar-mode -1)
+(tool-bar-mode -1)
+(menu-bar-mode -1)
 
 (set-frame-font "GohuFont-11")
 ;; (set-frame-font "Hack Nerd Font Mono-11")
-
-(setq-default split-height-threshold 20
-			  split-width-threshold 20)
-
-(setq-default fill-column 80)
-
-(setq-default recentf-max-saved-items 1000)
-
-(setq-default help-window-select t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ** Util functions
@@ -109,55 +112,66 @@
 ;; ** Short modes
 ;;----------------------------
 
-(require 'magit)
+(use-package magit
+  :bind ("<f6>" . magit-status))
 
 (save-place-mode 1)
 (show-paren-mode 1)
-
-(require 'rainbow-delimiters)
-;; (rainbow-delimiters-mode t)
-(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
-
-(require 'powerline)
-(powerline-center-evil-theme)
-
-;; (require 'projectile-direnv)
-;; (add-hook 'projectile-mode-hook 'projectile-direnv-export-variables)
-(projectile-mode)
-(setq projectile-switch-project-action #'helm-projectile-find-file)
-(require 'helm-projectile)
-
-(require 'mmm-auto)
-(setq mmm-global-mode 'maybe)
-(mmm-add-mode-ext-class 'html-mode "\\.php\\'" 'html-php)
-
-(when (display-graphic-p)
-	(require 'auto-dim-other-buffers)
-	(auto-dim-other-buffers-mode t))
-
-(use-package yasnippet
-  :init
-  (yas-global-mode 1))
-
-(when (display-graphic-p)
-	(require 'mode-icons)
-	(setq mode-icons (delete (seq-find (lambda (x) (let ((y (pop x)))
-														(and (string-or-null-p y)
-															(string-match-p (regexp-quote "company") y))))
-								mode-icons)
-					mode-icons))
-	(add-to-list 'mode-icons '("company-box"  61869 FontAwesome))
-	(mode-icons-mode))
-
-(scroll-bar-mode -1)
-(show-paren-mode t)
-(tool-bar-mode -1)
-(menu-bar-mode -1)
-;; (global-nlinum-relative-mode)
-;; (global-display-line-numbers-mode 'visual)
-(setq-default display-line-numbers 'visual)
 (global-auto-revert-mode t)
 
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
+;; (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+
+(use-package powerline
+  :config
+  (powerline-center-evil-theme))
+
+(use-package projectile
+  :config
+  (projectile-mode)
+  (use-package helm-projectile)
+  :custom
+  (projectile-switch-project-action #'helm-projectile-find-file))
+
+(define-prefix-command 'danny-projectile)
+(define-key danny-projectile (kbd "<f9>") 'helm-projectile-switch-project)
+(define-key danny-projectile "f" 'helm-projectile-find-file-dwim)
+(define-key danny-projectile "p" 'org-publish-current-project)
+(define-key danny-projectile "a" 'helm-projectile-ag)
+(global-set-key (kbd "<f9>") 'danny-projectile)
+
+(use-package mmm-mode
+  :config
+  (mmm-add-mode-ext-class 'html-mode "\\.php\\'" 'html-php)
+  (setq-default mmm-global-mode 'maybe))
+
+(use-package auto-dim-other-buffers
+  :if (display-graphic-p)
+  :config
+  (auto-dim-other-buffers-mode t))
+;; (when (display-graphic-p)
+;; 	(require 'auto-dim-other-buffers)
+;; 	(auto-dim-other-buffers-mode t))
+
+(use-package yasnippet
+  :config
+  (yas-global-mode 1)
+  :diminish yas-minor-mode
+  :bind (:map yas-minor-mode-map
+		 ("C-M-y" . 'yas-expand)))
+
+(use-package mode-icons
+  :if (display-graphic-p)
+  :init
+  :config
+  (setq mode-icons (delete (seq-find (lambda (x) (let ((y (pop x)))
+													  (and (string-or-null-p y)
+														  (string-match-p (regexp-quote "company") y))))
+							  mode-icons)
+				  mode-icons))
+  (add-to-list 'mode-icons '("company-box"  61869 FontAwesome))
+  (mode-icons-mode))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -200,7 +214,9 @@ See `comment-region' for behavior of a prefix arg."
 ;; ** Prettify
 ;;----------------------------
 
-(require 'prettify-greek)
+(use-package prettify-greek
+  :custom
+  (prettify-symbols-unprettify-at-point "right-edge"))
 
 ; Make up my own set with \ in front of them.
 (defconst danny-prettify-set 
@@ -224,7 +240,6 @@ See `comment-region' for behavior of a prefix arg."
 						(prettify-symbols-mode t)
 						(setq prettify-symbols-compose-predicate 'danny-prettify-predicate))))
 
-(setq-default prettify-symbols-unprettify-at-point "right-edge")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ** Switch back to minibuffer
@@ -238,73 +253,82 @@ See `comment-region' for behavior of a prefix arg."
   (when (active-minibuffer-window)
     (select-frame-set-input-focus (window-frame (active-minibuffer-window)))
     (select-window (active-minibuffer-window))))
+(global-set-key (kbd "<f12>") 'switch-to-minibuffer-window)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Evil stuff
 ;;----------------------------
 
 
-(require 'evil)
-(evil-mode 1)
+(use-package evil
+  :demand
+  :custom ((evil-cross-line t)
+           (evil-visual-x-select-timeout 999)
+           (evil-symbol-word-search 'symbol)
+		   (evil-want-fine-undo t)
+           (evil-emacs-state-cursor '("red" box))
+           (evil-normal-state-cursor '("green" box))
+           (evil-visual-state-cursor '("orange" box))
+           (evil-insert-state-cursor '("red" bar))
+           (evil-replace-state-cursor '("red" bar))
+           (evil-operator-state-cursor '("red" hollow)))
+  :bind (:map evil-window-map
+		 ("C-l" . evil-window-right)
+         ("C-h" . evil-window-left)
+         ("C-k" . evil-window-up)
+         ("C-j" . evil-window-down)
+         ("C-w" . evil-window-mru)
+         ("C-a" . ace-window)
+		 :map evil-insert-state-map
+		 ("C-e" . evil-end-of-line)
+		 :map evil-visual-state-map
+		 (">" . (lambda ()
+		 		  (interactive)
+		 								; ensure mark is less than point
+		 		  (when (> (mark) (point)) 
+		 			(exchange-point-and-mark)
+		 			)
+		 		  (evil-normal-state)
+		 		  (evil-shift-right (mark) (point))
+		 		  (evil-visual-restore) ; re-select last visual-mode selection
+		 		  ))
 
-(setq evil-cross-line t)
-; A cheat to disable copying to x clipboard.
-(setq evil-visual-x-select-timeout 999)
-
-(evil-add-hjkl-bindings package-menu-mode-map 'emacs
-  (kbd "/") 'evil-search-forward
-  (kbd "n") 'evil-search-next
-  (kbd "N") 'evil-search-previous)
-
-(define-key evil-window-map (kbd "C-l") 'evil-window-right)
-(define-key evil-window-map (kbd "C-h") 'evil-window-left)
-(define-key evil-window-map (kbd "C-k") 'evil-window-up)
-(define-key evil-window-map (kbd "C-j") 'evil-window-down)
-(define-key evil-window-map (kbd "C-w") 'evil-window-mru)
-(define-key evil-window-map (kbd "C-a") 'ace-window)
-
-(dolist (map '(evil-normal-state-map evil-insert-state-map evil-motion-state-map evil-emacs-state-map))
-	(define-key (eval map) (kbd "M-l") 'evil-forward-char)
-	(define-key (eval map) (kbd "M-h") 'evil-backward-char)
-	(define-key (eval map) (kbd "M-k") 'evil-previous-line)
-	(define-key (eval map) (kbd "M-j") 'evil-next-line))
-
-(dolist (map '(evil-motion-state-map evil-emacs-state-map evil-insert-state-map))
-	(define-key (eval map) (kbd "C-w") 'evil-window-map)
-	(define-key (eval map) (kbd "C-M-r") 'helm-recentf))
-
+		 ("<" . (lambda ()
+		 		  (interactive)
+		 								; ensure mark is less than point
+		 		  (when (> (mark) (point)) 
+		 			(exchange-point-and-mark)
+		 			)
+		 		  (evil-normal-state)
+		 		  (evil-shift-left (mark) (point))
+		 		  (evil-visual-restore) ; re-select last visual-mode selection
+		 		  ))
+		 :map evil-emacs-state-map
+		 ("C-w" . evil-window-map)
+		 )
+  ;; :bind-keymap (:map '(evil-motion-state-map evil-emacs-state-map evil-insert-state-map)
+  ;; 					 ("C-w" . evil-window-map))
+  ;; (dolist (map '(evil-motion-state-map evil-emacs-state-map evil-insert-state-map))
+  ;; 	(define-key (eval map) (kbd "C-w") 'evil-window-map)
+  ;; 	;; (define-key (eval map) (kbd "C-M-r") 'helm-recentf))
+  ;; 	)
 ;; (define-key evil-insert-state-map (kbd "C-a") 'evil-beginning-of-line)
-(define-key evil-insert-state-map (kbd "C-e") 'evil-end-of-line)
+  :config
+  (evil-mode 1)
+  (defalias #'forward-evil-word #'forward-evil-symbol)
+  (evil-add-hjkl-bindings package-menu-mode-map 'emacs
+    (kbd "/") 'evil-search-forward
+    (kbd "n") 'evil-search-next
+    (kbd "N") 'evil-search-previous)
 
-(define-key evil-visual-state-map ">" (lambda ()
-    (interactive)
-    ; ensure mark is less than point
-    (when (> (mark) (point)) 
-        (exchange-point-and-mark)
-    )
-    (evil-normal-state)
-    (evil-shift-right (mark) (point))
-    (evil-visual-restore) ; re-select last visual-mode selection
-))
+  (defun recenter-top-bottom-with-clear ()
+	"Do the normal recenter and redraw the screen."
+	(interactive)
+	(recenter-top-bottom)
+	(evil-search-highlight-persist-remove-all))
 
-(define-key evil-visual-state-map "<" (lambda ()
-    (interactive)
-    ; ensure mark is less than point
-    (when (> (mark) (point)) 
-        (exchange-point-and-mark)
-    )
-    (evil-normal-state)
-    (evil-shift-left (mark) (point))
-    (evil-visual-restore) ; re-select last visual-mode selection
-))
-
-(defun recenter-top-bottom-with-clear ()
-  "Do the normal recenter and redraw the screen."
-  (interactive)
-  (recenter-top-bottom)
-  (evil-search-highlight-persist-remove-all))
-
-(dolist (map '(evil-normal-state-map evil-insert-state-map evil-motion-state-map))
+  (dolist (map '(evil-normal-state-map evil-insert-state-map evil-motion-state-map))
+	(define-key (eval map) (kbd "C-w") 'evil-window-map)
 	(define-key (eval map) (kbd "C-c +") 'evil-numbers/inc-at-pt)
 	(define-key (eval map) (kbd "C-c -") 'evil-numbers/dec-at-pt)
 
@@ -317,160 +341,149 @@ See `comment-region' for behavior of a prefix arg."
 	;; (define-key (eval map) (kbd "C-n") nil)
 	;; (define-key (eval map) (kbd "C-p") nil)
 
- (dolist (key '("C-x C-<space>" "C-x <space>" "C-l"))
-   (define-key (eval map) (kbd key) 'recenter-top-bottom-with-clear))
-)
+	(dolist (key '("C-x C-<space>" "C-x <space>" "C-l"))
+	  (define-key (eval map) (kbd key) 'recenter-top-bottom-with-clear))
+	)
+										; Redefine M-y to copy to clipboard and M-p to paste from clipboard
+  (evil-define-operator danny-evil-clip-yank (beg end type register yank-handler)
+	(evil-yank beg end type ?+ yank-handler))
+  (evil-define-operator danny-evil-clip-paste (count &optional register yank-handler)
+	(interactive "P<x>")
+	(evil-paste-after 1 ?+ yank-handler))
+  (evil-define-key '(normal visual) 'global (kbd "C-M-y") 'danny-evil-clip-yank)
+  (evil-define-key '(normal insert) 'global (kbd "C-M-p") 'danny-evil-clip-paste)
 
-;; Don't do this because org-agenda has a lot of different bindings.
-;; (require 'org)
-;; (evil-set-initial-state 'org-agenda-mode 'motion)
+  (dolist (map '(minibuffer-local-map minibuffer-local-ns-map minibuffer-local-completion-map minibuffer-local-must-match-map minibuffer-local-isearch-map minibuffer-local-shell-command-map))
+	(define-key (eval map) (kbd "C-r") 'evil-paste-from-register))
 
-(setq-default evil-symbol-word-search 'symbol
-			  evil-want-fine-undo t)
-(with-eval-after-load 'evil
-    (defalias #'forward-evil-word #'forward-evil-symbol))
+  (use-package evil-magit)
+  
+  (use-package evil-surround
+	:config
+	(global-evil-surround-mode 1))
+  
+  (use-package evil-exchange
+	:custom
+	(evil-exchange-key (kbd "zx"))
+	:config
+    (evil-exchange-install))
+  
+  (use-package evil-search-highlight-persist
+  	:custom
+    (evil-search-highlight-string-min-len 3)
+    :config
+  	(global-evil-search-highlight-persist t))
 
-(setq evil-emacs-state-cursor '("red" box))
-(setq evil-normal-state-cursor '("green" box))
-(setq evil-visual-state-cursor '("orange" box))
-(setq evil-insert-state-cursor '("red" bar))
-(setq evil-replace-state-cursor '("red" bar))
-(setq evil-operator-state-cursor '("red" hollow))
+  (use-package evil-mc
+	:custom (evil-mc-one-cursor-show-mode-line-text nil)
+	:config
+	(global-evil-mc-mode 1)
+	(evil-define-key '(normal visual) evil-mc-key-map (kbd "C-p") nil)
+	(evil-define-key '(normal visual) evil-mc-key-map (kbd "C-n") nil)
+	(evil-define-key 'normal evil-mc-key-map "\M-n" nil)
+	(evil-define-key 'normal evil-mc-key-map "\M-p" nil)
 
-; Redefine M-y to copy to clipboard and M-p to paste from clipboard
-(evil-define-operator danny-evil-clip-yank (beg end type register yank-handler)
-  (evil-yank beg end type ?+ yank-handler))
-(evil-define-operator danny-evil-clip-paste (count &optional register yank-handler)
-  (interactive "P<x>")
-  (evil-paste-after 1 ?+ yank-handler))
-(evil-define-key '(normal visual) 'global (kbd "C-M-y") 'danny-evil-clip-yank)
-(evil-define-key '(normal insert) 'global (kbd "C-M-p") 'danny-evil-clip-paste)
+	(defhydra hydra-evil-mc-keys ()
+	  "evilmckeys"
+	  ("\C-n" evil-mc-make-and-goto-next-match "make and next")
+	  ("\C-p" evil-mc-make-and-goto-prev-match "make and prev")
+	  ("M-n" evil-mc-skip-and-goto-next-match "skip and next")
+	  ("M-p" evil-mc-skip-and-goto-prev-match "skip and prev")
+	  ("q" evil-mc-undo-all-cursors "undo all" :exit t)
+	  ("n" evil-mc-make-and-goto-next-cursor "make and find next cursor")
+	  ("p" evil-mc-make-and-goto-prev-cursor "make and find prev cursor")
+	  ("N" evil-mc-skip-and-goto-next-cursor "skip and find next cursor")
+	  ("P" evil-mc-skip-and-goto-prev-cursor "skip and find prev cursor")
+	  )
+	(evil-define-key '(normal visual) evil-mc-key-map (kbd "g r") 'hydra-evil-mc-keys/body)
+	(evil-define-key '(normal visual) evil-mc-key-map (kbd "M-r") 'hydra-evil-mc-keys/body)
 
-(dolist (map '(minibuffer-local-map minibuffer-local-ns-map minibuffer-local-completion-map minibuffer-local-must-match-map minibuffer-local-isearch-map minibuffer-local-shell-command-map))
-			 (define-key (eval map) (kbd "C-r") 'evil-paste-from-register))
+	(defun danny-make-evil-mc-cursor-on-click (event)
+	  "Stolen partially from the multiple cursor version code"
+	  (interactive "e")
+	  (mouse-minibuffer-check event)
+	  ;; Use event-end in case called from mouse-drag-region.
+	  ;; If EVENT is a click, event-end and event-start give same value.
+	  (let ((position (event-end event)))
+		(if (not (windowp (posn-window position)))
+			(error "Position not in text area of window"))
+		(select-window (posn-window position))
+		(let ((pt (posn-point position)))
+		  (if (numberp pt)
+			  ;; is there a fake cursor with the actual *point* right where we are?
+			  (save-excursion
+				(goto-char pt)
+				(evil-mc-make-cursor-here))))))
+	(global-set-key (kbd "C-S-<mouse-1>") 'danny-make-evil-mc-cursor-on-click)
 
-(require 'evil-magit)
+	;; (defun danny-evil-mc-edit-lines (&optional arg)
+	;;   "Stolen from multiple cursors"
+	;;   (interactive "P")
+	;;   (when (not (and mark-active (/= (point) (mark))))
+	;; 	(error "Mark a set of lines first"))
+	;;   (let* ((col (current-column))
+	;; 		 (point-line (line-number-at-pos))
+	;; 		 (mark-line (progn (exchange-point-and-mark) (line-number-at-pos)))
+	;; 		 (direction (if (< point-line mark-line) :up :down)))
+	;; 	(deactivate-mark)
+	;; 	(when (and (eq direction :up) (bolp))
+	;; 	  (previous-logical-line 1 nil)
+	;; 	  (move-to-column col))
+	;; 	;; Add the cursors
+	;; 	(while (not (eq (line-number-at-pos) point-line))
+	;; 	  ;; create the cursor
+	;; 	  (evil-mc-make-cursor-here)
+	;; 	  ;; proceed to next
+	;; 	  (if (eq direction :up)
+	;; 		  (previous-logical-line 1 nil)
+	;; 		(next-logical-line 1 nil))
+	;; 	  (move-to-column col))
+	;; 	))
 
-(require 'evil-surround)
-(global-evil-surround-mode 1)
+	(defun col-at-point (point)
+      (save-excursion (goto-char point) (current-column)))
 
-(require 'evil-exchange)
-(setq-default evil-exchange-key (kbd "zx"))
-(evil-exchange-install)
+	(defun evil--mc-make-cursor-at-col-append (_startcol endcol orig-line)
+      (end-of-line)
+      (when (> endcol (current-column))
+		(insert-char ?\s (- endcol (current-column))))
+      (move-to-column (- endcol 1))
+      (unless (= (line-number-at-pos) orig-line)
+		(evil-mc-make-cursor-here)))
 
-(require 'evil-search-highlight-persist)
-(global-evil-search-highlight-persist t)
-(setq-default evil-search-highlight-string-min-len 3)
+	(defun evil--mc-make-cursor-at-col-insert (startcol _endcol orig-line)
+      (end-of-line)
+      (move-to-column startcol)
+      (unless (or (= (line-number-at-pos) orig-line) (> startcol (current-column)))
+		(evil-mc-make-cursor-here)))
 
-(eval-after-load 'evil-mc '(evil-define-key 'normal evil-mc-key-map "\M-n" nil))
-(eval-after-load 'evil-mc '(evil-define-key 'normal evil-mc-key-map "\M-p" nil))
+	(defun evil--mc-make-vertical-cursors (beg end func)
+      (evil-mc-pause-cursors)
+      (apply-on-rectangle func
+                          beg end (line-number-at-pos (point)))
+      (evil-mc-resume-cursors)
+      (evil-normal-state))
 
-(require 'evil-mc)
-(global-evil-mc-mode 1)
-(evil-define-key '(normal visual) evil-mc-key-map (kbd "C-p") nil)
-(evil-define-key '(normal visual) evil-mc-key-map (kbd "C-n") nil)
+	(defun evil-mc-insert-vertical-cursors (beg end)
+      (interactive (list (region-beginning) (region-end)))
+      (evil--mc-make-vertical-cursors beg end 'evil--mc-make-cursor-at-col-insert)
+      (move-to-column (min (col-at-point beg) (col-at-point end))))
 
-(defhydra hydra-evil-mc-keys ()
-  "evilmckeys"
-  ("\C-n" evil-mc-make-and-goto-next-match "make and next")
-  ("\C-p" evil-mc-make-and-goto-prev-match "make and prev")
-  ("M-n" evil-mc-skip-and-goto-next-match "skip and next")
-  ("M-p" evil-mc-skip-and-goto-prev-match "skip and prev")
-  ("q" evil-mc-undo-all-cursors "undo all" :exit t)
-  ("n" evil-mc-make-and-goto-next-cursor "make and find next cursor")
-  ("p" evil-mc-make-and-goto-prev-cursor "make and find prev cursor")
-  ("N" evil-mc-skip-and-goto-next-cursor "skip and find next cursor")
-  ("P" evil-mc-skip-and-goto-prev-cursor "skip and find prev cursor")
-  )
-(evil-define-key '(normal visual) evil-mc-key-map (kbd "g r") 'hydra-evil-mc-keys/body)
-							   
+	(defun evil-mc-append-vertical-cursors (beg end)
+      (interactive (list (region-beginning) (region-end)))
+      (evil--mc-make-vertical-cursors beg end 'evil--mc-make-cursor-at-col-append)
+      (move-to-column (- (max (col-at-point beg) (col-at-point end)) 1)))
 
-(setq-default evil-mc-one-cursor-show-mode-line-text nil)
+	(evil-define-key 'visual global-map "gI" 'evil-mc-insert-vertical-cursors)
+	(evil-define-key 'visual global-map "gA" 'evil-mc-append-vertical-cursors)
+	)
+
 
 ;(add-to-list 'evil-mc-custom-known-commands '(outshine-self-insert-command . ((:default . evil-mc-execute-default-call-with-count))))
+)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; ** Additional commands
-;;----------------------------
 
-(defun danny-make-evil-mc-cursor-on-click (event)
-  "Stolen partially from the multiple cursor version code"
-  (interactive "e")
-  (mouse-minibuffer-check event)
-  ;; Use event-end in case called from mouse-drag-region.
-  ;; If EVENT is a click, event-end and event-start give same value.
-  (let ((position (event-end event)))
-    (if (not (windowp (posn-window position)))
-        (error "Position not in text area of window"))
-    (select-window (posn-window position))
-    (let ((pt (posn-point position)))
-      (if (numberp pt)
-          ;; is there a fake cursor with the actual *point* right where we are?
-		(save-excursion
-			(goto-char pt)
-			(evil-mc-make-cursor-here))))))
-(global-set-key (kbd "C-S-<mouse-1>") 'danny-make-evil-mc-cursor-on-click)
 
-(defun danny-evil-mc-edit-lines (&optional arg)
-  "Stolen from multiple cursors"
-  (interactive "P")
-  (when (not (and mark-active (/= (point) (mark))))
-    (error "Mark a set of lines first"))
-  (let* ((col (current-column))
-         (point-line (line-number-at-pos))
-         (mark-line (progn (exchange-point-and-mark) (line-number-at-pos)))
-         (direction (if (< point-line mark-line) :up :down)))
-    (deactivate-mark)
-    (when (and (eq direction :up) (bolp))
-      (previous-logical-line 1 nil)
-      (move-to-column col))
-    ;; Add the cursors
-    (while (not (eq (line-number-at-pos) point-line))
-      ;; create the cursor
-      (evil-mc-make-cursor-here)
-      ;; proceed to next
-      (if (eq direction :up)
-          (previous-logical-line 1 nil)
-        (next-logical-line 1 nil))
-      (move-to-column col))
-    ))
-
- (defun col-at-point (point)
-    (save-excursion (goto-char point) (current-column)))
-
-  (defun evil--mc-make-cursor-at-col-append (_startcol endcol orig-line)
-    (end-of-line)
-    (when (> endcol (current-column))
-      (insert-char ?\s (- endcol (current-column))))
-    (move-to-column (- endcol 1))
-    (unless (= (line-number-at-pos) orig-line)
-      (evil-mc-make-cursor-here)))
-
-  (defun evil--mc-make-cursor-at-col-insert (startcol _endcol orig-line)
-    (end-of-line)
-    (move-to-column startcol)
-    (unless (or (= (line-number-at-pos) orig-line) (> startcol (current-column)))
-      (evil-mc-make-cursor-here)))
-
-  (defun evil--mc-make-vertical-cursors (beg end func)
-    (evil-mc-pause-cursors)
-    (apply-on-rectangle func
-                        beg end (line-number-at-pos (point)))
-    (evil-mc-resume-cursors)
-    (evil-normal-state))
-
-  (defun evil-mc-insert-vertical-cursors (beg end)
-    (interactive (list (region-beginning) (region-end)))
-    (evil--mc-make-vertical-cursors beg end 'evil--mc-make-cursor-at-col-insert)
-    (move-to-column (min (col-at-point beg) (col-at-point end))))
-
-  (defun evil-mc-append-vertical-cursors (beg end)
-    (interactive (list (region-beginning) (region-end)))
-    (evil--mc-make-vertical-cursors beg end 'evil--mc-make-cursor-at-col-append)
-    (move-to-column (- (max (col-at-point beg) (col-at-point end)) 1)))
-
-  (evil-define-key 'visual global-map "gI" 'evil-mc-insert-vertical-cursors)
-  (evil-define-key 'visual global-map "gA" 'evil-mc-append-vertical-cursors)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -482,65 +495,21 @@ See `comment-region' for behavior of a prefix arg."
 ;;;;;;;;;;;;;;;;
 ;; * Company stuff
 
-(require 'company)
-(add-hook 'after-init-hook 'global-company-mode)
-(setq-default company-global-modes '(not shell-mode))
-
-(setq-default company-minimum-prefix-length 2)
-(setq-default company-idle-delay 0.2)
-
-;; Note that company-yasnippet is bad and never returns nil so the other
-;; backends can never be used.  It's better to use the yas fallback options.
-;(setq-default company-backends '( (:separate company-semantic company-clang company-gtags) company-yasnippet company-capf company-dabbrev))
-;(setq-default company-backends '( company-clang company-semantic company-gtags company-yasnippet company-capf company-dabbrev))
-;(setq-default company-backends '( company-clang company-semantic company-gtags company-capf company-dabbrev))
-;(setq-default company-backends '( company-clang company-semantic company-gtags company-capf company-keywords company-dabbrev-code))
-;(setq-default company-backends '( (:separate company-clang company-semantic company-gtags company-capf company-keywords) company-dabbrev-code))
-;(setq-default company-backends '( (:separate company-clang company-semantic company-gtags company-capf company-keywords) company-dabbrev-code company-dabbrev))
-(setq-default company-backends '( company-clang company-semantic company-gtags company-capf company-keywords company-dabbrev-code company-dabbrev))
-;(setq-default company-backends '( company-clang company-semantic company-capf company-keywords company-dabbrev-code company-dabbrev))
-;(setq-default company-backends '( company-yasnippet))
-
-(setq-default company-dabbrev-time-limit 1.0)
-
-;(defun company-yasnippet-or-completion ()
-;  "Solve company yasnippet conflicts."
-;  (interactive)
-;  (let ((yas-fallback-behavior
-;         (apply 'company-complete-common nil)))
-;    (yas-expand)))
-;
-;(add-hook 'company-mode-hook
-;          (lambda ()
-;            (substitute-key-definition
-;             'company-complete-common
-;             'company-yasnippet-or-completion
-;             company-active-map)))
-
-;; (add-hook 'elpy-mode-hook
-;; 	(lambda () (setcar company-backends '(:separate elpy-company-backend company-yasnippet)))
-;; )
-;(define-key company-mode-map (kbd "C-M-i") 'company-complete)
-(define-key company-mode-map (kbd "C-<tab>") 'company-other-backend)
-
-(require 'company-quickhelp)
-(company-quickhelp-mode t)
-
-(use-package company-box
-  :hook (company-mode . company-box-mode)
-  ;; :diminish company-box-mode
-  )
-
-(require 'company-gtags)
-(setq-default company-gtags-modes (append company-gtags-modes '(julia-mode-prog-mode)))
-
-;; (define-key company-active-map (kbd "<return>") nil)
-;; (define-key company-mode-map (kbd "C-n") 'company-select-next)
-;; (define-key company-mode-map (kbd "C-p") 'company-select-previous)
-;; (define-key company-mode-map (kbd "C-<tab>") 'company-other-backend)
-
-
-; Stolen from https://emacs.stackexchange.com/questions/13286/how-can-i-stop-the-enter-key-from-triggering-a-completion-in-company-mode
+(use-package company
+  :hook (after-init-hook . global-company-mode)
+  :custom ((company-global-modes '(not shell-mode))
+		   (company-minimum-prefix-length 2)
+		   (company-idle-delay 0.2)
+		   ;; Note that company-yasnippet is bad and never returns nil so the other
+		   ;; backends can never be used.  It's better to use the yas fallback options.
+		   (company-backends '( company-clang company-semantic company-gtags company-capf company-keywords company-dabbrev-code company-dabbrev))
+		   (company-dabbrev-time-limit 1.0))
+  :bind
+  ;;(define-key company-mode-map (kbd "C-M-i") 'company-complete)
+  (:map company-mode-map
+		("C-<tab>" . company-other-backend))
+  :config
+  ;; Stolen from https://emacs.stackexchange.com/questions/13286/how-can-i-stop-the-enter-key-from-triggering-a-completion-in-company-mode
   ;;; Prevent suggestions from being triggered automatically. In particular,
   ;;; this makes it so that:
   ;;; - TAB will always complete the current selection.
@@ -558,128 +527,140 @@ See `comment-region' for behavior of a prefix arg."
   ;;; - https://emacs.stackexchange.com/q/27459/12534
 
   ;; <return> is for windowed Emacs; RET is for terminal Emacs
-(dolist (key '("<return>" "RET"))
-;; Here we are using an advanced feature of define-key that lets
-;; us pass an "extended menu item" instead of an interactive
-;; function. Doing this allows RET to regain its usual
-;; functionality when the user has not explicitly interacted with
-;; Company.
+  (dolist (key '("<return>" "RET"))
+	;; Here we are using an advanced feature of define-key that lets
+	;; us pass an "extended menu item" instead of an interactive
+	;; function. Doing this allows RET to regain its usual
+	;; functionality when the user has not explicitly interacted with
+	;; Company.
 	(define-key company-active-map (kbd key)
-		`(menu-item nil company-complete-selection
-					:filter ,(lambda (cmd)
-								(when (company-explicit-action-p)
-								cmd)))))
+	  `(menu-item nil company-complete-selection
+				  :filter ,(lambda (cmd)
+							 (when (company-explicit-action-p)
+							   cmd)))))
   ;; (define-key company-active-map (kbd "TAB") #'company-complete-selection)
   ;; (define-key company-active-map (kbd "SPC") nil)
 
   ;; Company appears to override the above keymap based on company-auto-complete-chars.
   ;; Turning it off ensures we have full control.
   ;; (setq company-auto-complete-chars nil)
-(define-key company-active-map (kbd "C-<return>") #'company-complete-selection)
-(define-key company-active-map (kbd "C-RET") #'company-complete-selection)
-;; (define-key company-active-map (kbd "C-TAB") #'company-complete-common)
-;; (define-key company-active-map [?\C-\t] #'company-complete-common)
-;; (define-key company-active-map (kbd "TAB") nil)
-;; (define-key company-active-map [tab] nil)
+  (define-key company-active-map (kbd "C-<return>") #'company-complete-selection)
+  (define-key company-active-map (kbd "C-RET") #'company-complete-selection)
+  ;; (define-key company-active-map (kbd "C-TAB") #'company-complete-common)
+  ;; (define-key company-active-map [?\C-\t] #'company-complete-common)
+  ;; (define-key company-active-map (kbd "TAB") nil)
+  ;; (define-key company-active-map [tab] nil)
+  (use-package company-quickhelp
+	:config
+	(company-quickhelp-mode t))
+
+  (use-package company-box
+	:hook (company-mode . company-box-mode)
+	;; :diminish company-box-mode
+	)
+
+  (use-package company-gtags
+	:custom (company-gtags-modes (append company-gtags-modes '(julia-mode-prog-mode))))
+)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ** Hippie-expand
 ;;----------------------------
-(defun my-hippie-expand-completions (&optional hippie-expand-function)
-      "Return the full list of possible completions generated by `hippie-expand'.
-    The optional argument can be generated with `make-hippie-expand-function'."
-      (let ((this-command 'my-hippie-expand-completions)
-            (last-command last-command)
-            (buffer-modified (buffer-modified-p))
-            (hippie-expand-function (or hippie-expand-function 'hippie-expand)))
-        (flet ((ding)) ; avoid the (ding) when hippie-expand exhausts its options.
-          (while (progn
-                   (funcall hippie-expand-function nil)
-                   (setq last-command 'my-hippie-expand-completions)
-                   (not (equal he-num -1)))))
-        ;; Evaluating the completions modifies the buffer, however we will finish
-        ;; up in the same state that we began.
-        (set-buffer-modified-p buffer-modified)
-        ;; Provide the options in the order in which they are normally generated.
-        (delete he-search-string (reverse he-tried-table))))
+;; (defun my-hippie-expand-completions (&optional hippie-expand-function)
+;;       "Return the full list of possible completions generated by `hippie-expand'.
+;;     The optional argument can be generated with `make-hippie-expand-function'."
+;;       (let ((this-command 'my-hippie-expand-completions)
+;;             (last-command last-command)
+;;             (buffer-modified (buffer-modified-p))
+;;             (hippie-expand-function (or hippie-expand-function 'hippie-expand)))
+;;         (flet ((ding)) ; avoid the (ding) when hippie-expand exhausts its options.
+;;           (while (progn
+;;                    (funcall hippie-expand-function nil)
+;;                    (setq last-command 'my-hippie-expand-completions)
+;;                    (not (equal he-num -1)))))
+;;         ;; Evaluating the completions modifies the buffer, however we will finish
+;;         ;; up in the same state that we began.
+;;         (set-buffer-modified-p buffer-modified)
+;;         ;; Provide the options in the order in which they are normally generated.
+;;         (delete he-search-string (reverse he-tried-table))))
     
-(defun my-ido-hippie-expand-with (hippie-expand-function)
-	"Offer ido-based completion using the specified hippie-expand function."
-	(let* ((options (my-hippie-expand-completions hippie-expand-function))
-			(selection (and options
-							(ido-completing-read "Completions: " options))))
-	(if selection
-		(he-substitute-string selection t)
-		(message "No expansion found"))))
+;; (defun my-ido-hippie-expand-with (hippie-expand-function)
+;; 	"Offer ido-based completion using the specified hippie-expand function."
+;; 	(let* ((options (my-hippie-expand-completions hippie-expand-function))
+;; 			(selection (and options
+;; 							(ido-completing-read "Completions: " options))))
+;; 	(if selection
+;; 		(he-substitute-string selection t)
+;; 		(message "No expansion found"))))
 
-(defun my-ido-hippie-expand ()
-	"Offer ido-based completion for the word at point."
-	(interactive)
-	(my-ido-hippie-expand-with 'hippie-expand))
+;; (defun my-ido-hippie-expand ()
+;; 	"Offer ido-based completion for the word at point."
+;; 	(interactive)
+;; 	(my-ido-hippie-expand-with 'hippie-expand))
 
-(global-set-key (kbd "C-c /") 'my-ido-hippie-expand)
+;; (global-set-key (kbd "C-c /") 'my-ido-hippie-expand)
 
-(require 'cl-lib)
+;; (require 'cl-lib)
 
-(defun company-hippie-backend (command &optional arg &rest ignored)
-  (interactive (list 'interactive))
-  (cl-case command
-    (interactive (company-begin-backend 'company-hippie-backend))
-    (prefix (company-grab-symbol))
-    (candidates (my-hippie-expand-completions))
-    (meta (format "This value is named %s" arg))))
+;; (defun company-hippie-backend (command &optional arg &rest ignored)
+;;   (interactive (list 'interactive))
+;;   (cl-case command
+;;     (interactive (company-begin-backend 'company-hippie-backend))
+;;     (prefix (company-grab-symbol))
+;;     (candidates (my-hippie-expand-completions))
+;;     (meta (format "This value is named %s" arg))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Helm stuff
 ;;----------------------------
-(require 'helm)
-(require 'helm-config)
+(use-package helm
+  :diminish helm-mode
+  :init
+  (global-set-key (kbd "C-c h") 'helm-command-prefix)
+  :config
+  (helm-mode 1)
+  (require 'helm-config)
+  (when (executable-find "curl")
+    (setq-default helm-google-suggest-use-curl-p t))
+  :custom ((helm-split-window-in-side-p t) ; open helm buffer inside current window, not occupy whole other window
+		   (helm-move-to-line-cycle-in-source t) ; move to end or beginning of source when reaching top or bottom of source.
+		   (helm-ff-search-library-in-sexp t) ; search for library in `require' and `declare-function' sexp.
+		   (helm-scroll-amount 8) ; scroll 8 lines other window using M-<next>/M-<prior>
+		   (helm-ff-file-name-history-use-recentf t)
+		   (helm-M-x-fuzzy-match t) ;; optional fuzzy matching for helm-M-x
+		   (helm-semantic-fuzzy-match t)
+		   (helm-imenu-fuzzy-match t))
 
-(dim-minor-name 'helm-mode nil 'helm-mode)
 
 ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
 ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
 ;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
-(global-set-key (kbd "C-c h") 'helm-command-prefix)
-(global-unset-key (kbd "C-x c"))
-
-(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebind tab to run persistent action
-(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB work in terminal
-(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
-
-(when (executable-find "curl")
-  (setq-default helm-google-suggest-use-curl-p t))
-
-(setq-default helm-split-window-in-side-p           t ; open helm buffer inside current window, not occupy whole other window
-			  helm-move-to-line-cycle-in-source     t ; move to end or beginning of source when reaching top or bottom of source.
-			  helm-ff-search-library-in-sexp        t ; search for library in `require' and `declare-function' sexp.
-			  helm-scroll-amount                    8 ; scroll 8 lines other window using M-<next>/M-<prior>
-			  helm-ff-file-name-history-use-recentf t)
-
-(helm-mode 1)
-
-(setq-default helm-M-x-fuzzy-match t) ;; optional fuzzy matching for helm-M-x
-(setq-default helm-semantic-fuzzy-match t
-              helm-imenu-fuzzy-match    t)
-;; (define-key evil-motion-state-map (kbd "M-p") 'helm-recentf)
-
-(define-key helm-grep-map (kbd "C-.") 'helm-goto-next-file)
-(define-key helm-grep-map (kbd "C-,") 'helm-goto-precedent-file)
+	:bind (("C-x c" . nil)
+		   :map helm-map
+		   ("<tab>" . helm-execute-persistent-action) ; rebind tab to run persistent action
+		   ("C-i" . helm-execute-persistent-action) ; make TAB work in terminal
+		   ("C-z"  . helm-select-action) ; list actions using C-z
+		   :map helm-grep-map
+		   ("C-." . 'helm-goto-next-file)
+		   ("C-," . 'helm-goto-precedent-file)))
 
 ;; Kind of helm related
-(eval-after-load 'tramp '(setenv "SHELL" "/bin/bash"))
+(use-package tramp
+  :config
+  (setenv "SHELL" "/bin/bash"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * ggtags
 ;;----------------------------
-(require 'ggtags)
-(add-hook 'c-mode-common-hook
+(use-package ggtags
+  :hook (c-mode-common-hook .
           (lambda ()
             (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
               (progn (ggtags-mode 1)
 					 (evil-define-key 'normal (current-local-map) (kbd "M-.") 'ggtags-find-tag-dwim))
-			)))
+			))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * C Stuff
@@ -722,19 +703,9 @@ See `comment-region' for behavior of a prefix arg."
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; * Need to write this
+;; * Quit help windows
 ;;----------------------------
 
-
-;; TODO I want to come back to this and have a binding that closes all *...* windows
-;; make it set to C-k C-q
-
- ;; (defun kill-dired-buffers ()
- ;; 	 (interactive)
- ;; 	 (mapc (lambda (buffer) 
- ;;           (when (eq 'dired-mode (buffer-local-value 'major-mode buffer)) 
- ;;             (kill-buffer buffer))) 
- ;;         (buffer-list)))
 
 (defvar my/help-window-names
   '(
@@ -811,214 +782,226 @@ you want to quit windows on all frames."
 ;; * GUD
 ;;----------------------------
 
-(setq-default
- gdb-many-windows t
+;; (setq-default
+;;  gdb-many-windows t
 
- ;; Non-nil means display source file containing the main routine at startup
- ;; gdb-show-main t
- gdb-show-main nil
- )
+;;  ;; Non-nil means display source file containing the main routine at startup
+;;  ;; gdb-show-main t
+;;  gdb-show-main nil
+;;  )
 
-(require 'gud)
-(define-key gud-minor-mode-map (kbd "<f9>") 'gud-next)
-(add-hook 'gud-mode-hook
-		  (lambda () (tool-bar-mode t)))
+;; (require 'gud)
+;; (define-key gud-minor-mode-map (kbd "<f9>") 'gud-next)
+;; (add-hook 'gud-mode-hook
+;; 		  (lambda () (tool-bar-mode t)))
 
-(eval-after-load 'comint
-  '(progn
-	(defun danny-prev-match (n) "" (interactive "p")
-							   (if (not (comint-after-pmark-p)) (end-of-buffer))
-							   (comint-previous-matching-input-from-input n)
-							   (setq this-command 'comint-previous-matching-input-from-input))
-	(defun danny-next-match (n) "" (interactive "p")
-							   (if (not (comint-after-pmark-p)) (end-of-buffer))
-							   (comint-next-matching-input-from-input n)
-							   (setq this-command 'comint-next-matching-input-from-input))
+;; (eval-after-load 'comint
+;;   '(progn
+;; 	(defun danny-prev-match (n) "" (interactive "p")
+;; 							   (if (not (comint-after-pmark-p)) (end-of-buffer))
+;; 							   (comint-previous-matching-input-from-input n)
+;; 							   (setq this-command 'comint-previous-matching-input-from-input))
+;; 	(defun danny-next-match (n) "" (interactive "p")
+;; 							   (if (not (comint-after-pmark-p)) (end-of-buffer))
+;; 							   (comint-next-matching-input-from-input n)
+;; 							   (setq this-command 'comint-next-matching-input-from-input))
 
-    ;(define-key comint-mode-map (kbd "<up>") 'comint-previous-matching-input-from-input)
-    ;(define-key comint-mode-map (kbd "C-p") 'comint-previous-matching-input-from-input)
-    ;(define-key comint-mode-map (kbd "<down>") 'comint-next-matching-input-from-input)
-    ;(define-key comint-mode-map (kbd "C-n") 'comint-next-matching-input-from-input)
-    (define-key comint-mode-map (kbd "<up>") 'danny-prev-match)
-    (define-key comint-mode-map (kbd "C-p") 'danny-prev-match)
-    (define-key comint-mode-map (kbd "<down>") 'danny-next-match)
-    (define-key comint-mode-map (kbd "C-n") 'danny-next-match)
-	))
+;;     ;(define-key comint-mode-map (kbd "<up>") 'comint-previous-matching-input-from-input)
+;;     ;(define-key comint-mode-map (kbd "C-p") 'comint-previous-matching-input-from-input)
+;;     ;(define-key comint-mode-map (kbd "<down>") 'comint-next-matching-input-from-input)
+;;     ;(define-key comint-mode-map (kbd "C-n") 'comint-next-matching-input-from-input)
+;;     (define-key comint-mode-map (kbd "<up>") 'danny-prev-match)
+;;     (define-key comint-mode-map (kbd "C-p") 'danny-prev-match)
+;;     (define-key comint-mode-map (kbd "<down>") 'danny-next-match)
+;;     (define-key comint-mode-map (kbd "C-n") 'danny-next-match)
+;; 	))
 
 	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Org-mode stuff
 ;;------------------------------------------------
-(require 'org)
-(require 'ox-publish)
-(require 'org-agenda)
-
-(add-hook 'org-mode-hook 'auto-fill-mode)
-(add-hook 'org-mode-hook 'org-bullets-mode)
-(setq-default org-tags-column -100
-              org-agenda-tags-column -100
-              org-return-follows-link t
-              org-log-done 'time
-              org-directory "~/Dropbox/org"
-              org-default-notes-file (concat org-directory "/notes.org")
-			  org-habit-graph-column 70
-			  org-habit-show-habits-only-for-today nil
-			  org-refile-targets '((org-agenda-files :maxlevel . 3))
-			  org-refile-use-outline-path t
-			  org-outline-path-complete-in-steps nil
-			  org-enforce-todo-dependencies t
-			  org-agenda-skip-deadline-prewarning-if-scheduled t
-			  org-deadline-warning-days 5
-			  org-stuck-projects '("TODO={.+}/-DONE" ("CANCELLED") nil "SCHEDULED:\\|DEADLINE:")
-			  org-agenda-skip-deadline-if-done t
-			  org-agenda-skip-scheduled-if-done t
-			  org-clock-out-when-done '("WAITING" "DONE" "CANCELLED")
-			  org-insert-heading-respect-content t)
-
-(eval-after-load "org" '(setq-default org-modules (append org-modules '(org-habit org-mouse))))
-
-(danny-add-prettify-greek 'org-mode-hook)
-
-
-(defun danny-open-orgfile
-	(&optional arg)
-  "Open the default org file. If a prefix is supplied, open the org file in another window."
-  (interactive "p")
-	   ;(message "%s" arg)
-	   (if (and arg (> arg 1))
-		   (find-file-other-window org-default-notes-file)
-		   (find-file org-default-notes-file)))
-
+(use-package org
+  :init (require 'org-agenda)
+  :hook ((org-mode-hook . auto-fill-mode)
+		 (org-mode-hook . org-bullets-mode))
+  :custom ((org-tags-column -100)
+		   (org-agenda-tags-column -100)
+		   (org-return-follows-link t)
+		   (org-log-done 'time)
+		   (org-directory "~/Dropbox/org")
+		   (org-default-notes-file (concat org-directory "/notes.org"))
+		   (org-habit-graph-column 70)
+		   (org-habit-show-habits-only-for-today nil)
+		   (org-refile-targets '((org-agenda-files :maxlevel . 3)))
+		   (org-refile-use-outline-path t)
+		   (org-outline-path-complete-in-steps nil)
+		   (org-enforce-todo-dependencies t)
+		   (org-agenda-skip-deadline-prewarning-if-scheduled t)
+		   (org-deadline-warning-days 5)
+		   (org-stuck-projects '("TODO={.+}/-DONE" ("CANCELLED") nil "SCHEDULED:\\|DEADLINE:"))
+		   (org-agenda-skip-deadline-if-done t)
+		   (org-agenda-skip-scheduled-if-done t)
+		   (org-clock-out-when-done '("WAITING" "DONE" "CANCELLED"))
+		   (org-insert-heading-respect-content t)
 ;; TODO: make the tasks thing a bit more automatic.
-(setq-default org-capture-templates
-	  '(("c" "Coding todo entry" entry
-	      (file+headline "" "Coding")
-		  "* TODO %i%?    :%f:\n\t%\i\n\t%u\n\t%a")
-	    ("t" "General task" entry
-	      (file+headline "" "Tasks")
-		  "* TODO %i%?    :%f:\n\t%\i\n\t%u\n\t%a")
-	    ("z" "Miscellaneous" checkitem
-	      (file+headline "" "Misc")
-	      ;(file "")
-		  ;"- [ ] %i%?\n\t%u"
-		  )))
+		   (org-capture-templates
+			'(("c" "Coding todo entry" entry
+			   (file+headline "" "Coding")
+			   "* TODO %i%?    :%f:\n\t%\i\n\t%u\n\t%a")
+			  ("t" "General task" entry
+			   (file+headline "" "Tasks")
+			   "* TODO %i%?    :%f:\n\t%\i\n\t%u\n\t%a")
+			  ("z" "Miscellaneous" checkitem
+			   (file+headline "" "Misc")
+										;(file "")
+										;"- [ ] %i%?\n\t%u"
+			   )))
+		   (org-confirm-babel-evaluate nil))
 
-;; ** Agenda
-(evil-add-hjkl-bindings org-agenda-mode-map 'emacs
-  (kbd "/") 'evil-search-forward
-  (kbd "n") 'evil-search-next
-  (kbd "N") 'evil-search-previous)
 
-;; (define-key org-agenda-mode-map (kbd "M-S-<left>") (lambda (arg) (interactive "P") (org-agenda-schedule arg "-1w")))
-;; (define-key org-agenda-mode-map (kbd "M-S-<right>") (lambda (arg) (interactive "P") (org-agenda-schedule arg "+1w")))
-(define-key org-agenda-mode-map (kbd "M-S-<left>") (lambda () (interactive) (org-agenda-date-earlier 7)))
-(define-key org-agenda-mode-map (kbd "M-S-<right>") (lambda () (interactive) (org-agenda-date-later 7)))
+  :bind (:map danny-orgmode
+		 ("<f7>" . danny-open-orgfile)
+		 ("l" . org-store-link)
+		 ("a" . org-agenda)
+		 ("c" . org-capture)
+		 ("b" . org-iswitchb)
+		 ("j" . org-clock-goto)
+		 ("o" . org-clock-out)
+		 ("i" . org-clock-in-last)
+		 ("r" . remember)
+		 ("R" . remember-notes)
+		 ("m" . outshine-imenu)
+		 :map org-mode-map
+		 ("<C-M-return>" . org-insert-todo-subheading)
+		 ("C-4" . org-archive-subtree)
+		 :map org-babel-map
+		 ("C-c" . org-babel-hide-result-toggle)
+		 :map org-agenda-mode-map
+		 ("M-S-<left>" . (lambda () (interactive) (org-agenda-date-earlier 7)))
+		 ("M-S-<right>" . (lambda () (interactive) (org-agenda-date-later 7)))
 
-(define-key org-agenda-mode-map (kbd "H") (lambda () (interactive) (org-agenda-date-earlier 1)))
-(define-key org-agenda-mode-map (kbd "L") (lambda () (interactive) (org-agenda-date-later 1)))
-(define-key org-agenda-mode-map (kbd "M-H") (lambda () (interactive) (org-agenda-date-earlier 7)))
-(define-key org-agenda-mode-map (kbd "M-L") (lambda () (interactive) (org-agenda-date-later 7)))
+		 ("H" . (lambda () (interactive) (org-agenda-date-earlier 1)))
+		 ("L" . (lambda () (interactive) (org-agenda-date-later 1)))
+		 ("M-H" . (lambda () (interactive) (org-agenda-date-earlier 7)))
+		 ("M-L" . (lambda () (interactive) (org-agenda-date-later 7))))
+  :custom-face
+  (org-level-1 ((t (:height 1.5 :family "Liberation Mono"))))
+  (org-level-2 ((t (:height 1.2 :family "Liberation Mono"))))
+  (org-agenda-dimmed-todo-face ((t (:foreground "grey20"))))
 
+  :config
+  (define-prefix-command 'danny-orgmode)
+  (setq org-modules (append org-modules '(org-habit org-mouse)))
+
+  (require 'ox-publish)
+  (danny-add-prettify-greek 'org-mode-hook)
+
+
+  (defun danny-open-orgfile
+	  (&optional arg)
+	"Open the default org file. If a prefix is supplied, open the org file in another window."
+	(interactive "p")
+										;(message "%s" arg)
+	(if (and arg (> arg 1))
+		(find-file-other-window org-default-notes-file)
+	  (find-file org-default-notes-file)))
+
+
+  ;; (require 'org-agenda)
+	(evil-add-hjkl-bindings org-agenda-mode-map 'emacs
+	  (kbd "/") 'evil-search-forward
+	  (kbd "n") 'evil-search-next
+	  (kbd "N") 'evil-search-previous)
 (add-to-list 'org-agenda-custom-commands '("d" "Day+Stuck" ((agenda "" '(org-agenda-span 'day))
 														(stuck))))
 
-;; ** Fonts
-;; (evil-set-initial-state 'org-agenda-mode 'normal)
+  ;; (set-face-attribute 'org-level-1 nil :height 1.5 :family "Liberation Mono")
+  ;; (set-face-attribute 'org-level-2 nil :height 1.2 :family "Liberation Mono")
+  ;; (set-face-attribute 'outline-3 nil :height 1.2 :family "Liberation Mono")
 
-(set-face-attribute 'org-level-1 nil :height 1.5 :family "Liberation Mono")
-(set-face-attribute 'org-level-2 nil :height 1.2 :family "Liberation Mono")
-;; (set-face-attribute 'outline-3 nil :height 1.2 :family "Liberation Mono")
+  ;; (set-face-attribute 'org-agenda-dimmed-todo-face nil :foreground "grey20")
 
-(set-face-attribute 'org-agenda-dimmed-todo-face nil :foreground "grey20")
+  ;; (require 'org-babel)
 
+  ;; (setq org-html-htmlize-output-type 'css) ; default: 'inline-css
+  ;; (setq org-html-htmlize-font-prefix "org-") ; default: "org-"
 
-;; ** Babel
-
-;; (require 'org-babel)
-(setq-default org-confirm-babel-evaluate nil)
-(define-key org-babel-map (kbd "C-c") 'org-babel-hide-result-toggle)
-
-;; (setq org-html-htmlize-output-type 'css) ; default: 'inline-css
-;; (setq org-html-htmlize-font-prefix "org-") ; default: "org-"
-
-;; (require 'ob-ipython)
-;; (ignore-errors (ob-ipython-auto-configure-kernels))
-;; ;;; display/update images in the buffer after I evaluate
-;; (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
-;; (setq-default org-babel-default-header-args:jupyter-julia '((:exports . "both")
-;; 														    (:results . "output")
-;; 														    (:async . "t")
-;; 															(:kernel . "julia-1.1")
-;; 															(:eval . "never-export")))
+  ;; (require 'ob-ipython)
+  ;; (ignore-errors (ob-ipython-auto-configure-kernels))
+  ;; ;;; display/update images in the buffer after I evaluate
+  ;; (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
+  ;; (setq-default org-babel-default-header-args:jupyter-julia '((:exports . "both")
+  ;; 														    (:results . "output")
+  ;; 														    (:async . "t")
+  ;; 															(:kernel . "julia-1.1")
+  ;; 															(:eval . "never-export")))
 
 
-(require 'ob-jupyter)
-;; ob-jupyter requires ob-python for some things as defaults.
-(require 'ob-python)
-;; (add-to-list 'org-babel-load-languages '(jupyter . t))
-(org-babel-do-load-languages 'org-babel-load-languages '((jupyter . t)))
-(setq-default org-babel-default-header-args:jupyter-julia '((:exports . "both")
-															(:results . "output verbatim drawer")
-														    (:session . "defaultdanny")
-														    (:async . "yes")
-															;; (:kernel . "julia-1.1_pre")
-															(:kernel . "julia-1.1")
-															(:eval . "never-export")))
-;; (setq-default org-babel-default-header-args:jupyter-julia '((:session . "juliasession")))
-(add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+  ;; ob-jupyter requires ob-python for some things as defaults.
+  (require 'ob-python)
+  (use-package jupyter
+  :custom (org-babel-default-header-args:jupyter-julia '((:exports . "both")
+															  (:results . "output verbatim drawer")
+														      (:session . "defaultdanny")
+														      (:async . "yes")
+															  ;; (:kernel . "julia-1.1_pre")
+															  (:kernel . "julia-1.1")
+															  (:eval . "never-export")))
+	:config
+	(require 'ob-jupyter)
+    (org-babel-do-load-languages 'org-babel-load-languages '((jupyter . t)))
+  ;; (setq-default org-babel-default-header-args:jupyter-julia '((:session . "juliasession")))
+    (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 
 
-(defvar my-org-src-mode-map (make-sparse-keymap))
-(define-minor-mode my-org-src-mode
-  :init-value nil
-  :keymap my-org-src-mode-map)
-(add-hook 'org-src-mode-hook 'my-org-src-mode)
-(define-key my-org-src-mode-map (kbd "C-c C-c") 'jupyter-eval-buffer)
+	(defvar my-org-src-mode-map (make-sparse-keymap))
+	(define-minor-mode my-org-src-mode
+	  :init-value nil
+	  :keymap my-org-src-mode-map)
+	(add-hook 'org-src-mode-hook 'my-org-src-mode)
+	(define-key my-org-src-mode-map (kbd "C-c C-c") 'jupyter-eval-buffer)
 
-(evil-define-key 'insert 'jupyter-org-interaction-mode-map (kbd "M-i") (lambda () (interactive) (insert-tab)))
+	(evil-define-key 'insert 'jupyter-org-interaction-mode-map (kbd "M-i") (lambda () (interactive) (insert-tab)))
 
-(defvar my-org-block-mode-map (make-sparse-keymap))
-(define-minor-mode my-org-block-mode
-  :keymap my-org-block-mode-map)
-(add-hook 'org-mode 'my-org-block-mode)
+	(defvar my-org-block-mode-map (make-sparse-keymap))
+	(define-minor-mode my-org-block-mode
+	  :keymap my-org-block-mode-map)
+	(add-hook 'org-mode 'my-org-block-mode)
 
-(defun my-org-execute-and-next ()
-  (interactive)
-  (message "Huh? %s" (this-single-command-keys))
-  (message "Huh? %s" (yas--fallback-translate-input (this-single-command-keys)))
-  (message "Huh? %s" last-input-event)
-  (let* ((my-org-block-mode nil)
-		 (key (this-single-command-keys))
-		 (binding (key-binding key t)))
-	(message "Huh? %s" binding)
-	(message "Huh? %s" binding))
-  (org-babel-execute-src-block)
-  (org-babel-next-src-block))
-   
-(define-key-with-fallback my-org-block-mode-map (kbd "M-RET") (my-org-execute-and-next) (org-in-src-block-p))
+	(defun my-org-execute-and-next ()
+	  (interactive)
+	  (let* ((my-org-block-mode nil)
+			 (key (this-single-command-keys))
+			 (binding (key-binding key t)))
+		(org-babel-execute-src-block)
+		(org-babel-next-src-block)))
+	
+	(define-key-with-fallback my-org-block-mode-map (kbd "M-RET") (my-org-execute-and-next) (org-in-src-block-p))
+
+  )
+)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Latex stuff
 ;;----------------------------
-(add-hook 'LaTeX-mode-hook 'auto-fill-mode)
-(add-hook 'LaTeX-mode-hook 'flyspell-mode)
-(add-hook 'LaTeX-mode-hook 'prettify-symbols-mode)
-(add-hook 'LaTeX-mode-hook 'latex-preview-pane-mode)
-(add-hook 'LaTeX-mode-hook (lambda () (load-theme 'material-light)))
-(add-hook 'doc-view-mode-hook (lambda () (relative-line-numbers-mode -1)))
-(add-hook 'LaTeX-mode-hook (lambda () (add-hook 'after-save-hook 'preview-buffer nil t)))
+(use-package tex-mode
+  :hook (LaTeX-mode-hook . (auto-fill-mode flyspell-mode prettify-symbols-mode latex-preview-pane-mode))
+  :config
+  (add-hook 'LaTeX-mode-hook (lambda () (load-theme 'material-light)))
+  ;; (add-hook 'doc-view-mode-hook (lambda () (relative-line-numbers-mode -1)))
+  (add-hook 'LaTeX-mode-hook (lambda () (add-hook 'after-save-hook 'preview-buffer nil t)))
+										; Delay the company tooltips
+  (add-hook 'LaTeX-mode-hook (lambda () (setq-local company-idle-delay 2.0)))
 
-; Delay the company tooltips
-(add-hook 'LaTeX-mode-hook (lambda () (setq company-idle-delay 2.0)))
-
-(when (string= (system-name) "pengix")
+  (when (string= (system-name) "pengix")
 	(setq-default preview-orientation 'below))
 
-;; (require 'LaTeX-preview)
-; Hopefully fix being able to read font in error regions
-;; (add-hook 'LaTeX-mode-hook (lambda () (set-face-attribute 'preview-face nil :inverse-video t)))
+  ;; (require 'LaTeX-preview)
+										; Hopefully fix being able to read font in error regions
+  ;; (add-hook 'LaTeX-mode-hook (lambda () (set-face-attribute 'preview-face nil :inverse-video t)))
 
-(add-hook 'doc-view-mode-hook (lambda () (setq-local display-line-numbers nil)))
+  (add-hook 'doc-view-mode-hook (lambda () (setq-local display-line-numbers nil)))
+)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Ediff stuff
@@ -1030,10 +1013,13 @@ you want to quit windows on all frames."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * which-key mode
 ;;------------------------------------------------
-(require 'which-key)
-(which-key-mode)
-(which-key-setup-side-window-right-bottom)
-(dim-minor-name 'which-key-mode nil)
+(use-package which-key
+  :diminish which-key-mode
+  :config
+  (which-key-mode)
+  (which-key-setup-side-window-right-bottom)
+)
+;; (dim-minor-name 'which-key-mode nil)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1129,28 +1115,6 @@ you want to quit windows on all frames."
 ;; * Key bindings
 ;;----------------------------
 
-(define-prefix-command 'danny-orgmode)
-(define-key danny-orgmode (kbd "<f7>") 'danny-open-orgfile)
-(define-key danny-orgmode "l" 'org-store-link)
-(define-key danny-orgmode "a" 'org-agenda)
-(define-key danny-orgmode "c" 'org-capture)
-(define-key danny-orgmode "b" 'org-iswitchb)
-(define-key danny-orgmode "j" 'org-clock-goto)
-(define-key danny-orgmode "o" 'org-clock-out)
-(define-key danny-orgmode "i" 'org-clock-in-last)
-(define-key danny-orgmode "r" 'remember)
-(define-key danny-orgmode "R" 'remember-notes)
-(define-key danny-orgmode "m" 'outshine-imenu)
-
-(define-key org-mode-map (kbd "<C-M-return>") 'org-insert-todo-subheading)
-(define-key org-mode-map (kbd "C-4") 'org-archive-subtree)
-
-(define-prefix-command 'danny-projectile)
-(define-key danny-projectile (kbd "<f9>") 'helm-projectile-switch-project)
-(define-key danny-projectile "f" 'helm-projectile-find-file-dwim)
-(define-key danny-projectile "p" 'org-publish-current-project)
-(define-key danny-projectile "a" 'helm-projectile-ag)
-
 (define-prefix-command 'danny-completions)
 
 (define-key evil-insert-state-map (kbd "C-k") 'danny-completions)
@@ -1175,7 +1139,6 @@ you want to quit windows on all frames."
 
 (define-key evil-normal-state-map (kbd "M-a") 'avy-goto-char-timer)
 
-(define-key yas-minor-mode-map (kbd "C-M-y") 'yas-expand)
 
 (define-key ggtags-mode-map (kbd "C-c g s") 'ggtags-find-other-symbol)
 (define-key ggtags-mode-map (kbd "C-c g h") 'ggtags-view-tag-history)
@@ -1226,9 +1189,7 @@ you want to quit windows on all frames."
 (define-key evil-window-map "C-r" 'my/quit-help-windows)
 
 (global-set-key (kbd "<f7>") 'danny-orgmode)
-(global-set-key (kbd "<f9>") 'danny-projectile)
-(global-set-key (kbd "<f6>") 'magit-status)
-(global-set-key (kbd "<f12>") 'switch-to-minibuffer-window)
+;; (global-set-key (kbd "<f6>") 'magit-status)
 ;; (global-set-key (kbd "<f8>") 'sr-speedbar-toggle)
 (global-set-key (kbd "<f8>") 'treemacs)
 
