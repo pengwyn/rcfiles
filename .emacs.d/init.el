@@ -73,7 +73,8 @@
               fill-column 80
               recentf-max-saved-items 1000
               help-window-select t
-			  display-line-numbers 'visual)
+			  display-line-numbers 'visual
+			  indent-tabs-mode nil)
 
 
 (scroll-bar-mode -1)
@@ -208,6 +209,11 @@ See `comment-region' for behavior of a prefix arg."
   (interactive "P")
   (copy-and-comment-region (line-beginning-position) (line-end-position)))
 
+(with-eval-after-load "evil" 
+  (define-key evil-visual-state-map (kbd "C-y") 'copy-and-comment-region)
+  ;; (define-key evil-insert-state-map (kbd "C-y") 'copy-and-comment-line)
+  (define-key evil-normal-state-map (kbd "C-y") 'copy-and-comment-line))
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -261,7 +267,7 @@ See `comment-region' for behavior of a prefix arg."
 
 
 (use-package evil
-  :demand
+  :demand t
   :custom ((evil-cross-line t)
            (evil-visual-x-select-timeout 999)
            (evil-symbol-word-search 'symbol)
@@ -273,46 +279,46 @@ See `comment-region' for behavior of a prefix arg."
            (evil-replace-state-cursor '("red" bar))
            (evil-operator-state-cursor '("red" hollow)))
   :bind (:map evil-window-map
-		 ("C-l" . evil-window-right)
-         ("C-h" . evil-window-left)
-         ("C-k" . evil-window-up)
-         ("C-j" . evil-window-down)
-         ("C-w" . evil-window-mru)
-         ("C-a" . ace-window)
-		 :map evil-insert-state-map
-		 ("C-e" . evil-end-of-line)
-		 :map evil-visual-state-map
-		 (">" . (lambda ()
-		 		  (interactive)
+			  ("C-l" . evil-window-right)
+			  ("C-h" . evil-window-left)
+			  ("C-k" . evil-window-up)
+			  ("C-j" . evil-window-down)
+			  ("C-w" . evil-window-mru)
+			  ("C-a" . ace-window)
+			  ;; :map evil-insert-state-map
+			  ;; ("C-e" . evil-end-of-line)
+			  :map evil-visual-state-map
+			  (">" . (lambda ()
+		 			   (interactive)
 		 								; ensure mark is less than point
-		 		  (when (> (mark) (point)) 
-		 			(exchange-point-and-mark)
-		 			)
-		 		  (evil-normal-state)
-		 		  (evil-shift-right (mark) (point))
-		 		  (evil-visual-restore) ; re-select last visual-mode selection
-		 		  ))
+		 			   (when (> (mark) (point)) 
+		 				 (exchange-point-and-mark)
+		 				 )
+		 			   (evil-normal-state)
+		 			   (evil-shift-right (mark) (point))
+		 			   (evil-visual-restore) ; re-select last visual-mode selection
+		 			   ))
 
-		 ("<" . (lambda ()
-		 		  (interactive)
+			  ("<" . (lambda ()
+		 			   (interactive)
 		 								; ensure mark is less than point
-		 		  (when (> (mark) (point)) 
-		 			(exchange-point-and-mark)
-		 			)
-		 		  (evil-normal-state)
-		 		  (evil-shift-left (mark) (point))
-		 		  (evil-visual-restore) ; re-select last visual-mode selection
-		 		  ))
-		 :map evil-emacs-state-map
-		 ("C-w" . evil-window-map)
-		 )
+		 			   (when (> (mark) (point)) 
+		 				 (exchange-point-and-mark)
+		 				 )
+		 			   (evil-normal-state)
+		 			   (evil-shift-left (mark) (point))
+		 			   (evil-visual-restore) ; re-select last visual-mode selection
+		 			   ))
+			  :map evil-emacs-state-map
+			  ("C-w" . evil-window-map)
+			  )
   ;; :bind-keymap (:map '(evil-motion-state-map evil-emacs-state-map evil-insert-state-map)
   ;; 					 ("C-w" . evil-window-map))
   ;; (dolist (map '(evil-motion-state-map evil-emacs-state-map evil-insert-state-map))
   ;; 	(define-key (eval map) (kbd "C-w") 'evil-window-map)
   ;; 	;; (define-key (eval map) (kbd "C-M-r") 'helm-recentf))
   ;; 	)
-;; (define-key evil-insert-state-map (kbd "C-a") 'evil-beginning-of-line)
+  ;; (define-key evil-insert-state-map (kbd "C-a") 'evil-beginning-of-line)
   :config
   (evil-mode 1)
   (defalias #'forward-evil-word #'forward-evil-symbol)
@@ -367,6 +373,11 @@ See `comment-region' for behavior of a prefix arg."
 	(evil-exchange-key (kbd "zx"))
 	:config
     (evil-exchange-install))
+
+  (use-package evil-avy
+	:bind
+	;; Was originally only for normal mode.
+	("M-a" . avy-goto-char-timer))
   
   (use-package evil-search-highlight-persist
   	:custom
@@ -479,8 +490,8 @@ See `comment-region' for behavior of a prefix arg."
 	)
 
 
-;(add-to-list 'evil-mc-custom-known-commands '(outshine-self-insert-command . ((:default . evil-mc-execute-default-call-with-count))))
-)
+										;(add-to-list 'evil-mc-custom-known-commands '(outshine-self-insert-command . ((:default . evil-mc-execute-default-call-with-count))))
+  )
 
 
 
@@ -496,7 +507,7 @@ See `comment-region' for behavior of a prefix arg."
 ;; * Company stuff
 
 (use-package company
-  :hook (after-init-hook . global-company-mode)
+  :hook (after-init . global-company-mode)
   :custom ((company-global-modes '(not shell-mode))
 		   (company-minimum-prefix-length 2)
 		   (company-idle-delay 0.2)
@@ -560,10 +571,7 @@ See `comment-region' for behavior of a prefix arg."
 	:hook (company-mode . company-box-mode)
 	;; :diminish company-box-mode
 	)
-
-  (use-package company-gtags
-	:custom (company-gtags-modes (append company-gtags-modes '(julia-mode-prog-mode))))
-)
+  )
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -586,7 +594,7 @@ See `comment-region' for behavior of a prefix arg."
 ;;         (set-buffer-modified-p buffer-modified)
 ;;         ;; Provide the options in the order in which they are normally generated.
 ;;         (delete he-search-string (reverse he-tried-table))))
-    
+
 ;; (defun my-ido-hippie-expand-with (hippie-expand-function)
 ;; 	"Offer ido-based completion using the specified hippie-expand function."
 ;; 	(let* ((options (my-hippie-expand-completions hippie-expand-function))
@@ -636,17 +644,23 @@ See `comment-region' for behavior of a prefix arg."
 		   (helm-imenu-fuzzy-match t))
 
 
-;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
-;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
-;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
-	:bind (("C-x c" . nil)
-		   :map helm-map
-		   ("<tab>" . helm-execute-persistent-action) ; rebind tab to run persistent action
-		   ("C-i" . helm-execute-persistent-action) ; make TAB work in terminal
-		   ("C-z"  . helm-select-action) ; list actions using C-z
-		   :map helm-grep-map
-		   ("C-." . 'helm-goto-next-file)
-		   ("C-," . 'helm-goto-precedent-file)))
+  ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
+  ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
+  ;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
+  :bind (("C-x c" . nil)
+		 ("M-x" . helm-M-x)
+		 ;; (global-set-key (kbd "C-M-x") 'execute-extended-command)
+		 ;; (global-set-key (kbd "C-x b") 'helm-mini)
+		 ("C-x f" . helm-find-files)
+		 ("C-x C-f" . helm-multi-files)
+		 ("C-x b" . helm-buffers-list)
+		 :map helm-map
+		 ("<tab>" . helm-execute-persistent-action) ; rebind tab to run persistent action
+		 ("C-i" . helm-execute-persistent-action) ; make TAB work in terminal
+		 ("C-z"  . helm-select-action) ; list actions using C-z
+		 :map helm-grep-map
+		 ("C-." . 'helm-goto-next-file)
+		 ("C-," . 'helm-goto-precedent-file)))
 
 ;; Kind of helm related
 (use-package tramp
@@ -657,12 +671,28 @@ See `comment-region' for behavior of a prefix arg."
 ;; * ggtags
 ;;----------------------------
 (use-package ggtags
-  :hook (c-mode-common-hook .
-          (lambda ()
-            (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
-              (progn (ggtags-mode 1)
-					 (evil-define-key 'normal (current-local-map) (kbd "M-.") 'ggtags-find-tag-dwim))
-			))))
+  :hook (c-mode-common .
+					   (lambda ()
+						 (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
+						   (progn (ggtags-mode 1)
+								  (evil-define-key 'normal (current-local-map) (kbd "M-.") 'ggtags-find-tag-dwim))
+						   )))
+  :bind (:map ggtags-mode-map
+			  ("C-c g s" . ggtags-find-other-symbol)
+			  ("C-c g h" . ggtags-view-tag-history)
+			  ("C-c g r" . ggtags-find-reference)
+			  ("C-c g f" . ggtags-find-file)
+			  ("C-c g c" . ggtags-create-tags)
+			  ("C-c g u" . ggtags-update-tags)
+
+			  ("M-," . pop-tag-mark)
+			  ("C-M-," . ggtags-find-tag-continue))
+
+  ;; (define-key evil-normal-state-map (kbd "M-.") 'ggtags-find-tag-dwim)
+  ;; (define-key evil-normal-state-map (kbd "M-.") nil)
+
+
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * General semantic stuff
@@ -714,7 +744,6 @@ See `comment-region' for behavior of a prefix arg."
 ;; * Quit help windows
 ;;----------------------------
 
-
 (defvar my/help-window-names
   '(
     ;; Ubiquitous help buffers
@@ -746,6 +775,10 @@ you want to quit windows on all frames."
         ;; (delete-windows-on name kill frame)))))
 		(delete-windows-on name frame)))))
 
+(with-eval-after-load "evil" 
+  (define-key evil-window-map "r" 'my/quit-help-windows)
+  (define-key evil-window-map "C-r" 'my/quit-help-windows))
+
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ;; * Speedbar
 ;; ;;----------------------------
@@ -770,7 +803,7 @@ you want to quit windows on all frames."
 ;; * Treemacs
 ;;----------------------------
 (use-package treemacs
-  :defer t
+  :bind ("<f8>" . treemacs)
   :config
   (use-package treemacs-evil)
   (use-package treemacs-projectile)
@@ -778,7 +811,7 @@ you want to quit windows on all frames."
   (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action)
   (add-to-list 'treemacs-pre-file-insert-predicates #'treemacs-is-file-git-ignored?)
   ;; (add-to-list 'treemacs-pre-file-insert-predicates #'treemacs-file-tracked-p)
-)
+  )
 
 (defun treemacs-file-tracked-p (file git-info)
   "Determined if FILE is tracked by git by means of GIT-INFO."
@@ -824,74 +857,82 @@ you want to quit windows on all frames."
 ;;     (define-key comint-mode-map (kbd "C-n") 'danny-next-match)
 ;; 	))
 
-	
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Org-mode stuff
 ;;------------------------------------------------
 (use-package org
   :init (require 'org-agenda)
-  :hook ((auto-fill-mode . org-mode)
-		 (org-bullets-mode . org-mode))
+  :demand t
+
+  :hook (
+  		 (org-mode . auto-fill-mode)
+  		 (org-mode . org-bullets-mode)
+  		 (org-mode . (lambda () (setq tab-width 2))))
+
   :custom ((org-tags-column -100)
-		   (org-agenda-tags-column -100)
-		   (org-return-follows-link t)
-		   (org-log-done 'time)
-		   (org-directory "~/Dropbox/org")
-		   (org-default-notes-file (concat org-directory "/notes.org"))
-		   (org-habit-graph-column 70)
-		   (org-habit-show-habits-only-for-today nil)
-		   (org-refile-targets '((org-agenda-files :maxlevel . 3)))
-		   (org-refile-use-outline-path t)
-		   (org-outline-path-complete-in-steps nil)
-		   (org-enforce-todo-dependencies t)
-		   (org-agenda-skip-deadline-prewarning-if-scheduled t)
-		   (org-deadline-warning-days 5)
-		   (org-stuck-projects '("TODO={.+}/-DONE" ("CANCELLED") nil "SCHEDULED:\\|DEADLINE:"))
-		   (org-agenda-skip-deadline-if-done t)
-		   (org-agenda-skip-scheduled-if-done t)
-		   (org-clock-out-when-done '("WAITING" "DONE" "CANCELLED"))
-		   (org-insert-heading-respect-content t)
-;; TODO: make the tasks thing a bit more automatic.
-		   (org-capture-templates
-			'(("c" "Coding todo entry" entry
-			   (file+headline "" "Coding")
-			   "* TODO %i%?    :%f:\n\t%\i\n\t%u\n\t%a")
-			  ("t" "General task" entry
-			   (file+headline "" "Tasks")
-			   "* TODO %i%?    :%f:\n\t%\i\n\t%u\n\t%a")
-			  ("z" "Miscellaneous" checkitem
-			   (file+headline "" "Misc")
-										;(file "")
-										;"- [ ] %i%?\n\t%u"
-			   )))
-		   (org-confirm-babel-evaluate nil))
+  		   (org-agenda-tags-column -100)
+  		   (org-return-follows-link t)
+  		   (org-log-done 'time)
+  		   (org-directory "~/Dropbox/org")
+  		   (org-default-notes-file (concat org-directory "/notes.org"))
+  		   (org-habit-graph-column 70)
+  		   (org-habit-show-habits-only-for-today nil)
+  		   (org-refile-targets '((org-agenda-files :maxlevel . 3)))
+  		   (org-refile-use-outline-path t)
+  		   (org-outline-path-complete-in-steps nil)
+  		   (org-enforce-todo-dependencies t)
+  		   (org-agenda-skip-deadline-prewarning-if-scheduled t)
+  		   (org-deadline-warning-days 5)
+  		   (org-stuck-projects '("TODO={.+}/-DONE" ("CANCELLED") nil "SCHEDULED:\\|DEADLINE:"))
+  		   (org-agenda-skip-deadline-if-done t)
+  		   (org-agenda-skip-scheduled-if-done t)
+  		   (org-clock-out-when-done '("WAITING" "DONE" "CANCELLED"))
+  		   (org-insert-heading-respect-content t)
+  		   ;; TODO: make the tasks thing a bit more automatic.
+  		   (org-capture-templates
+  			'(("c" "Coding todo entry" entry
+  			   (file+headline "" "Coding")
+  			   "* TODO %i%?    :%f:\n\t%\i\n\t%u\n\t%a")
+  			  ("t" "General task" entry
+  			   (file+headline "" "Tasks")
+  			   "* TODO %i%?    :%f:\n\t%\i\n\t%u\n\t%a")
+  			  ("z" "Miscellaneous" checkitem
+  			   (file+headline "" "Misc")
+  										;(file "")
+  										;"- [ ] %i%?\n\t%u"
+  			   )))
+  		   (org-confirm-babel-evaluate nil))
 
 
-  :bind (:map danny-orgmode
-		 ("<f7>" . danny-open-orgfile)
-		 ("l" . org-store-link)
-		 ("a" . org-agenda)
-		 ("c" . org-capture)
-		 ("b" . org-iswitchb)
-		 ("j" . org-clock-goto)
-		 ("o" . org-clock-out)
-		 ("i" . org-clock-in-last)
-		 ("r" . remember)
-		 ("R" . remember-notes)
-		 ("m" . outshine-imenu)
-		 :map org-mode-map
-		 ("<C-M-return>" . org-insert-todo-subheading)
-		 ("C-4" . org-archive-subtree)
-		 :map org-babel-map
-		 ("C-c" . org-babel-hide-result-toggle)
-		 :map org-agenda-mode-map
-		 ("M-S-<left>" . (lambda () (interactive) (org-agenda-date-earlier 7)))
-		 ("M-S-<right>" . (lambda () (interactive) (org-agenda-date-later 7)))
+  :bind (("<f7>" . danny-orgmode)
+		 :map danny-orgmode
+  		 ("<f7>" . danny-open-orgfile)
+  		 ("l" . org-store-link)
+  		 ("a" . org-agenda)
+  		 ("c" . org-capture)
+  		 ("b" . org-iswitchb)
+  		 ("j" . org-clock-goto)
+  		 ("o" . org-clock-out)
+  		 ("i" . org-clock-in-last)
+  		 ("r" . remember)
+  		 ("R" . remember-notes)
+  		 ("m" . outshine-imenu)
+  		 :map org-mode-map
+  		 ("<C-M-return>" . org-insert-todo-subheading)
+  		 ("C-4" . org-archive-subtree)
+         ("<return>" . org-return-indent)
+  		 :map org-babel-map
+  		 ("C-c" . org-babel-hide-result-toggle)
+  		 :map org-agenda-mode-map
+  		 ("M-S-<left>" . (lambda () (interactive) (org-agenda-date-earlier 7)))
+  		 ("M-S-<right>" . (lambda () (interactive) (org-agenda-date-later 7)))
 
-		 ("H" . (lambda () (interactive) (org-agenda-date-earlier 1)))
-		 ("L" . (lambda () (interactive) (org-agenda-date-later 1)))
-		 ("M-H" . (lambda () (interactive) (org-agenda-date-earlier 7)))
-		 ("M-L" . (lambda () (interactive) (org-agenda-date-later 7))))
+  		 ("H" . (lambda () (interactive) (org-agenda-date-earlier 1)))
+  		 ("L" . (lambda () (interactive) (org-agenda-date-later 1)))
+  		 ("M-H" . (lambda () (interactive) (org-agenda-date-earlier 7)))
+  		 ("M-L" . (lambda () (interactive) (org-agenda-date-later 7))))
+
   :custom-face
   (org-level-1 ((t (:height 1.5 :family "Liberation Mono"))))
   (org-level-2 ((t (:height 1.2 :family "Liberation Mono"))))
@@ -906,85 +947,64 @@ you want to quit windows on all frames."
 
 
   (defun danny-open-orgfile
-	  (&optional arg)
-	"Open the default org file. If a prefix is supplied, open the org file in another window."
-	(interactive "p")
-										;(message "%s" arg)
-	(if (and arg (> arg 1))
-		(find-file-other-window org-default-notes-file)
-	  (find-file org-default-notes-file)))
+  	  (&optional arg)
+  	"Open the default org file. If a prefix is supplied, open the org file in another window."
+  	(interactive "p")
+  										;(message "%s" arg)
+  	(if (and arg (> arg 1))
+  		(find-file-other-window org-default-notes-file)
+  	  (find-file org-default-notes-file)))
 
 
   ;; (require 'org-agenda)
-	(evil-add-hjkl-bindings org-agenda-mode-map 'emacs
-	  (kbd "/") 'evil-search-forward
-	  (kbd "n") 'evil-search-next
-	  (kbd "N") 'evil-search-previous)
-(add-to-list 'org-agenda-custom-commands '("d" "Day+Stuck" ((agenda "" '(org-agenda-span 'day))
-														(stuck))))
-
-  ;; (set-face-attribute 'org-level-1 nil :height 1.5 :family "Liberation Mono")
-  ;; (set-face-attribute 'org-level-2 nil :height 1.2 :family "Liberation Mono")
-  ;; (set-face-attribute 'outline-3 nil :height 1.2 :family "Liberation Mono")
-
-  ;; (set-face-attribute 'org-agenda-dimmed-todo-face nil :foreground "grey20")
-
-  ;; (require 'org-babel)
-
-  ;; (setq org-html-htmlize-output-type 'css) ; default: 'inline-css
-  ;; (setq org-html-htmlize-font-prefix "org-") ; default: "org-"
-
-  ;; (require 'ob-ipython)
-  ;; (ignore-errors (ob-ipython-auto-configure-kernels))
-  ;; ;;; display/update images in the buffer after I evaluate
-  ;; (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
-  ;; (setq-default org-babel-default-header-args:jupyter-julia '((:exports . "both")
-  ;; 														    (:results . "output")
-  ;; 														    (:async . "t")
-  ;; 															(:kernel . "julia-1.1")
-  ;; 															(:eval . "never-export")))
-
+  (evil-add-hjkl-bindings org-agenda-mode-map 'emacs
+  	(kbd "/") 'evil-search-forward
+  	(kbd "n") 'evil-search-next
+  	(kbd "N") 'evil-search-previous)
+  (add-to-list 'org-agenda-custom-commands '("d" "Day+Stuck" ((agenda "" '(org-agenda-span 'day))
+  														      (stuck))))
 
   ;; ob-jupyter requires ob-python for some things as defaults.
   (require 'ob-python)
   (use-package jupyter
-  :custom (org-babel-default-header-args:jupyter-julia '((:exports . "both")
-															  (:results . "output verbatim drawer")
-														      (:session . "defaultdanny")
-														      (:async . "yes")
-															  ;; (:kernel . "julia-1.1_pre")
-															  (:kernel . "julia-1.1")
-															  (:eval . "never-export")))
-	:config
-	(require 'ob-jupyter)
+    :custom (org-babel-default-header-args:jupyter-julia '((:exports . "both")
+  														   (:results . "output verbatim drawer")
+  														   (:session . "defaultdanny")
+  														   (:async . "yes")
+  														   ;; (:kernel . "julia-1.1_pre")
+  														   (:kernel . "julia-1.1")
+  														   (:eval . "never-export")))
+  	:config
+  	(require 'ob-jupyter)
     (org-babel-do-load-languages 'org-babel-load-languages '((jupyter . t)))
-  ;; (setq-default org-babel-default-header-args:jupyter-julia '((:session . "juliasession")))
+    ;; (setq-default org-babel-default-header-args:jupyter-julia '((:session . "juliasession")))
     (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 
 
-	(defvar my-org-src-mode-map (make-sparse-keymap))
-	(define-minor-mode my-org-src-mode
-	  :init-value nil
-	  :keymap my-org-src-mode-map)
-	(add-hook 'org-src-mode-hook 'my-org-src-mode)
-	(define-key my-org-src-mode-map (kbd "C-c C-c") 'jupyter-eval-buffer)
+  	(defvar my-org-src-mode-map (make-sparse-keymap))
+  	(define-minor-mode my-org-src-mode
+  	  :init-value nil
+  	  :keymap my-org-src-mode-map)
+  	(add-hook 'org-src-mode-hook 'my-org-src-mode)
+  	(define-key my-org-src-mode-map (kbd "C-c C-c") 'jupyter-eval-buffer)
 
-	(evil-define-key 'insert 'jupyter-org-interaction-mode-map (kbd "M-i") (lambda () (interactive) (insert-tab)))
+  	;; (evil-define-key 'insert 'jupyter-org-interaction-mode-map (kbd "M-i") (lambda () (interactive) (insert-tab)))
+  	(evil-define-key 'insert 'jupyter-org-interaction-mode-map (kbd "M-i") nil)
 
-	(defvar my-org-block-mode-map (make-sparse-keymap))
-	(define-minor-mode my-org-block-mode
-	  :keymap my-org-block-mode-map)
-	(add-hook 'org-mode 'my-org-block-mode)
+  	(defvar my-org-block-mode-map (make-sparse-keymap))
+  	(define-minor-mode my-org-block-mode
+  	  :keymap my-org-block-mode-map)
+  	(add-hook 'org-mode 'my-org-block-mode)
 
-	(defun my-org-execute-and-next ()
-	  (interactive)
-	  (let* ((my-org-block-mode nil)
-			 (key (this-single-command-keys))
-			 (binding (key-binding key t)))
-		(org-babel-execute-src-block)
-		(org-babel-next-src-block)))
+  	(defun my-org-execute-and-next ()
+  	  (interactive)
+  	  (let* ((my-org-block-mode nil)
+  			 (key (this-single-command-keys))
+  			 (binding (key-binding key t)))
+  		(org-babel-execute-src-block)
+  		(org-babel-next-src-block)))
 	
-	(define-key-with-fallback my-org-block-mode-map (kbd "M-RET") (my-org-execute-and-next) (org-in-src-block-p))
+  	(define-key-with-fallback my-org-block-mode-map (kbd "M-RET") (my-org-execute-and-next) (org-in-src-block-p))
 
   )
 )
@@ -993,7 +1013,11 @@ you want to quit windows on all frames."
 ;; * Latex stuff
 ;;----------------------------
 (use-package tex-mode
-  :hook (LaTeX-mode-hook . (auto-fill-mode flyspell-mode prettify-symbols-mode latex-preview-pane-mode))
+  ;; :hook (LaTeX-mode-hook . (auto-fill-mode flyspell-mode prettify-symbols-mode latex-preview-pane-mode))
+  :hook ((LaTeX-mode . auto-fill-mode)
+		 (LaTeX-mode . flyspell-mode)
+		 (LaTeX-mode . prettify-symbols-mode)
+		 (LaTeX-mode . latex-preview-pane-mode))
   :config
   (add-hook 'LaTeX-mode-hook (lambda () (load-theme 'material-light)))
   ;; (add-hook 'doc-view-mode-hook (lambda () (relative-line-numbers-mode -1)))
@@ -1034,85 +1058,79 @@ you want to quit windows on all frames."
 ;; * Outshine/outorg/navi-mode stuff
 ;;----------------------------
 
-(require 'outshine)
-;; (add-hook 'outline-minor-mode-hook
-;; 		  (lambda () (progn
-;; 					(outshine-hook-function)
-;; 					(setq-local outshine-imenu-preliminary-generic-expression
-;; 						`((nil ,(concat (message "%s" (outshine-calc-outline-regexp)) "\\(.*$\\)") 1))))))
-(add-hook 'outline-minor-mode-hook
-		  (lambda () (progn
-					;; (outshine-hook-function)
-					(outshine-mode)
-					(setq-local outshine-imenu-preliminary-generic-expression
-						`((nil ,(concat (outshine-calc-outline-regexp) "\\(.*$\\)") 1))))))
-;; (add-hook 'outline-minor-mode-hook
-;; 		  (lambda () (setq-local outshine-imenu-preliminary-generic-expression
-;; 						`((nil ,(concat (outshine-calc-outline-regexp) "\\(.*$\\)") 1)))))
-;; (add-hook 'outline-minor-mode-hook (lambda ()
-;; 									 (unless (eq major-mode 'org-mode) (progn (outshine-hook-function) (message "%s" "looks like this was not org-mode!")))))
-;(setq outshine-imenu-preliminary-generic-expression
-;	`((nil ,(concat (outshine-calc-outline-regexp) "\\(.*$\\)") 1)))
+(use-package outshine
+  :hook ((prog-mode . outline-minor-mode)
+  		 (outline-minor-mode . (lambda () (progn
+						 (outshine-mode)
+						 (setq-local outshine-imenu-preliminary-generic-expression
+									 `((nil ,(concat (outshine-calc-outline-regexp) "\\(.*$\\)") 1)))))))
+  :diminish outline-minor-mode
+  :config
 
-(add-hook 'prog-mode-hook 'outline-minor-mode)
-(dim-minor-name 'outline-minor-mode nil)
+  ;; Fix self-insert-command for evil-mc
+  (add-to-list 'evil-mc-custom-known-commands '(outshine-self-insert-command . ((:default . evil-mc-execute-default-call-with-count))))
 
-;; (set-face-attribute 'outline-1 nil :height 2.0 :family "Inconsolata" :foreground "black" :background "DarkSeaGreen1")
-;; (set-face-attribute 'outline-2 nil :height 1.5 :family "Inconsolata")
-;; (set-face-attribute 'outline-3 nil :height 1.2 :family "Inconsolata")
-(set-face-attribute 'outline-1 nil :height 2.0 :family "Liberation Mono" :foreground "black" :background "DarkSeaGreen1")
-(set-face-attribute 'outline-2 nil :height 1.5 :family "Liberation Mono")
-(set-face-attribute 'outline-3 nil :height 1.2 :family "Liberation Mono")
-;; (set-face-attribute 'outline-1 nil :height 2.0 :foreground "black" :background "DarkSeaGreen1")
-;; (set-face-attribute 'outline-2 nil :height 1.5)
-;; (set-face-attribute 'outline-3 nil :height 1.2)
+  :custom-face
+  (outline-1 ((t (:height 2.0 :family "Liberation Mono" :foreground "black" :background "DarkSeaGreen1"))))
+  (outline-2 ((t (:height 1.5 :family "Liberation Mono"))))
+  (outline-3 ((t (:height 1.2 :family "Liberation Mono"))))
+  (org-agenda-dimmed-todo-face ((t (:foreground "grey20"))))
 
-(setq outshine-imenu-show-headlines-p nil)
-; Need this to help with outshine-imenu
-;; (add-hook 'outline-minor-mode-hook (lambda () (setq-local outshine-imenu-preliminary-generic-expression
-;;                `((nil ,(concat (message "%s" (outshine-calc-outline-regexp)) "\\(.*$\\)") 1)))))
+  :custom
+  (outshine-imenu-show-headlines-p nil)
+  ;; Need this to help with outshine-imenu
+  ;; (add-hook 'outline-minor-mode-hook (lambda () (setq-local outshine-imenu-preliminary-generic-expression
+  ;;                `((nil ,(concat (message "%s" (outshine-calc-outline-regexp)) "\\(.*$\\)") 1)))))
 
-;; Fix self-insert-command for evil-mc
-(add-to-list 'evil-mc-custom-known-commands '(outshine-self-insert-command . ((:default . evil-mc-execute-default-call-with-count))))
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Julia
 ;;----------------------------
-(require 'julia-mode)
-(add-hook 'julia-mode-hook 'ggtags-mode)
-(add-hook 'julia-mode-hook 'julia-math-mode)
-(add-hook 'julia-mode-hook 'julia-repl-mode)
-;; (add-hook 'julia-mode-hook (lambda () (setq-local ggtags-process-environment '("GTAGSLABEL=juliactags"))))
-; TODO: I should fix this up for that it uses something like the default julia-mode settings but handles my macro prefixes.
-;; (add-hook 'julia-mode-hook (lambda () (setq-local imenu-create-index-function #'ggtags-build-imenu-index)))
+(use-package julia-mode
+  :hook ((julia-mode . ggtags-mode)
+		 (julia-mode . julia-math-mode)
+		 (julia-mode . julia-repl-mode))
+  
+  ;; (add-hook 'julia-mode-hook (lambda () (setq-local ggtags-process-environment '("GTAGSLABEL=juliactags"))))
+										; TODO: I should fix this up for that it uses something like the default julia-mode settings but handles my macro prefixes.
+  ;; (add-hook 'julia-mode-hook (lambda () (setq-local imenu-create-index-function #'ggtags-build-imenu-index)))
 
+  :config
 
-; Fixing up imenu in julia-mode to work with my macros
-(let ((macroprefix "^\\(?:[[:blank:]]*@[^[:blank:]@]+\\)*"))
+										; Fixing up imenu in julia-mode to work with my macros
+  (let ((macroprefix "^\\(?:[[:blank:]]*@[^[:blank:]@]+\\)*"))
 	(setq julia-imenu-generic-expression
-	;; don't use syntax classes, screws egrep
-	`(
-		;("Function (_)" ,(concat macroprefix "[[:blank:]]*function[[:blank:]]+\\(_[^[:blank:]]*\\)") 1)
-		("Function" ,(concat macroprefix "[[:blank:]]*function[[:blank:]]+\\(.*)\\)[[:blank:]]*") 1)
-		("Function" ,(concat macroprefix "[[:blank:]]*\\([^[:blank:](]*(.*)\\)[[:blank:]]*=[^=]+") 1)
-		("Const" "[ \t]*const \\([^ \t\n]*\\)" 1)
-		;; ("Type"  ,(concat macroprefix "^[ \t]*[a-zA-Z0-9_]*type[a-zA-Z0-9_]* \\([^ \t\n]*\\)") 1)
-		("Struct" ,(concat macroprefix "\\(?:[[:blank:]]*mutable\\)?[[:blank:]]+struct[[:blank:]]+\\([^{[:blank:]\n]+\\)") 1)
-		;; ("Require"      " *\\(\\brequire\\)(\\([^ \t\n)]*\\)" 2)
-		;; ("Include"      ,(concat macroprefix " *\\(\\binclude\\)(\\([^ \t\n)]*\\)") 2)
-		("Using"      ,(concat macroprefix "[[:blank:]]*using[[:blank:]]*\\(.*\\)") 1)
-		)))
+		  ;; don't use syntax classes, screws egrep
+		  `(
+										;("Function (_)" ,(concat macroprefix "[[:blank:]]*function[[:blank:]]+\\(_[^[:blank:]]*\\)") 1)
+			("Function" ,(concat macroprefix "[[:blank:]]*function[[:blank:]]+\\(.*)\\)[[:blank:]]*") 1)
+			("Function" ,(concat macroprefix "[[:blank:]]*\\([^[:blank:](]*(.*)\\)[[:blank:]]*=[^=]+") 1)
+			("Const" "[ \t]*const \\([^ \t\n]*\\)" 1)
+			;; ("Type"  ,(concat macroprefix "^[ \t]*[a-zA-Z0-9_]*type[a-zA-Z0-9_]* \\([^ \t\n]*\\)") 1)
+			("Struct" ,(concat macroprefix "\\(?:[[:blank:]]*mutable\\)?[[:blank:]]+struct[[:blank:]]+\\([^{[:blank:]\n]+\\)") 1)
+			;; ("Require"      " *\\(\\brequire\\)(\\([^ \t\n)]*\\)" 2)
+			;; ("Include"      ,(concat macroprefix " *\\(\\binclude\\)(\\([^ \t\n)]*\\)") 2)
+			("Using"      ,(concat macroprefix "[[:blank:]]*using[[:blank:]]*\\(.*\\)") 1)
+			)))
 
-(add-hook 'julia-mode-hook (lambda () (setq-local company-backends '( company-gtags company-dabbrev-code company-dabbrev))))
+  (require 'company-gtags)
+  (setq company-gtags-modes (append company-gtags-modes '(julia-mode-prog-mode)))
+  (add-hook 'julia-mode-hook (lambda () (setq-local company-backends '( company-gtags company-dabbrev-code company-dabbrev))))
 
-(setq-default julia-max-block-lookback 50000)
+  :custom
+  (julia-max-block-lookback 50000)
 
-;; (setq-default julia-repl-switches "-J /home/pengwyn/.julia/dev/PackageCompiler/sysimg/sys.so")
+  ;; (setq-default julia-repl-switches "-J /home/pengwyn/.julia/dev/PackageCompiler/sysimg/sys.so")
 
-(require 'ein)
-(setq-default ein:completion-backend 'ein:company-backend)
-(setq-default ein:cell-traceback-level nil)
-(add-hook 'ein:notebook-multilang-mode-hook (lambda () (setq-local company-idle-delay nil)))
+  ;; (require 'ein)
+  ;; (setq-default ein:completion-backend 'ein:company-backend)
+  ;; (setq-default ein:cell-traceback-level nil)
+  ;; (add-hook 'ein:notebook-multilang-mode-hook (lambda () (setq-local company-idle-delay nil)))
+
+  :bind (:map julia-mode-map
+		 ("<f5>" . julia-repl))
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Projectile
@@ -1120,13 +1138,34 @@ you want to quit windows on all frames."
 (setq-default projectile-mode-line-prefix " ")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; * Term mode
+;;----------------------------
+
+(use-package term
+  :hook (term-mode . my-term-mode)
+  :bind (:map my-term-mode-map
+			  ("<f5>" . evil-window-mru)
+			  ("C-w" . evil-window-map)
+			  ("C-d" . term-send-eof)
+			  ("C-x C-c" . save-buffers-kill-terminal)
+			  ("C-c" . term-interrupt-subjob))
+
+  :config
+  (defvar my-term-mode-map (make-sparse-keymap))
+  (define-minor-mode my-term-mode
+	:init nil
+	:keymap my-term-mode-map)
+
+  (evil-set-initial-state 'term-mode 'emacs))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Key bindings
 ;;----------------------------
 
 (define-prefix-command 'danny-completions)
 
-(define-key evil-insert-state-map (kbd "C-k") 'danny-completions)
-(define-key evil-normal-state-map (kbd "C-k") 'danny-completions)
+(evil-define-key '(insert normal) 'global (kbd "C-k") 'danny-completions)
 (define-key danny-completions (kbd "C-l") 'evil-complete-previous-line)
 (define-key danny-completions (kbd "C-o") 'helm-occur)
 (define-key danny-completions (kbd "C-k") 'helm-resume)
@@ -1141,95 +1180,17 @@ you want to quit windows on all frames."
 (define-key danny-completions (kbd "C-c") 'company-complete)
 (define-key danny-completions (kbd "C-f") 'company-files)
 
-(define-key evil-visual-state-map (kbd "C-y") 'copy-and-comment-region)
-(define-key evil-insert-state-map (kbd "C-y") 'copy-and-comment-line)
-(define-key evil-normal-state-map (kbd "C-y") 'copy-and-comment-line)
-
-(define-key evil-normal-state-map (kbd "M-a") 'avy-goto-char-timer)
-
-
-(define-key ggtags-mode-map (kbd "C-c g s") 'ggtags-find-other-symbol)
-(define-key ggtags-mode-map (kbd "C-c g h") 'ggtags-view-tag-history)
-(define-key ggtags-mode-map (kbd "C-c g r") 'ggtags-find-reference)
-(define-key ggtags-mode-map (kbd "C-c g f") 'ggtags-find-file)
-(define-key ggtags-mode-map (kbd "C-c g c") 'ggtags-create-tags)
-(define-key ggtags-mode-map (kbd "C-c g u") 'ggtags-update-tags)
-
-(define-key ggtags-mode-map (kbd "M-,") 'pop-tag-mark)
-(define-key ggtags-mode-map (kbd "C-M-,") 'ggtags-find-tag-continue)
-
-;; (define-key evil-normal-state-map (kbd "M-.") 'ggtags-find-tag-dwim)
-;; (define-key evil-normal-state-map (kbd "M-.") nil)
-
-(define-key julia-mode-map (kbd "<f5>") 'julia-repl)
-
-
-
-
-(defvar my-term-mode-map (make-sparse-keymap))
-(define-minor-mode my-term-mode
-  :init nil
-  :keymap my-term-mode-map)
-
-(add-hook 'term-mode-hook 'my-term-mode)
-
-(require 'term)
-(evil-set-initial-state 'term-mode 'emacs)
-
-(define-key my-term-mode-map (kbd "<f5>") 'evil-window-mru)
-(define-key my-term-mode-map (kbd "C-w") 'evil-window-map)
-(define-key my-term-mode-map (kbd "C-d") 'term-send-eof)
-(define-key my-term-mode-map (kbd "C-x C-c") 'save-buffers-kill-terminal)
-(define-key my-term-mode-map (kbd "C-c") 'term-interrupt-subjob)
-
-;; (provide 'my-mode)
-
-
-
-(global-set-key (kbd "M-x") 'helm-M-x)
-;; (global-set-key (kbd "C-M-x") 'execute-extended-command)
-;; (global-set-key (kbd "C-x b") 'helm-mini)
-(global-set-key (kbd "C-x f") 'helm-find-files)
-(global-set-key (kbd "C-x C-f") 'helm-multi-files)
-(global-set-key (kbd "C-x b") 'helm-buffers-list)
-
-(define-key evil-window-map "r" 'my/quit-help-windows)
-(define-key evil-window-map "C-r" 'my/quit-help-windows)
-
-(global-set-key (kbd "<f7>") 'danny-orgmode)
-;; (global-set-key (kbd "<f6>") 'magit-status)
-;; (global-set-key (kbd "<f8>") 'sr-speedbar-toggle)
-(global-set-key (kbd "<f8>") 'treemacs)
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * THEME
 ;;----------------------------
 
-;; (require 'grandshell-theme)
 (require 'moe-theme)
-;; (require 'poet-theme)
-;; (when (display-graphic-p)
-;; 	;; (load-theme 'alect-black t) ;; load material theme
-;; 	;; (load-theme 'grandshell t)
-;;   (add-hook 'after-make-frame-hook (lambda (frame)
-;; 	(load-theme 'moe-dark t)
-;; 	(set-background-color "black")
-;; 	)))
-
-;; (require 'color-theme)
-;; (color-theme-initialize)
-
 (defun apply-color-theme (frame)
   "Apply color theme to a frame based on whether its a 'real'
    window or a console window."
   (select-frame frame)
-  ;; (if (window-system frame)
-  ;;     (color-theme-tango)
-  ;;   (color-theme-tango-black)))
-  ;; (load-theme 'moe-dark t)
-  (set-background-color "black")
-  (print "Taswerarwerasdfwaer"))
+  (set-background-color "black"))
 
 ;; (setq color-theme-is-global nil)
 (add-hook 'after-make-frame-functions 'apply-color-theme)
