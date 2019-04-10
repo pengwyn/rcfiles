@@ -665,44 +665,50 @@ See `comment-region' for behavior of a prefix arg."
 			))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; * General semantic stuff
+;;----------------------------
+
+(use-package semantic
+  :config
+  (require 'semantic/db-global)
+
+  (global-semanticdb-minor-mode 1)
+  (global-semantic-idle-scheduler-mode 1)
+
+  ;; This inteferes with too many other things.
+  ;; (global-semantic-idle-summary-mode 1)
+  (add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode)
+
+  ;;(semantic-mode 1)
+  ;; (global-set-key (kbd "<f5>") 'compile)
+  ;; (global-set-key (kbd "C-j") 'next-error)
+  )
+
+
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * C Stuff
 ;;----------------------------
-(require 'cc-mode)
+(use-package cc-mode
+  :hook ('c-mode-common . (lambda ()
+							(when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
+							  (semantic-mode 1)
+							  (flycheck-mode 1))))
+  :custom ((c-default-style "linux")
+           (c-basic-offset 4)
+           (tab-width 4)
+           (indent-tabs-mode t)
+		   (compilation-read-command nil)
+		   (compile-command "make"))
+  :config
+  (semanticdb-enable-gnu-global-databases 'c-mode)
+  (semanticdb-enable-gnu-global-databases 'c++-mode)
 
-(setq-default c-default-style "linux"
-              c-basic-offset 4
-              tab-width 4
-              indent-tabs-mode t)
-
-(require 'semantic)
-(require 'semantic/db-global)
-(semanticdb-enable-gnu-global-databases 'c-mode)
-(semanticdb-enable-gnu-global-databases 'c++-mode)
-
-(global-semanticdb-minor-mode 1)
-(global-semantic-idle-scheduler-mode 1)
-
-;; This inteferes with too many other things.
-;; (global-semantic-idle-summary-mode 1)
-(add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode)
-
-;(semantic-mode 1)
-
-(add-hook 'c-mode-common-hook
-          (lambda ()
-            (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
-              (semantic-mode 1)
-			  (flycheck-mode 1))))
-
-;; (global-set-key (kbd "<f5>") 'compile)
-(setq-default compilation-read-command nil)
-(setq-default compile-command "make")
-;; (global-set-key (kbd "C-j") 'next-error)
-(define-key c-mode-map (kbd "<f5>") 'compile)
-(define-key c-mode-map (kbd "C-j") 'next-error)
-
-
-
+  :bind (:map c-mode-map
+			  ("<f5>" . compile)
+			  ("C-j" . next-error))
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Quit help windows
@@ -824,8 +830,8 @@ you want to quit windows on all frames."
 ;;------------------------------------------------
 (use-package org
   :init (require 'org-agenda)
-  :hook ((org-mode-hook . auto-fill-mode)
-		 (org-mode-hook . org-bullets-mode))
+  :hook ((auto-fill-mode . org-mode)
+		 (org-bullets-mode . org-mode))
   :custom ((org-tags-column -100)
 		   (org-agenda-tags-column -100)
 		   (org-return-follows-link t)
