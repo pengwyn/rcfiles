@@ -811,7 +811,7 @@ you want to quit windows on all frames."
 
 (with-eval-after-load "evil" 
   (define-key evil-window-map "r" 'my/quit-help-windows)
-  (define-key evil-window-map "C-r" 'my/quit-help-windows))
+  (define-key evil-window-map (kbd "C-r") 'my/quit-help-windows))
 
 ;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ;; * Speedbar
