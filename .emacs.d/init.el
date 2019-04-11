@@ -44,7 +44,7 @@
 ;;----------------------------
 
 (require 'undo-tree)
-(diminish 'undo-tree-mode)
+;; (diminish 'undo-tree-mode)
 (diminish 'abbrev-mode)
 (diminish 'auto-fill-function)
 (diminish 'auto-revert-mode)
@@ -170,7 +170,7 @@
   :config
   (yas-global-mode 1)
   (use-package yasnippet-snippets)
-  :diminish yas-minor-mode
+  ;; :diminish yas-minor-mode
   :bind (:map yas-minor-mode-map
               ("C-M-y" . 'yas-expand)))
 
@@ -656,7 +656,7 @@ See `comment-region' for behavior of a prefix arg."
 ;; * Helm stuff
 ;;----------------------------
 (use-package helm
-  :diminish helm-mode
+  ;; :diminish helm-mode
   :init
   (global-set-key (kbd "C-c h") 'helm-command-prefix)
   :config
