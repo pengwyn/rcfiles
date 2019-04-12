@@ -1040,9 +1040,10 @@ you want to quit windows on all frames."
     ;; (evil-define-key 'insert 'jupyter-org-interaction-mode-map (kbd "M-i") (lambda () (interactive) (insert-tab)))
     (evil-define-key 'insert 'jupyter-org-interaction-mode-map (kbd "M-i") nil)
     (evil-define-key '(insert normal visual) my-org-block-mode-map (kbd "C-s C-r") 'org-reveal
-      (kbd "C-s C-a") 'org-show-block-all
-      (kbd "C-s C-s") 'org-show-subtree
-      (kbd "C-s C-c") 'org-show-children)
+																   (kbd "C-s C-a") 'org-show-block-all
+																   (kbd "C-s C-s") 'org-show-subtree
+																   (kbd "C-s C-c") 'org-show-children
+																   (kbd "C-s C-b") 'outline-show-branches)
 
     (defvar my-org-block-mode-map (make-sparse-keymap))
     (define-minor-mode my-org-block-mode
