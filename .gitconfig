@@ -3,8 +3,6 @@
 	name = Daniel Cocks
 [color]
 	ui = true
-[push]
-	default = simple
 [pull]
 	ff = only
 [diff]

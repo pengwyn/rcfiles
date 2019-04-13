@@ -79,6 +79,8 @@
 (set-frame-font "GohuFont-11")
 ;; (set-frame-font "Hack Nerd Font Mono-11")
 
+(global-set-key (kbd "C-x c") 'delete-frame)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ** Util functions
 ;;----------------------------
@@ -176,8 +178,7 @@
               ("C-M-y" . 'yas-expand)))
 
 (use-package mode-icons
-  :if (display-graphic-p)
-  :init
+  ;; :if (display-graphic-p)
   :config
   (setq mode-icons (delete (seq-find (lambda (x) (let ((y (pop x)))
                                                    (and (string-or-null-p y)
@@ -1253,6 +1254,9 @@ you want to quit windows on all frames."
 
 ;; (setq color-theme-is-global nil)
 (add-hook 'after-make-frame-functions 'apply-color-theme)
+;; (add-hook 'after-make-frame-functions (lambda (frame) (interactive) (org-agenda nil "d")))
+(setq initial-buffer-choice (lambda () (org-agenda nil "d") (get-buffer "*Org Agenda*")))
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 (load-theme 'moe-dark t)
 (apply-color-theme (selected-frame))
