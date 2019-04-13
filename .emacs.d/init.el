@@ -412,7 +412,9 @@ See `comment-region' for behavior of a prefix arg."
 
   (use-package evil-anzu
     :bind (:map evil-insert-state-map
-                ("C-M-r" . anzu-query-replace-regexp)))
+           ("C-M-r" . anzu-query-replace-regexp)
+           :map evil-normal-state-map           
+           ("C-M-r" . anzu-query-replace-regexp)))
 
   (use-package evil-mc
     :custom (evil-mc-one-cursor-show-mode-line-text nil)
@@ -923,7 +925,7 @@ you want to quit windows on all frames."
            (org-refile-use-outline-path t)
            (org-outline-path-complete-in-steps nil)
            (org-enforce-todo-dependencies t)
-           (org-agenda-skip-deadline-prewarning-if-scheduled t)
+           (org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled)
            (org-deadline-warning-days 5)
            (org-stuck-projects '("TODO={.+}/-DONE" ("CANCELLED") nil "SCHEDULED:\\|DEADLINE:"))
            (org-agenda-skip-deadline-if-done t)
@@ -1003,6 +1005,9 @@ you want to quit windows on all frames."
   (my/evil-add-bindings org-agenda-mode-map)
   (add-to-list 'org-agenda-custom-commands '("d" "Day+Stuck" ((agenda "" '(org-agenda-span 'day))
                                                               (stuck))))
+
+  (add-hook 'org-agenda-after-show-hook 'org-reveal)
+  (add-hook 'org-agenda-after-show-hook 'org-show-subtree)
 
   (use-package evil-org)
   (use-package org-bullets)
