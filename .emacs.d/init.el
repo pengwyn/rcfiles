@@ -80,6 +80,7 @@
 ;; (set-frame-font "Hack Nerd Font Mono-11")
 
 (global-set-key (kbd "C-x c") 'delete-frame)
+(global-set-key (kbd "M-w") 'ace-window)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ** Util functions
@@ -440,7 +441,7 @@ See `comment-region' for behavior of a prefix arg."
       ("P" evil-mc-skip-and-goto-prev-cursor "skip and find prev cursor")
       )
     (evil-define-key '(normal visual) evil-mc-key-map (kbd "g r") 'hydra-evil-mc-keys/body)
-    (evil-define-key '(normal visual) evil-mc-key-map (kbd "M-r") 'hydra-evil-mc-keys/body)
+    (evil-define-key '(normal visual) evil-mc-key-map (kbd "M-m") 'hydra-evil-mc-keys/body)
 
     (defun danny-make-evil-mc-cursor-on-click (event)
       "Stolen partially from the multiple cursor version code"
@@ -857,7 +858,7 @@ you want to quit windows on all frames."
   (add-to-list 'treemacs-pre-file-insert-predicates #'treemacs-is-file-git-ignored?)
   ;; (add-to-list 'treemacs-pre-file-insert-predicates #'treemacs-file-tracked-p)
 
-  (treemacs-tag-follow-mode t)
+  ;; (treemacs-tag-follow-mode t)
   )
 
 ;; I think this is techinically separate
@@ -989,9 +990,10 @@ you want to quit windows on all frames."
   (define-prefix-command 'danny-orgmode)
   (setq org-modules (append org-modules '(org-habit org-mouse)))
 
-  (require 'ox-publish)
   (danny-add-prettify-greek 'org-mode-hook)
 
+  (require 'ox-publish)
+  (require 'ox-md)
 
   (defun danny-open-orgfile
       (&optional arg)
@@ -1019,7 +1021,7 @@ you want to quit windows on all frames."
   (require 'ob-python)
   (use-package jupyter
     :custom (org-babel-default-header-args:jupyter-julia '((:exports . "both")
-                                                           (:results . "output verbatim drawer")
+                                                           (:results . "value verbatim drawer")
                                                            (:session . "defaultdanny")
                                                            (:async . "yes")
                                                            ;; (:kernel . "julia-1.1_pre")
@@ -1038,17 +1040,18 @@ you want to quit windows on all frames."
       :keymap my-org-src-mode-map)
     (add-hook 'org-src-mode-hook 'my-org-src-mode)
     (define-key my-org-src-mode-map (kbd "C-c C-c") 'jupyter-eval-buffer)
+    (define-key my-org-src-mode-map (kbd "C-c C-j") 'jupyter-repl-restart-kernel)
     ;; (evil-define-key 'insert 'jupyter-org-interaction-mode-map (kbd "M-i") (lambda () (interactive) (insert-tab)))
     (evil-define-key 'insert 'jupyter-org-interaction-mode-map (kbd "M-i") nil)
-    (evil-define-key '(insert normal visual) my-org-block-mode-map (kbd "C-s C-r") 'org-reveal
-																   (kbd "C-s C-a") 'org-show-block-all
-																   (kbd "C-s C-s") 'org-show-subtree
-																   (kbd "C-s C-c") 'org-show-children
-																   (kbd "C-s C-b") 'outline-show-branches)
 
     (defvar my-org-block-mode-map (make-sparse-keymap))
     (define-minor-mode my-org-block-mode
       :keymap my-org-block-mode-map)
+    (evil-define-key '(insert normal visual) my-org-block-mode-map (kbd "C-s C-r") 'org-reveal
+																   (kbd "C-s C-a") 'outline-show-all
+																   (kbd "C-s C-s") 'org-show-subtree
+																   (kbd "C-s C-c") 'org-show-children
+																   (kbd "C-s C-b") 'outline-show-branches)
     (add-hook 'org-mode 'my-org-block-mode)
 
     (defun my-org-execute-and-next ()
@@ -1173,6 +1176,16 @@ you want to quit windows on all frames."
   (setq company-gtags-modes (append company-gtags-modes '(julia-mode-prog-mode)))
   (add-hook 'julia-mode-hook (lambda () (setq-local company-backends '( company-gtags company-dabbrev-code company-dabbrev))))
 
+  (defun my/julia-set-bp ()
+    (interactive)
+    "Send a breakpoint set command to the julia-repl"
+    (let ((filename (buffer-file-name))
+          (lineno (int-to-string (line-number-at-pos nil t))))
+      (message filename)
+      (message "%s" lineno)
+      (julia-repl--send-string (concat "breakpoint(\"" filename "\"," lineno ")")))
+    )
+
   :custom
   (julia-max-block-lookback 50000)
 
@@ -1184,7 +1197,8 @@ you want to quit windows on all frames."
   ;; (add-hook 'ein:notebook-multilang-mode-hook (lambda () (setq-local company-idle-delay nil)))
 
   :bind (:map julia-mode-map
-              ("<f5>" . julia-repl))
+              ("<f5>" . julia-repl)
+              ("C-c <f5>" . my/julia-set-bp))
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1255,7 +1269,7 @@ you want to quit windows on all frames."
 ;; (setq color-theme-is-global nil)
 (add-hook 'after-make-frame-functions 'apply-color-theme)
 ;; (add-hook 'after-make-frame-functions (lambda (frame) (interactive) (org-agenda nil "d")))
-(setq initial-buffer-choice (lambda () (org-agenda nil "d") (get-buffer "*Org Agenda*")))
+;;(setq initial-buffer-choice (lambda () (org-agenda nil "d") (get-buffer "*Org Agenda*")))
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 (load-theme 'moe-dark t)
