@@ -83,7 +83,7 @@
 ;; ** Util functions
 ;;----------------------------
 
-                                        ; Stolen from somewhere.
+;; Stolen from somewhere.
 (defmacro define-key-with-fallback (keymap key def condition &optional mode)
   "Define key with fallback. Binds KEY to definition DEF in keymap KEYMAP, 
    the binding is active when the CONDITION is true. Otherwise turns MODE off 
@@ -111,6 +111,7 @@
     (kbd "n") 'evil-search-next
     (kbd "N") 'evil-search-previous
     (kbd "^") 'evil-first-non-blank
+    (kbd "^") 'evil-end-of-line
     (kbd "C-f") 'evil-scroll-page-down
     (kbd "C-b") 'evil-scroll-page-up))
 
@@ -310,38 +311,38 @@ See `comment-region' for behavior of a prefix arg."
            (evil-operator-state-cursor '("red" hollow)))
 
   :bind (:map evil-window-map
-         ("C-l" . evil-window-right)
-         ("C-h" . evil-window-left)
-         ("C-k" . evil-window-up)
-         ("C-j" . evil-window-down)
-         ("C-w" . evil-window-mru)
-         ("C-a" . ace-window)
-         ;; :map evil-insert-state-map
-         ;; ("C-e" . evil-end-of-line)
-         :map evil-visual-state-map
-         (">" . (lambda ()
-                  (interactive)
-                                   ; ensure mark is less than point
-                  (when (> (mark) (point)) 
-                    (exchange-point-and-mark)
-                    )
-                  (evil-normal-state)
-                  (evil-shift-right (mark) (point))
-                  (evil-visual-restore) ; re-select last visual-mode selection
-                  ))
+              ("C-l" . evil-window-right)
+              ("C-h" . evil-window-left)
+              ("C-k" . evil-window-up)
+              ("C-j" . evil-window-down)
+              ("C-w" . evil-window-mru)
+              ("C-a" . ace-window)
+              ;; :map evil-insert-state-map
+              ;; ("C-e" . evil-end-of-line)
+              :map evil-visual-state-map
+              (">" . (lambda ()
+                       (interactive)
+                                        ; ensure mark is less than point
+                       (when (> (mark) (point)) 
+                         (exchange-point-and-mark)
+                         )
+                       (evil-normal-state)
+                       (evil-shift-right (mark) (point))
+                       (evil-visual-restore) ; re-select last visual-mode selection
+                       ))
 
-         ("<" . (lambda ()
-                  (interactive)
-                                   ; ensure mark is less than point
-                  (when (> (mark) (point)) 
-                    (exchange-point-and-mark)
-                    )
-                  (evil-normal-state)
-                  (evil-shift-left (mark) (point))
-                  (evil-visual-restore) ; re-select last visual-mode selection
-                  ))
-         :map evil-emacs-state-map
-         ("C-w" . evil-window-map))
+              ("<" . (lambda ()
+                       (interactive)
+                                        ; ensure mark is less than point
+                       (when (> (mark) (point)) 
+                         (exchange-point-and-mark)
+                         )
+                       (evil-normal-state)
+                       (evil-shift-left (mark) (point))
+                       (evil-visual-restore) ; re-select last visual-mode selection
+                       ))
+              :map evil-emacs-state-map
+              ("C-w" . evil-window-map))
 
   :config
   (evil-mode 1)
@@ -412,9 +413,9 @@ See `comment-region' for behavior of a prefix arg."
 
   (use-package evil-anzu
     :bind (:map evil-insert-state-map
-           ("C-M-r" . anzu-query-replace-regexp)
-           :map evil-normal-state-map           
-           ("C-M-r" . anzu-query-replace-regexp)))
+                ("C-M-r" . anzu-query-replace-regexp)
+                :map evil-normal-state-map           
+                ("C-M-r" . anzu-query-replace-regexp)))
 
   (use-package evil-mc
     :custom (evil-mc-one-cursor-show-mode-line-text nil)
@@ -856,7 +857,7 @@ you want to quit windows on all frames."
   ;; (add-to-list 'treemacs-pre-file-insert-predicates #'treemacs-file-tracked-p)
 
   (treemacs-tag-follow-mode t)
-)
+  )
 
 ;; I think this is techinically separate
 (use-package treemacs-icons-dired)
@@ -1039,9 +1040,9 @@ you want to quit windows on all frames."
     ;; (evil-define-key 'insert 'jupyter-org-interaction-mode-map (kbd "M-i") (lambda () (interactive) (insert-tab)))
     (evil-define-key 'insert 'jupyter-org-interaction-mode-map (kbd "M-i") nil)
     (evil-define-key '(insert normal visual) my-org-block-mode-map (kbd "C-s C-r") 'org-reveal
-                                                                   (kbd "C-s C-a") 'org-show-block-all
-                                                                   (kbd "C-s C-s") 'org-show-subtree
-                                                                   (kbd "C-s C-c") 'org-show-children)
+      (kbd "C-s C-a") 'org-show-block-all
+      (kbd "C-s C-s") 'org-show-subtree
+      (kbd "C-s C-c") 'org-show-children)
 
     (defvar my-org-block-mode-map (make-sparse-keymap))
     (define-minor-mode my-org-block-mode
