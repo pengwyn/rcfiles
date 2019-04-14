@@ -76,7 +76,7 @@
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 
-(set-frame-font "GohuFont-14")
+;; (set-frame-font "GohuFont-11")
 ;; (set-frame-font "Hack Nerd Font Mono-11")
 
 (global-set-key (kbd "C-x c") 'delete-frame)
@@ -1266,7 +1266,9 @@ you want to quit windows on all frames."
   "Apply color theme to a frame based on whether its a 'real'
    window or a console window."
   (select-frame frame)
-  (set-background-color "black"))
+  (set-background-color "black")
+  (set-frame-font "GohuFont-11")
+  )
 
 ;; (setq color-theme-is-global nil)
 (add-hook 'after-make-frame-functions 'apply-color-theme)
