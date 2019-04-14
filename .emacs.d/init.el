@@ -76,7 +76,7 @@
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 
-(set-frame-font "GohuFont-11")
+(set-frame-font "GohuFont-14")
 ;; (set-frame-font "Hack Nerd Font Mono-11")
 
 (global-set-key (kbd "C-x c") 'delete-frame)
@@ -344,7 +344,9 @@ See `comment-region' for behavior of a prefix arg."
                        (evil-visual-restore) ; re-select last visual-mode selection
                        ))
               :map evil-emacs-state-map
-              ("C-w" . evil-window-map))
+              ("C-w" . evil-window-map)
+              :map evil-normal-state-map
+              ("<tab>" . indent-region))
 
   :config
   (evil-mode 1)
