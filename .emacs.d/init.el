@@ -139,7 +139,30 @@
 (use-package magit
   :bind ("<f6>" . magit-status)
   :config
-  (use-package magit-popup))
+  (use-package magit-popup)
+
+  (defun my/setup-gpg-agent ()
+    "Setup gpg agent env variables for magit."
+    (unless (getenv "SSH_AUTH_SOCK")
+      (with-temp-buffer
+        (insert-file-contents "~/.gnupg/evalstr")
+        (let* ((found-str (condition-case nil
+                              (progn
+                                (search-forward-regexp "SSH_AUTH_SOCK=[^\s-]*")
+                                (match-string 0))
+                            (error (progn (message "Unable to find SSH_AUTH_SOCK string!")
+                                          "")
+                                   )))
+               (envvar (split-string found-str "=")))
+          (when envvar
+            (apply 'setenv envvar))
+          )))
+    (call-process-shell-command "gpg-connect-agent updatestartuptty /bye")
+    )
+  (add-hook 'magit-pre-call-git-hook 'my/setup-gpg-agent)
+  )
+
+
 
 
 (use-package projectile
@@ -319,6 +342,7 @@ See `comment-region' for behavior of a prefix arg."
               ("C-j" . evil-window-down)
               ("C-w" . evil-window-mru)
               ("C-a" . ace-window)
+              ("C-d" . kill-buffer-and-window)
               ;; :map evil-insert-state-map
               ;; ("C-e" . evil-end-of-line)
               :map evil-visual-state-map
@@ -345,8 +369,9 @@ See `comment-region' for behavior of a prefix arg."
                        ))
               :map evil-emacs-state-map
               ("C-w" . evil-window-map)
-              :map evil-normal-state-map
-              ("<tab>" . indent-region))
+              ;; :map evil-visual-state-map
+              ;; ("<tab>" . indent-region)
+              )
 
   :config
   (evil-mode 1)
@@ -1042,7 +1067,6 @@ you want to quit windows on all frames."
       :keymap my-org-src-mode-map)
     (add-hook 'org-src-mode-hook 'my-org-src-mode)
     (define-key my-org-src-mode-map (kbd "C-c C-c") 'jupyter-eval-buffer)
-    (define-key my-org-src-mode-map (kbd "C-c C-j") 'jupyter-repl-restart-kernel)
     ;; (evil-define-key 'insert 'jupyter-org-interaction-mode-map (kbd "M-i") (lambda () (interactive) (insert-tab)))
     (evil-define-key 'insert 'jupyter-org-interaction-mode-map (kbd "M-i") nil)
 
@@ -1065,6 +1089,7 @@ you want to quit windows on all frames."
         (org-babel-next-src-block)))
     
     (define-key-with-fallback my-org-block-mode-map (kbd "M-RET") (my-org-execute-and-next) (org-in-src-block-p))
+    (define-key my-org-block-mode-map (kbd "C-c C-j") 'jupyter-repl-restart-kernel)
     )
   )
 
