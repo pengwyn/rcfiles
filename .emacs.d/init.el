@@ -977,7 +977,9 @@ you want to quit windows on all frames."
                                         ;(file "")
                                         ;"- [ ] %i%?\n\t%u"
                )))
-           (org-confirm-babel-evaluate nil))
+           (org-confirm-babel-evaluate nil)
+           (org-agenda-restore-windows-after-quit t)
+           (org-agenda-window-setup 'only-window))
 
 
   :bind (("<f7>" . danny-orgmode)
@@ -1034,7 +1036,6 @@ you want to quit windows on all frames."
       (find-file org-default-notes-file)))
 
 
-  ;; (require 'org-agenda)
   (my/evil-add-bindings org-agenda-mode-map)
   (add-to-list 'org-agenda-custom-commands '("d" "Day+Stuck" ((agenda "" '(org-agenda-span 'day))
                                                               (stuck))))
@@ -1079,6 +1080,7 @@ you want to quit windows on all frames."
 																   (kbd "C-s C-a") 'outline-show-all
 																   (kbd "C-s C-s") 'org-show-subtree
 																   (kbd "C-s C-c") 'org-show-children
+																   (kbd "C-s C-e") 'org-show-entry
 																   (kbd "C-s C-b") 'outline-show-branches)
     (add-hook 'org-mode 'my-org-block-mode)
 
@@ -1203,7 +1205,7 @@ you want to quit windows on all frames."
 
   (require 'company-gtags)
   (setq company-gtags-modes (append company-gtags-modes '(julia-mode-prog-mode)))
-  (add-hook 'julia-mode-hook (lambda () (setq-local company-backends '( company-gtags company-dabbrev-code company-dabbrev))))
+  (add-hook 'julia-mode-hook (lambda () (setq-local company-backends '( company-gtags company-dabbrev-code))))
 
   (defun my/julia-set-bp ()
     (interactive)
