@@ -177,6 +177,8 @@
 (define-key danny-projectile "f" 'helm-projectile-find-file-dwim)
 (define-key danny-projectile "p" 'org-publish-current-project)
 (define-key danny-projectile "a" 'helm-projectile-ag)
+(define-key danny-projectile "d" 'projectile-dired)
+(define-key danny-projectile "x" (lambda () (interactive) (browse-url-xdg-open (projectile-project-root))))
 (global-set-key (kbd "<f9>") 'danny-projectile)
 
 (use-package mmm-mode
