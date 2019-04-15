@@ -141,14 +141,14 @@
   :config
   (use-package magit-popup)
 
-  (defun my/setup-gpg-agent ()
+  (defun my/setup-gpg-agent (&optional force)
     "Setup gpg agent env variables for magit."
-    (unless (getenv "SSH_AUTH_SOCK")
+    (unless (or force (getenv "SSH_AUTH_SOCK"))
       (with-temp-buffer
         (insert-file-contents "~/.gnupg/evalstr")
         (let* ((found-str (condition-case nil
                               (progn
-                                (search-forward-regexp "SSH_AUTH_SOCK=[^\s-]*")
+                                (search-forward-regexp "SSH_AUTH_SOCK=[^\s;]*")
                                 (match-string 0))
                             (error (progn (message "Unable to find SSH_AUTH_SOCK string!")
                                           "")
@@ -159,7 +159,7 @@
           )))
     (call-process-shell-command "gpg-connect-agent updatestartuptty /bye")
     )
-  (add-hook 'magit-pre-call-git-hook 'my/setup-gpg-agent)
+  (add-hook 'magit-credential-hook 'my/setup-gpg-agent)
   )
 
 
