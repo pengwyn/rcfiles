@@ -23,6 +23,7 @@
 
 (global-set-key (kbd "<f2>") 'package-list-packages)
 (global-set-key (kbd "<f3>") (lambda () (interactive) (find-file "~/.emacs.d/init.el")))
+(global-set-key (kbd "<f4>") 'save-buffers-kill-emacs)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * use-package
@@ -1017,7 +1018,18 @@ you want to quit windows on all frames."
   (org-level-2 ((t (:height 1.2 :family "Liberation Mono"))))
   (org-agenda-dimmed-todo-face ((t (:foreground "grey20"))))
 
+  (org-code ((t (:background "#500000"))))
+  (org-special-keyword ((t (:background "#500000" :foreground "black"))))
+
+  (org-block-begin-line ((t (:background "#3a3a3a" :foreground "black"))))
+  (org-block-end-line ((t (:background "#3a3a3a" :foreground "black"))))
+
   :config
+  (defface my/org-results-keyword
+    '((t :background "white" :inherit org-special-keyword))
+    "asdf")
+  (font-lock-add-keywords 'org-mode `((,(org-re-property "RESULTS" nil t) . 'my/org-results-keyword)))
+
   (define-prefix-command 'danny-orgmode)
   (setq org-modules (append org-modules '(org-habit org-mouse)))
 
@@ -1232,6 +1244,11 @@ you want to quit windows on all frames."
               ("C-c <f5>" . my/julia-set-bp))
   )
 
+;; TODO: Write a "move forward/backward block"
+;; This should replace a "sentence" move in evil.
+
+;; TODO: Write a thing to hook into the "show current function at top" like semantic does.
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Projectile
 ;;----------------------------
@@ -1239,7 +1256,9 @@ you want to quit windows on all frames."
   :custom
   (projectile-mode-line-prefix " ")
   :config
-  (use-package projectile-direnv)
+  (use-package projectile-direnv
+    :hook (projectile-mode . projectile-direnv-export-variables)
+    )
   (use-package projectile-variable))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
