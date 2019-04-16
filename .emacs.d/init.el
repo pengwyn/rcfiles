@@ -119,8 +119,23 @@
     (kbd "C-f") 'evil-scroll-page-down
     (kbd "C-b") 'evil-scroll-page-up))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ** Switch back to minibuffer
+;;------------------------------------------------
+
+;; Emergency switch back to minibuffer
+;; Stolen from http://superuser.com/questions/132225/how-to-get-back-to-an-active-minibuffer-prompt-in-emacs-without-the-mouse
+(defun switch-to-minibuffer-window ()
+  "switch to minibuffer window (if active)"
+  (interactive)
+  (when (active-minibuffer-window)
+    (select-frame-set-input-focus (window-frame (active-minibuffer-window)))
+    (select-window (active-minibuffer-window))))
+(global-set-key (kbd "<f12>") 'switch-to-minibuffer-window)
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; ** Short modes
+;; * Short modes
 ;;----------------------------
 
 (savehist-mode t)
@@ -223,6 +238,18 @@
   :config
   (use-package helm-flycheck))
 
+(use-package dashboard
+  :custom
+  ((dashboard-items '((recents . 10)
+                     (bookmarks . 10)
+                     ;;(project . 5)
+                     (agenda . 15)
+                     ;;(registers . 5)
+					 )))
+  :config
+  (dashboard-setup-startup-hook)
+  (add-to-list 'bookmark-alist '("Init file" . ((filename . "~/.emacs.d/init.el")))))
+
 (use-package hydra)
 (use-package ace-window)
 (use-package sudo-edit)
@@ -234,7 +261,7 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; ** Commenting things
+;; * Commenting things
 ;;----------------------------
 
 (defun endless/comment-line (n)
@@ -275,7 +302,7 @@ See `comment-region' for behavior of a prefix arg."
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; ** Prettify
+;; * Prettify
 ;;----------------------------
 
 (use-package prettify-greek
@@ -304,20 +331,6 @@ See `comment-region' for behavior of a prefix arg."
                         (prettify-symbols-mode t)
                         (setq prettify-symbols-compose-predicate 'danny-prettify-predicate))))
 
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; ** Switch back to minibuffer
-;;------------------------------------------------
-
-;; Emergency switch back to minibuffer
-;; Stolen from http://superuser.com/questions/132225/how-to-get-back-to-an-active-minibuffer-prompt-in-emacs-without-the-mouse
-(defun switch-to-minibuffer-window ()
-  "switch to minibuffer window (if active)"
-  (interactive)
-  (when (active-minibuffer-window)
-    (select-frame-set-input-focus (window-frame (active-minibuffer-window)))
-    (select-window (active-minibuffer-window))))
-(global-set-key (kbd "<f12>") 'switch-to-minibuffer-window)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Evil stuff
@@ -1199,21 +1212,23 @@ you want to quit windows on all frames."
 
   :config
 
-                                        ; Fixing up imenu in julia-mode to work with my macros
-  (let ((macroprefix "^\\(?:[[:blank:]]*@[^[:blank:]@]+\\)*"))
-    (setq julia-imenu-generic-expression
-          ;; don't use syntax classes, screws egrep
-          `(
-                                        ;("Function (_)" ,(concat macroprefix "[[:blank:]]*function[[:blank:]]+\\(_[^[:blank:]]*\\)") 1)
-            ("Function" ,(concat macroprefix "[[:blank:]]*function[[:blank:]]+\\(.*)\\)[[:blank:]]*") 1)
-            ("Function" ,(concat macroprefix "[[:blank:]]*\\([^[:blank:](]*(.*)\\)[[:blank:]]*=[^=]+") 1)
-            ("Const" "[ \t]*const \\([^ \t\n]*\\)" 1)
-            ;; ("Type"  ,(concat macroprefix "^[ \t]*[a-zA-Z0-9_]*type[a-zA-Z0-9_]* \\([^ \t\n]*\\)") 1)
-            ("Struct" ,(concat macroprefix "\\(?:[[:blank:]]*mutable\\)?[[:blank:]]+struct[[:blank:]]+\\([^{[:blank:]\n]+\\)") 1)
-            ;; ("Require"      " *\\(\\brequire\\)(\\([^ \t\n)]*\\)" 2)
-            ;; ("Include"      ,(concat macroprefix " *\\(\\binclude\\)(\\([^ \t\n)]*\\)") 2)
-            ("Using"      ,(concat macroprefix "[[:blank:]]*using[[:blank:]]*\\(.*\\)") 1)
-            )))
+  ;; I now have a lot of this in the custom julia-mode.el
+
+                                        ;; Fixing up imenu in julia-mode to work with my macros
+  ;; (let ((macroprefix "^\\(?:[[:blank:]]*@[^[:blank:]@]+\\)*"))
+  ;;   (setq julia-imenu-generic-expression
+  ;;         ;; don't use syntax classes, screws egrep
+  ;;         `(
+  ;;                                       ;("Function (_)" ,(concat macroprefix "[[:blank:]]*function[[:blank:]]+\\(_[^[:blank:]]*\\)") 1)
+  ;;           ("Function" ,(concat macroprefix "[[:blank:]]*function[[:blank:]]+\\(.*)\\)[[:blank:]]*") 1)
+  ;;           ("Function" ,(concat macroprefix "[[:blank:]]*\\([^[:blank:](]*(.*)\\)[[:blank:]]*=[^=]+") 1)
+  ;;           ("Const" "[ \t]*const \\([^ \t\n]*\\)" 1)
+  ;;           ;; ("Type"  ,(concat macroprefix "^[ \t]*[a-zA-Z0-9_]*type[a-zA-Z0-9_]* \\([^ \t\n]*\\)") 1)
+  ;;           ("Struct" ,(concat macroprefix "\\(?:[[:blank:]]*mutable\\)?[[:blank:]]+struct[[:blank:]]+\\([^{[:blank:]\n]+\\)") 1)
+  ;;           ;; ("Require"      " *\\(\\brequire\\)(\\([^ \t\n)]*\\)" 2)
+  ;;           ;; ("Include"      ,(concat macroprefix " *\\(\\binclude\\)(\\([^ \t\n)]*\\)") 2)
+  ;;           ("Using"      ,(concat macroprefix "[[:blank:]]*using[[:blank:]]*\\(.*\\)") 1)
+  ;;           )))
 
   (require 'company-gtags)
   (setq company-gtags-modes (append company-gtags-modes '(julia-mode-prog-mode)))
@@ -1229,6 +1244,18 @@ you want to quit windows on all frames."
       (julia-repl--send-string (concat "breakpoint(\"" filename "\"," lineno ")")))
     )
 
+
+  :init
+  ;; (font-lock-remove-keywords 'julia-mode (list (list julia-function-regex 1 'font-lock-function-name-face)))
+  ;; (setq julia-function-regex (rx line-start (* (or space (1+ (* word) "@" (1+ word)))) symbol-start
+  ;;                                "function"
+  ;;                                (1+ space)
+  ;;                                ;; Don't highlight module names in function declarations:
+  ;;                                (* (seq (1+ (or word (syntax symbol))) "."))
+  ;;                                ;; The function name itself
+  ;;                                (group (1+ (or word (syntax symbol))))))
+  ;; (font-lock-add-keywords 'julia-mode (list (list julia-function-regex 1 'font-lock-function-name-face)))
+
   :custom
   (julia-max-block-lookback 50000)
 
@@ -1241,13 +1268,51 @@ you want to quit windows on all frames."
 
   :bind (:map julia-mode-map
               ("<f5>" . julia-repl)
-              ("C-c <f5>" . my/julia-set-bp))
-  )
+              ("C-c <f5>" . my/julia-set-bp)
+              ;; (")" . my/evil-forward-block-end)
+              ;; ("(" . my/evil-backward-block-begin)
+              )
+
+  :config
+  (defun julia-forward-block (n)
+    (let ((n n))
+      (while (> n 0)
+        (julia-start-of-next-block)
+        (setq n (1- n)))
+      (while (< n 0)
+        (julia-start-of-last-block)
+        (setq n (1+ n)))
+       ))
+
+  ;; (add-hook 'julia-mode-hook (lambda () (setq-local forward-block 'julia-forward-block)))
+
+  ;; (evil-define-motion evil-forward-block-begin (count)
+  ;;   :jump t
+  ;;   :type exclusive
+  ;;   (evil-forward-begin 'block count))
+  (defvar julia-block 'danny-julia-block)
+  (put julia-block 'forward-op 'julia-forward-block)
+  (evil-define-motion my/evil-forward-block-end (count)
+    :jump t
+    :type exclusive
+    (evil-forward-end julia-block count))
+  (evil-define-motion my/evil-backward-block-begin (count)
+    :jump t
+    :type exclusive
+    (evil-backward-beginning julia-block count))
+  ;; (evil-define-motion evil-backward-block-end (count)
+  ;;   :jump t
+  ;;   :type exclusive
+  ;;   (evil-backward-end 'block count))
+  (evil-define-key '(normal visual motion) 'julia-mode-map ")" 'my/evil-forward-block-end)
+  (evil-define-key '(normal visual motion) 'julia-mode-map "(" 'my/evil-backward-block-begin)
 
 ;; TODO: Write a "move forward/backward block"
 ;; This should replace a "sentence" move in evil.
 
-;; TODO: Write a thing to hook into the "show current function at top" like semantic does.
+  ;; TODO: Write a thing to hook into the "show current function at top" like semantic does.
+
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Projectile
