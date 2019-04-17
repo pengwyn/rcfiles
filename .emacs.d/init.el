@@ -250,6 +250,7 @@
   ;; (dashboard-setup-startup-hook)
   ;;(setq initial-buffer-choice (lambda () (switch-to-buffer (dashboard-refresh-buffer))))
   (add-to-list 'bookmark-alist '("Init file" . ((filename . "~/.emacs.d/init.el"))))
+  (add-to-list 'bookmark-alist '("Diet log" . ((filename . "~/Dropbox/org/gallbladder_diet.org"))))
   ;; (dashboard-insert-startupify-lists)
   (add-hook 'after-make-frame-functions (lambda (frame)
     									  (interactive)
