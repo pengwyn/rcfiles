@@ -14,6 +14,7 @@ alias ipython2r='MPLCONFIGDIR=$HOME/.config/matplotlib/nodisplay ipython2'
 #alias pacman='pacman-color'
 #alias netstat='netstat --numeric-hosts --inet -a'
 alias ..='cd ..'
+alias emacs='emacsclient -c'
 
 if [[ $(hostname) != "mixologist" ]]
 then
