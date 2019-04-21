@@ -400,6 +400,8 @@ See `comment-region' for behavior of a prefix arg."
               ("C-w" . evil-window-map)
               ;; :map evil-visual-state-map
               ;; ("<tab>" . indent-region)
+              :map evil-motion-state-map
+              ("<down-mouse-1>" . nil)
               )
 
   :config
