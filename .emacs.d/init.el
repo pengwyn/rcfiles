@@ -759,6 +759,10 @@ See `comment-region' for behavior of a prefix arg."
          ("C-." . 'helm-goto-next-file)
          ("C-," . 'helm-goto-precedent-file)))
 
+;; TODO: Add several alt-choices to the multifiles, including
+;; - Open file in vertical for C-x C-f
+;; - Open dired in split
+
 ;; Kind of helm related
 (use-package tramp
   :config
