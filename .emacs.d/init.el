@@ -1051,17 +1051,40 @@ you want to quit windows on all frames."
   (org-level-2 ((t (:height 1.2 :family "Liberation Mono"))))
   (org-agenda-dimmed-todo-face ((t (:foreground "grey20"))))
 
+  ;; (org-code ((t (:background "#500000"))))
   (org-code ((t (:background "#500000"))))
-  (org-special-keyword ((t (:background "#500000" :foreground "black"))))
+  ;; (org-special-keyword ((t (:background "#500000" :foreground "black"))))
 
   (org-block-begin-line ((t (:background "#3a3a3a" :foreground "black"))))
   (org-block-end-line ((t (:background "#3a3a3a" :foreground "black"))))
 
   :config
   (defface my/org-results-keyword
-    '((t :background "white" :inherit org-special-keyword))
+    ;; '((t :background "white" :inherit org-special-keyword))
+    '((t :inherit org-code :foreground "black"))
     "asdf")
-  (font-lock-add-keywords 'org-mode `((,(org-re-property "RESULTS" nil t) . 'my/org-results-keyword)))
+
+  ;; (let
+  ;;     ((results-block-regex (concat (org-re-property "RESULTS" nil t) "\\(^:.*$\\)*?" "^:END:"))) 
+  ;;   (font-lock-add-keywords 'org-mode '((results-block-regex (0 'my/org-results-keyword t))) t))
+;; (font-lock-add-keywords nil `((,(org-re-property "RESULTS" nil t)  (0 'my/org-results-keyword t))) t)
+;; (font-lock-add-keywords nil '(("RESULTS" . 'my/org-results-keyword)))
+  (defun my/find-RESULTS-END (limit)
+    ""
+    ;; (message "Did my find original with limit = %d" limit)
+    (when (search-forward-regexp ":END:" limit t)
+      (let ((end-match-data (match-data))
+            match-data-temp)
+        (when (search-backward "#+RESULTS:" nil t)
+          (let ((results-match-data (match-data)))
+            (search-forward-regexp ":END:" nil t)
+            (when (equal end-match-data (match-data))
+              ;; (set-match-data (list (nth 0 results-match-data) (nth 1 end-match-data)))
+              t))))))
+
+  (font-lock-add-keywords 'org-mode '((my/find-RESULTS-END (0 'my/org-results-keyword t))) t)
+  (font-lock-add-keywords 'org-mode `((,(regexp-quote "#+RESULTS:") (0 'my/org-results-keyword t))) t)
+  (font-lock-add-keywords 'org-mode `((,(org-re-property "RESULTS" nil t) (0 'my/org-results-keyword t))) t)
 
   (define-prefix-command 'danny-orgmode)
   (setq org-modules (append org-modules '(org-habit org-mouse)))
