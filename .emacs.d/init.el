@@ -68,7 +68,8 @@
               fill-column 80
               recentf-max-saved-items 1000
               help-window-select t
-              display-line-numbers 'visual
+              ;; display-line-numbers 'visual
+              display-line-numbers nil
               indent-tabs-mode nil
               tab-width 4)
 
