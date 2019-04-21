@@ -1158,7 +1158,12 @@ you want to quit windows on all frames."
              (key (this-single-command-keys))
              (binding (key-binding key t)))
         (org-babel-execute-src-block)
-        (org-babel-next-src-block)))
+        ;; Unfortunately, regular next-src-block always hides other src blocks
+        (cl-letf (((symbol-function 'org-show-context) (lambda (&optional key) nil)))
+          (org-babel-next-src-block))))
+
+    ;; TODO in the future turn this into a function
+    ;; (org-babel-map-src-blocks nil (org-babel-remove-result))
     
     (define-key-with-fallback my-org-block-mode-map (kbd "M-RET") (my-org-execute-and-next) (org-in-src-block-p))
     (define-key my-org-block-mode-map (kbd "C-c C-j") 'jupyter-repl-restart-kernel)
