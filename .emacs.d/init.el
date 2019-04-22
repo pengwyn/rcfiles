@@ -71,7 +71,8 @@
               ;; display-line-numbers 'visual
               display-line-numbers nil
               indent-tabs-mode nil
-              tab-width 4)
+              tab-width 4
+              dired-auto-revert-buffer t)
 
 
 (scroll-bar-mode -1)
@@ -1185,8 +1186,9 @@ you want to quit windows on all frames."
          (doc-view-mode . (lambda () (setq-local display-line-numbers nil))))
 
   :config
-  (when (string= (system-name) "pengix")
-    (setq-default preview-orientation 'below))
+  ;; (when (string= (system-name) "pengix")
+  ;;   (setq-default preview-orientation 'below))
+  (setq-default latex-preview-pane-use-frame t)
 
   (use-package latex-math-preview)
   (use-package latex-pretty-symbols)
