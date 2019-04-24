@@ -252,6 +252,12 @@
                                                (get-buffer "*scratch*")))))
   )
 
+(use-package helpful
+  :demand t
+  :bind (("C-h f" . helpful-callable)
+         ("C-h v" . helpful-variable)
+         ("C-h k" . helpful-key)))
+
 (use-package hydra)
 (use-package ace-window)
 (use-package sudo-edit)
