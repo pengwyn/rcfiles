@@ -180,25 +180,6 @@
   (add-hook 'magit-credential-hook 'my/setup-gpg-agent)
   )
 
-
-
-
-(use-package projectile
-  :config
-  (projectile-mode)
-  (use-package helm-projectile)
-  :custom
-  (projectile-switch-project-action #'helm-projectile-find-file))
-
-(define-prefix-command 'danny-projectile)
-(define-key danny-projectile (kbd "<f9>") 'helm-projectile-switch-project)
-(define-key danny-projectile "f" 'helm-projectile-find-file-dwim)
-(define-key danny-projectile "p" 'org-publish-current-project)
-(define-key danny-projectile "a" 'helm-projectile-ag)
-(define-key danny-projectile "d" 'projectile-dired)
-(define-key danny-projectile "x" (lambda () (interactive) (browse-url-xdg-open (projectile-project-root))))
-(global-set-key (kbd "<f9>") 'danny-projectile)
-
 (use-package mmm-mode
   :config
   (mmm-add-mode-ext-class 'html-mode "\\.php\\'" 'html-php)
@@ -1369,13 +1350,35 @@ you want to quit windows on all frames."
 ;; * Projectile
 ;;----------------------------
 (use-package projectile
+  :demand
   :custom
-  (projectile-mode-line-prefix " ")
+  ((projectile-mode-line-prefix " ")
+   (projectile-switch-project-action #'helm-projectile-find-file))
   :config
+  (projectile-mode)
+  (use-package helm-projectile)
   (use-package projectile-direnv
     :hook (projectile-mode . projectile-direnv-export-variables)
     )
-  (use-package projectile-variable))
+  (use-package projectile-variable)
+
+  (defun my/open-projectile-or-current-directory ()
+    (interactive)
+    (let ((directory (or (projectile-project-root)
+                        (file-name-directory buffer-file-name))))
+      (browse-url-xdg-open directory)))
+  
+  (define-prefix-command 'danny-projectile)
+
+  :bind (("<f9>" . danny-projectile)
+         :map danny-projectile
+         ("<f9>" . 'helm-projectile-switch-project)
+         ("f" . 'helm-projectile-find-file-dwim)
+         ("p" . 'org-publish-current-project)
+         ("a" . 'helm-projectile-ag)
+         ("d" . 'projectile-dired)
+         ("x" . 'my/open-projectile-or-current-directory)))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Term mode
