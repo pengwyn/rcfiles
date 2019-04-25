@@ -222,7 +222,7 @@
               ("C-M-y" . 'yas-expand)))
 
 (use-package mode-icons
-  ;; :if (display-graphic-p)
+  :if (display-graphic-p)
   :config
   (setq mode-icons (delete (seq-find (lambda (x) (let ((y (pop x)))
                                                    (and (string-or-null-p y)
@@ -662,10 +662,11 @@ See `comment-region' for behavior of a prefix arg."
     :config
     (company-quickhelp-mode t))
 
-  (use-package company-box
-    :hook (company-mode . company-box-mode)
-    ;; :diminish company-box-mode
-    )
+  (when (display-graphic-p)
+    (use-package company-box
+        :hook (company-mode . company-box-mode)
+        ;; :diminish company-box-mode
+        ))
   )
 
 
