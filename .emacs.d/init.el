@@ -135,6 +135,15 @@
     (select-window (active-minibuffer-window))))
 (global-set-key (kbd "<f12>") 'switch-to-minibuffer-window)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ** Align func
+;;----------------------------
+(defun my/simple-align (beg end)
+     "Align using any 2+ space with 4 spaces"
+     (interactive "r")
+     (align-regexp beg end (rx (group (>= 2 (syntax whitespace)))) 1 4 t))
+
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Short modes
