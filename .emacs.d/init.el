@@ -195,7 +195,7 @@
   (setq-default mmm-global-mode 'maybe))
 
 (use-package auto-dim-other-buffers
-  :if (display-graphic-p)
+  ;; :if (display-graphic-p)
   :diminish
   :config
   (auto-dim-other-buffers-mode t))
@@ -212,7 +212,7 @@
               ("C-M-y" . 'yas-expand)))
 
 (use-package mode-icons
-  :if (display-graphic-p)
+  ;; :if (display-graphic-p)
   :config
   (setq mode-icons (delete (seq-find (lambda (x) (let ((y (pop x)))
                                                    (and (string-or-null-p y)
