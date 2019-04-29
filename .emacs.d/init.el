@@ -1387,7 +1387,7 @@ you want to quit windows on all frames."
     (interactive)
     (let ((directory (or (projectile-project-root)
                         (file-name-directory buffer-file-name))))
-      (browse-url-xdg-open directory)))
+      (browse-url-xdg-open (file-truename directory))))
   
   (define-prefix-command 'danny-projectile)
 
