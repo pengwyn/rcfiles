@@ -1365,6 +1365,7 @@ you want to quit windows on all frames."
 
 ;; TODO: Write a "move forward/backward block"
 ;; This should replace a "sentence" move in evil.
+;; Even though I have this above, it doesn't work well to skip over inner regions.
 
   ;; TODO: Write a thing to hook into the "show current function at top" like semantic does.
 
