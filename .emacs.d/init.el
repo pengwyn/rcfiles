@@ -256,7 +256,7 @@
                                           (if (< (length command-line-args) 2)
                                               (my/select-dashboard))))
   (setq initial-buffer-choice (lambda () (if (> (length command-line-args) 1)
-                                             (find-file-noselect (nth 1 command-line-args))
+                                             (find-file (nth 1 command-line-args))
                                            (or (get-buffer dashboard-buffer-name)
                                                (get-buffer "*scratch*")))))
   )
@@ -1177,15 +1177,18 @@ you want to quit windows on all frames."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Latex stuff
 ;;----------------------------
+;; Annoying theme stuff
+(defvar my/in-latex-mode nil)
 (use-package tex-mode
-  ;; :hook (LaTeX-mode-hook . (auto-fill-mode flyspell-mode prettify-symbols-mode latex-preview-pane-mode))
+  :demand t
   :hook ((LaTeX-mode . auto-fill-mode)
          (LaTeX-mode . flyspell-mode)
          (LaTeX-mode . prettify-symbols-mode)
          (LaTeX-mode . latex-preview-pane-mode)
          (LaTeX-mode . (lambda () (load-theme 'material-light)
                          (add-hook 'after-save-hook 'preview-buffer nil t)
-                         (setq-local company-idle-delay 2.0)))
+                         (setq-local company-idle-delay 2.0)
+                         (setq my/in-latex-mode t)))
          (doc-view-mode . (lambda () (setq-local display-line-numbers nil))))
 
   :config
@@ -1454,8 +1457,12 @@ you want to quit windows on all frames."
   "Apply color theme to a frame based on whether its a 'real'
    window or a console window."
   (select-frame frame)
-  (set-background-color "black")
-  (set-frame-font "GohuFont-11")
+  (unless my/in-latex-mode
+    (load-theme 'moe-dark t)
+    (custom-theme-set-faces 'moe-dark '(default ((t (:background "#000000")))))
+    ;; (set-background-color "black")
+    )
+  (set-frame-font "GohuFont-11" nil t)
   )
 
 ;; (setq color-theme-is-global nil)
@@ -1464,5 +1471,8 @@ you want to quit windows on all frames."
 ;;(setq initial-buffer-choice (lambda () (org-agenda nil "d") (get-buffer "*Org Agenda*")))
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
-(load-theme 'moe-dark t)
-(apply-color-theme (selected-frame))
+;; (moe-dark)
+;; (load-theme 'moe-dark t t)
+;; (apply-color-theme (selected-frame))
+
+;; (set-frame-font "GohuFont-11" nil t)
