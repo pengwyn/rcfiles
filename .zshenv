@@ -71,6 +71,10 @@ alias gb="git branch"
 alias gf="git fetch"
 alias g="git"
 
+alias grs="gr status"
+alias grf="gr fetch ; gr status"
+alias grp="gr git pull --ff-only"
+
 # Quickfind
 function qfind {
 	find -iname "*$1*"
