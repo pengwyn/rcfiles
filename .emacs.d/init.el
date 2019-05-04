@@ -1350,11 +1350,12 @@ you want to quit windows on all frames."
   ;; (add-hook 'ein:notebook-multilang-mode-hook (lambda () (setq-local company-idle-delay nil)))
 
   :bind (:map julia-mode-map
-              ("<f5>" . julia-repl)
-              ("C-c <f5>" . my/julia-set-bp)
-              ;; (")" . my/evil-forward-block-end)
-              ;; ("(" . my/evil-backward-block-begin)
-              )
+         ("<f5>" . julia-repl)
+         ("C-c <f5>" . my/julia-set-bp)
+         ;; (")" . my/evil-forward-block-end)
+         ;; ("(" . my/evil-backward-block-begin)
+         :map julia-repl-mode-map
+         ("C-c C-b" . my/julia-repl-send-buffer))
 
   :config
   (defun julia-forward-block (n)
@@ -1396,6 +1397,28 @@ you want to quit windows on all frames."
 
   ;; TODO: Write a thing to hook into the "show current function at top" like semantic does.
 
+  (defun my/julia-repl-send-buffer (arg)
+    "Send the contents of the current buffer to the Julia
+     REPL.
+
+     (No! This was bad for script-like files) Uses includet(...) instead of include(...).
+
+     With an arg, first change the working directory to the
+     location of the file."
+
+    (interactive "P")
+    (let* ((file buffer-file-name))
+      (when (and file (buffer-modified-p))
+        (if (y-or-n-p "Buffer modified, save? ")
+            (save-buffer)
+          (setq file nil)))
+      (when arg
+        (julia-repl--send-string (concat "cd(\"" (file-truename default-directory) "\")")))
+      (julia-repl--send-string
+       (if file
+           ;; (concat "includet(\"" file "\")")
+         (concat "include(\"" file "\")")
+         (buffer-substring-no-properties (point-min) (point-max))))))
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
