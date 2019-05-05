@@ -256,7 +256,7 @@
                                           (if (< (length command-line-args) 2)
                                               (my/select-dashboard))))
   (setq initial-buffer-choice (lambda () (if (> (length command-line-args) 1)
-                                             (find-file (nth 1 command-line-args))
+                                             (find-file-noselect (nth 1 command-line-args))
                                            (or (get-buffer dashboard-buffer-name)
                                                (get-buffer "*scratch*")))))
   )
@@ -1044,7 +1044,8 @@ you want to quit windows on all frames."
                )))
            (org-confirm-babel-evaluate nil)
            (org-agenda-restore-windows-after-quit t)
-           (org-agenda-window-setup 'only-window))
+           (org-agenda-window-setup 'only-window)
+           (org-src-window-setup 'other-window))
 
 
   :bind (("<f7>" . danny-orgmode)
@@ -1064,6 +1065,7 @@ you want to quit windows on all frames."
          ("<C-M-return>" . org-insert-todo-subheading)
          ("C-4" . org-archive-subtree)
          ("<return>" . org-return-indent)
+         ("M-a" . nil)
          :map org-babel-map
          ("C-c" . org-babel-hide-result-toggle)
          :map org-agenda-mode-map
@@ -1293,6 +1295,24 @@ you want to quit windows on all frames."
                                         ; TODO: I should fix this up for that it uses something like the default julia-mode settings but handles my macro prefixes.
   ;; (add-hook 'julia-mode-hook (lambda () (setq-local imenu-create-index-function #'ggtags-build-imenu-index)))
 
+  :custom
+  (julia-max-block-lookback 50000)
+
+  ;; (setq-default julia-repl-switches "-J /home/pengwyn/.julia/dev/PackageCompiler/sysimg/sys.so")
+
+  ;; (require 'ein)
+  ;; (setq-default ein:completion-backend 'ein:company-backend)
+  ;; (setq-default ein:cell-traceback-level nil)
+  ;; (add-hook 'ein:notebook-multilang-mode-hook (lambda () (setq-local company-idle-delay nil)))
+
+  :bind (:map julia-mode-map
+         ("<f5>" . julia-repl)
+         ("C-c <f5>" . my/julia-set-bp)
+         ;; (")" . my/evil-forward-block-end)
+         ;; ("(" . my/evil-backward-block-begin)
+         :map julia-repl-mode-map
+         ("C-c C-b" . my/julia-repl-send-buffer))
+
   :config
 
   ;; I now have a lot of this in the custom julia-mode.el
@@ -1327,37 +1347,8 @@ you want to quit windows on all frames."
       (julia-repl--send-string (concat "breakpoint(\"" filename "\"," lineno ")")))
     )
 
+  (use-package julia-repl)
 
-  :init
-  ;; (font-lock-remove-keywords 'julia-mode (list (list julia-function-regex 1 'font-lock-function-name-face)))
-  ;; (setq julia-function-regex (rx line-start (* (or space (1+ (* word) "@" (1+ word)))) symbol-start
-  ;;                                "function"
-  ;;                                (1+ space)
-  ;;                                ;; Don't highlight module names in function declarations:
-  ;;                                (* (seq (1+ (or word (syntax symbol))) "."))
-  ;;                                ;; The function name itself
-  ;;                                (group (1+ (or word (syntax symbol))))))
-  ;; (font-lock-add-keywords 'julia-mode (list (list julia-function-regex 1 'font-lock-function-name-face)))
-
-  :custom
-  (julia-max-block-lookback 50000)
-
-  ;; (setq-default julia-repl-switches "-J /home/pengwyn/.julia/dev/PackageCompiler/sysimg/sys.so")
-
-  ;; (require 'ein)
-  ;; (setq-default ein:completion-backend 'ein:company-backend)
-  ;; (setq-default ein:cell-traceback-level nil)
-  ;; (add-hook 'ein:notebook-multilang-mode-hook (lambda () (setq-local company-idle-delay nil)))
-
-  :bind (:map julia-mode-map
-         ("<f5>" . julia-repl)
-         ("C-c <f5>" . my/julia-set-bp)
-         ;; (")" . my/evil-forward-block-end)
-         ;; ("(" . my/evil-backward-block-begin)
-         :map julia-repl-mode-map
-         ("C-c C-b" . my/julia-repl-send-buffer))
-
-  :config
   (defun julia-forward-block (n)
     (let ((n n))
       (while (> n 0)
