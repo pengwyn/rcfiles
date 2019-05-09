@@ -265,7 +265,13 @@
   :demand t
   :bind (("C-h f" . helpful-callable)
          ("C-h v" . helpful-variable)
-         ("C-h k" . helpful-key)))
+         ("C-h k" . helpful-key))
+  :config
+  (evil-define-key 'normal 'helpful-mode-map "q" 'delete-window)
+
+  (dolist (func '(helpful-callable helpful-variable helpful-key)) 
+    (add-to-list 'helm-completing-read-handlers-alist
+                 (cons func 'helm-completing-read-symbols))))
 
 (use-package hydra)
 (use-package ace-window)
@@ -762,6 +768,21 @@ See `comment-region' for behavior of a prefix arg."
   (use-package wgrep-helm)
   (use-package helm-ag)
 
+  (defun helm-ff-sort-by-size ()
+    (interactive)
+    (setq helm-ff-initial-sort-method 'size)
+    (helm-update))
+
+  (defun helm-ff-sort-by-newest ()
+    (interactive)
+    (setq helm-ff-initial-sort-method 'newest)
+    (helm-update))
+
+  (defun helm-ff-sort-alpha ()
+    (interactive)
+    (setq helm-ff-initial-sort-method nil)
+    (helm-update))
+
   :custom ((helm-split-window-in-side-p t) ; open helm buffer inside current window, not occupy whole other window
            (helm-move-to-line-cycle-in-source t) ; move to end or beginning of source when reaching top or bottom of source.
            (helm-ff-search-library-in-sexp t) ; search for library in `require' and `declare-function' sexp.
@@ -770,7 +791,6 @@ See `comment-region' for behavior of a prefix arg."
            (helm-M-x-fuzzy-match t) ;; optional fuzzy matching for helm-M-x
            (helm-semantic-fuzzy-match t)
            (helm-imenu-fuzzy-match t))
-
 
   ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
   ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
@@ -788,7 +808,11 @@ See `comment-region' for behavior of a prefix arg."
          ("C-z"  . helm-select-action) ; list actions using C-z
          :map helm-grep-map
          ("C-." . 'helm-goto-next-file)
-         ("C-," . 'helm-goto-precedent-file)))
+         ("C-," . 'helm-goto-precedent-file)
+         :map helm-find-files-map
+         ("S-<f1>" . 'helm-ff-sort-by-size)
+         ("S-<f2>" . 'helm-ff-sort-by-newest)
+         ("S-<f3>" . 'helm-ff-sort-alpha)))
 
 ;; TODO: Add several alt-choices to the multifiles, including
 ;; - Open file in vertical for C-x C-f
