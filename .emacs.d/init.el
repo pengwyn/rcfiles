@@ -191,8 +191,14 @@
 
 (use-package mmm-mode
   :config
-  (mmm-add-mode-ext-class 'html-mode "\\.php\\'" 'html-php)
-  (setq-default mmm-global-mode 'maybe))
+  ;; (mmm-add-mode-ext-class 'html-mode "\\.php\\'" 'html-php)
+  ;; (add-to-list 'mmm-mode-ext-classes-alist '(nil "\\.html" 'html-php))
+  (mmm-add-mode-ext-class nil "\\.html" 'html-php)
+  (setq-default mmm-global-mode 'maybe)
+  ;; (add-hook 'html-mode-hook 'mmm-mode)
+  )
+
+;; (use-package polymode)
 
 (use-package auto-dim-other-buffers
   ;; :if (display-graphic-p)
@@ -242,8 +248,8 @@
   :config
   ;; (dashboard-setup-startup-hook)
   ;;(setq initial-buffer-choice (lambda () (switch-to-buffer (dashboard-refresh-buffer))))
-  (add-to-list 'bookmark-alist '("Init file" . ((filename . "~/.emacs.d/init.el"))))
-  (add-to-list 'bookmark-alist '("Diet log" . ((filename . "~/Dropbox/org/gallbladder_diet.org"))))
+  ;; (add-to-list 'bookmark-alist '("Init file" . ((filename . "~/.emacs.d/init.el"))))
+  ;; (add-to-list 'bookmark-alist '("Diet log" . ((filename . "~/Dropbox/org/gallbladder_diet.org"))))
   ;; (dashboard-insert-startupify-lists)
   (defun my/select-dashboard ()
     (if (get-buffer dashboard-buffer-name)
@@ -269,9 +275,10 @@
   :config
   (evil-define-key 'normal 'helpful-mode-map "q" 'delete-window)
 
-  (dolist (func '(helpful-callable helpful-variable helpful-key)) 
-    (add-to-list 'helm-completing-read-handlers-alist
-                 (cons func 'helm-completing-read-symbols))))
+  (with-eval-after-load 'helm-mode
+    (dolist (func '(helpful-callable helpful-variable helpful-key)) 
+      (add-to-list 'helm-completing-read-handlers-alist
+                   (cons func 'helm-completing-read-symbols)))))
 
 (use-package hydra)
 (use-package ace-window)
@@ -302,7 +309,6 @@ With negative prefix, apply to -N lines above."
 
 (global-set-key (kbd "C-;") 'endless/comment-line)
 (setq-default comment-style 'multi-line)
-
 
 ;; This is copied from https://stackoverflow.com/questions/23588549/emacs-copy-region-line-and-comment-at-the-same-time
 (defun copy-and-comment-region (beg end &optional arg)

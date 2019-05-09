@@ -474,8 +474,7 @@ Do not move back beyond position MIN."
       (while (not (or (> count 0) (<= (point) min)))
         (julia-safe-backward-sexp)
         (setq count
-              (cond (julia-at-start-keyword)(
-                     (+ count 1))
+              (cond ((julia-at-start-keyword) (+ count 1))
                     ((and (equal (current-word t) "end")
                           (not (julia-in-comment)))
                      (- count 1))
