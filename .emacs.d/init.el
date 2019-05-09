@@ -1352,10 +1352,14 @@ you want to quit windows on all frames."
   (defun julia-forward-block (n)
     (let ((n n))
       (while (> n 0)
-        (julia-start-of-next-block)
+        (if (julia-at-end-keyword)
+            (julia-start-of-next-block)
+          (julia-end-of-this-block))
         (setq n (1- n)))
       (while (< n 0)
-        (julia-start-of-last-block)
+        (if (julia-at-start-keyword)
+            (julia-end-of-last-block)
+          (julia-start-of-this-block))
         (setq n (1+ n)))
        ))
 
@@ -1381,6 +1385,9 @@ you want to quit windows on all frames."
   ;;   (evil-backward-end 'block count))
   (evil-define-key '(normal visual motion) 'julia-mode-map ")" 'my/evil-forward-block-end)
   (evil-define-key '(normal visual motion) 'julia-mode-map "(" 'my/evil-backward-block-begin)
+
+  (evil-define-key '(normal visual motion) 'julia-mode-map "{" 'julia-start-of-this-block)
+  (evil-define-key '(normal visual motion) 'julia-mode-map "}" 'julia-end-of-this-block)
 
 ;; TODO: Write a "move forward/backward block"
 ;; This should replace a "sentence" move in evil.

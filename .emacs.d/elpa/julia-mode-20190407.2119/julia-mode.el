@@ -474,7 +474,7 @@ Do not move back beyond position MIN."
       (while (not (or (> count 0) (<= (point) min)))
         (julia-safe-backward-sexp)
         (setq count
-              (cond ((julia-at-keyword julia-block-start-keywords)
+              (cond (julia-at-start-keyword)(
                      (+ count 1))
                     ((and (equal (current-word t) "end")
                           (not (julia-in-comment)))
@@ -773,8 +773,8 @@ Return nil if point is not in a function, otherwise point."
         ;;   (while (and (or (> count 0) (= (line-number-at-pos) startline)) (not (eobp)))
         ;;     (forward-sexp)
         ;;     (setq count
-        ;;           (cond ((julia-at-keyword julia-block-start-keywords) (1+ count))
-        ;;                 ((julia-at-keyword '("end")) (1- count))
+        ;;           (cond ((julia-at-start-keyword) (1+ count))
+        ;;                 ((julia-at-end-keyword) (1- count))
         ;;                 (t count)))))
         (julia-start-of-next-block)
         (forward-sexp)
@@ -782,38 +782,100 @@ Return nil if point is not in a function, otherwise point."
       ;; (end-of-line)
       (point)))))
 
-(defun julia-end-of-block ()
+(defun julia-at-start-keyword ()
+  (julia-at-keyword julia-block-start-keywords))
+
+(defun julia-at-end-keyword ()
+  (julia-at-keyword '("end")))
+
+(defun julia-start-of-this-block-pos ()
+  (save-excursion
+   (julia-safe-backward-sexp) 
+  (let ((count 1))
+    (while (and (> count 0) (not (bobp)))
+      (julia-safe-backward-sexp)
+      (setq count
+            (cond ((julia-at-start-keyword) (1- count))
+                  ((julia-at-end-keyword) (1+ count))
+                  (t count)))))
+  (if (bobp)
+      nil
+    (point))
+  ))
+
+(defun julia-start-of-this-block ()
   "Move point to the end of the current block"
   (interactive)
+  (let ((new-point (julia-start-of-this-block-pos)))
+    (when new-point
+      (goto-char new-point)))
+)
+
+
+(defun julia-end-of-this-block-pos ()
+  (save-excursion
+  (forward-sexp)
   (let ((count 1))
     (while (and (> count 0) (not (eobp)))
       (forward-sexp)
       (setq count
-            (cond ((julia-at-keyword julia-block-start-keywords) (1+ count))
-                  ((julia-at-keyword '("end")) (1- count))
+            (cond ((julia-at-start-keyword) (1+ count))
+                  ((julia-at-end-keyword) (1- count))
                   (t count)))))
-      ;; (end-of-line)
-      (point))
+  (if (eobp)
+      nil
+    (point))
+  ))
+
+(defun julia-end-of-this-block ()
+  "Move point to the end of the current block"
+  (interactive)
+  (let ((new-point (julia-end-of-this-block-pos)))
+    (when new-point
+      (goto-char new-point)))
+)
+
+
 
 (defun julia-start-of-next-block ()
   "Move point to the start of the next block"
   (interactive)
   (end-of-line)
-  (when (julia-at-keyword julia-block-start-keywords)
+  (when (julia-at-start-keyword)
     (forward-sexp)
     (forward-char))
-  (while (and (not (julia-at-keyword julia-block-start-keywords)) (not (eobp)))
+  (while (and (not (julia-at-start-keyword)) (not (eobp)))
     (forward-sexp)))
 
 (defun julia-start-of-last-block ()
   "Move point to the start of the last block"
   (interactive)
   (beginning-of-line)
-  (when (julia-at-keyword julia-block-start-keywords)
-    (backward-sexp)
+  (when (julia-at-start-keyword)
+    (julia-safe-backward-sexp)
     (backward-char))
-  (while (and (not (julia-at-keyword julia-block-start-keywords)) (not (bobp)))
-    (backward-sexp)))
+  (while (and (not (julia-at-start-keyword)) (not (bobp)))
+    (julia-safe-backward-sexp)))
+
+(defun julia-end-of-next-block ()
+  "Move point to the start of the next block"
+  (interactive)
+  (end-of-line)
+  (when (julia-at-end-keyword)
+    (forward-sexp)
+    (forward-char))
+  (while (and (not (julia-at-end-keyword)) (not (eobp)))
+    (forward-sexp)))
+
+(defun julia-end-of-last-block ()
+  "Move point to the start of the last block"
+  (interactive)
+  (beginning-of-line)
+  (when (julia-at-end-keyword)
+    (julia-safe-backward-sexp)
+    (backward-char))
+  (while (and (not (julia-at-end-keyword)) (not (bobp)))
+    (julia-safe-backward-sexp)))
 
 
 ;;; IMENU
