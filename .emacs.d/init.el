@@ -860,21 +860,21 @@ See `comment-region' for behavior of a prefix arg."
 ;; * General semantic stuff
 ;;----------------------------
 
-(use-package semantic
-  :config
-  (require 'semantic/db-global)
+;; (use-package semantic
+;;   :config
+;;   (require 'semantic/db-global)
 
-  (global-semanticdb-minor-mode 1)
-  (global-semantic-idle-scheduler-mode 1)
+;;   (global-semanticdb-minor-mode 1)
+;;   (global-semantic-idle-scheduler-mode 1)
 
-  ;; This inteferes with too many other things.
-  ;; (global-semantic-idle-summary-mode 1)
-  (add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode)
+;;   ;; This inteferes with too many other things.
+;;   ;; (global-semantic-idle-summary-mode 1)
+;;   (add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode)
 
-  ;;(semantic-mode 1)
-  ;; (global-set-key (kbd "<f5>") 'compile)
-  ;; (global-set-key (kbd "C-j") 'next-error)
-  )
+;;   ;;(semantic-mode 1)
+;;   ;; (global-set-key (kbd "<f5>") 'compile)
+;;   ;; (global-set-key (kbd "C-j") 'next-error)
+;;   )
 
 
 
@@ -1229,6 +1229,7 @@ you want to quit windows on all frames."
     ;; (org-babel-map-src-blocks nil (org-babel-remove-result))
     
     (define-key-with-fallback my-org-block-mode-map (kbd "M-RET") (my-org-execute-and-next) (org-in-src-block-p))
+    (define-key-with-fallback my-org-block-mode-map (kbd "<M-enter>") (my-org-execute-and-next) (org-in-src-block-p))
     (define-key my-org-block-mode-map (kbd "C-c C-j") 'jupyter-repl-restart-kernel)
     )
   )
@@ -1541,7 +1542,8 @@ you want to quit windows on all frames."
     (custom-theme-set-faces 'moe-dark '(default ((t (:background "#000000")))))
     ;; (set-background-color "black")
     )
-  (set-frame-font "GohuFont-11" nil t)
+  (set-frame-font "GohuFont-13" nil t)
+  ;; (set-frame-font "ProggyVector-10" nil t)
   )
 
 ;; (setq color-theme-is-global nil)
