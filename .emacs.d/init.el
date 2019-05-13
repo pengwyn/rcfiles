@@ -882,26 +882,26 @@ See `comment-region' for behavior of a prefix arg."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * C Stuff
 ;;----------------------------
-(use-package cc-mode
-  :hook ('c-mode-common . (lambda ()
-                            (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
-                              (semantic-mode 1)
-                              (flycheck-mode 1))
-                            (setq tab-width 4
-                                  indent-tabs-mode t)
-                            ))
-  :custom ((c-default-style "linux")
-           (c-basic-offset 4)
-           (compilation-read-command nil)
-           (compile-command "make"))
-  :config
-  (semanticdb-enable-gnu-global-databases 'c-mode)
-  (semanticdb-enable-gnu-global-databases 'c++-mode)
+;; (use-package cc-mode
+;;   :hook ('c-mode-common . (lambda ()
+;;                             (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
+;;                               (semantic-mode 1)
+;;                               (flycheck-mode 1))
+;;                             (setq tab-width 4
+;;                                   indent-tabs-mode t)
+;;                             ))
+;;   :custom ((c-default-style "linux")
+;;            (c-basic-offset 4)
+;;            (compilation-read-command nil)
+;;            (compile-command "make"))
+;;   :config
+;;   (semanticdb-enable-gnu-global-databases 'c-mode)
+;;   (semanticdb-enable-gnu-global-databases 'c++-mode)
 
-  :bind (:map c-mode-map
-              ("<f5>" . compile)
-              ("C-j" . next-error))
-  )
+;;   :bind (:map c-mode-map
+;;               ("<f5>" . compile)
+;;               ("C-j" . next-error))
+;;   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Quit help windows
@@ -1118,7 +1118,7 @@ you want to quit windows on all frames."
   (org-code ((t (:background "#500000"))))
   ;; (org-special-keyword ((t (:background "#500000" :foreground "black"))))
 
-  (org-block-begin-line ((t (:background "#3a3a3a" :foreground "black"))))
+  (org-block-begin-line ((t (:background "#3a3a3a" :foreground "#777"))))
   (org-block-end-line ((t (:background "#3a3a3a" :foreground "black"))))
 
   :config
@@ -1148,6 +1148,8 @@ you want to quit windows on all frames."
   (font-lock-add-keywords 'org-mode '((my/find-RESULTS-END (0 'my/org-results-keyword t))) t)
   (font-lock-add-keywords 'org-mode `((,(regexp-quote "#+RESULTS:") (0 'my/org-results-keyword t))) t)
   (font-lock-add-keywords 'org-mode `((,(org-re-property "RESULTS" nil t) (0 'my/org-results-keyword t))) t)
+
+  ;; TODO: Make disabled (with :eval no) source blocks show in a different colour
 
   (define-prefix-command 'danny-orgmode)
   (setq org-modules (append org-modules '(org-habit org-mouse)))
@@ -1478,7 +1480,8 @@ you want to quit windows on all frames."
          :map danny-projectile
          ("<f9>" . 'helm-projectile-switch-project)
          ("f" . 'helm-projectile-find-file-dwim)
-         ("p" . 'org-publish-current-project)
+         ;; ("p" . 'org-publish-current-project)
+         ("p" . 'projectile-compile-project)
          ("a" . 'helm-projectile-ag)
          ("d" . 'projectile-dired)
          ("x" . 'my/open-projectile-or-current-directory)))
