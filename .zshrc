@@ -222,7 +222,14 @@ export GPG_TTY=$(tty)
 # Force an update for every ssh command
 alias ssh='gpg-connect-agent updatestartuptty /bye;ssh'
 
-alias rs="gpg-connect-agent updatestartuptty /bye;rsync -avzziu --info=progress2"
+#alias rs="gpg-connect-agent updatestartuptty /bye;rsync -avzziu --info=progress2"
+alias rs="rsync -avzziu --info=progress2"
+
+
+function _gpg-agent-update-tty {
+  gpg-connect-agent UPDATESTARTUPTTY /bye >/dev/null
+}
+add-zsh-hook preexec _gpg-agent-update-tty
 
 ############################
 # * Utils
@@ -275,3 +282,5 @@ __remote_commands=(scp rsync rs)
 autoload -U url-quote-magic
 zle -N self-insert url-quote-magic
 zstyle -e :urlglobber url-other-schema '[[ $__remote_commands[(i)$words[1]] -le ${#__remote_commands} ]] && reply=("*") || reply=(http https ftp)'
+
+

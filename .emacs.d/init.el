@@ -189,13 +189,20 @@
   (add-hook 'magit-credential-hook 'my/setup-gpg-agent)
   )
 
-(use-package mmm-mode
+;; (use-package mmm-mode
+;;   :config
+;;   ;; (mmm-add-mode-ext-class 'html-mode "\\.php\\'" 'html-php)
+;;   ;; (add-to-list 'mmm-mode-ext-classes-alist '(nil "\\.html" 'html-php))
+;;   (mmm-add-mode-ext-class nil "\\.html" 'html-php)
+;;   (setq-default mmm-global-mode 'maybe)
+;;   ;; (add-hook 'html-mode-hook 'mmm-mode)
+;;   )
+
+(use-package web-mode
+  :custom ((web-mode-enable-engine-detect t))
+  
   :config
-  ;; (mmm-add-mode-ext-class 'html-mode "\\.php\\'" 'html-php)
-  ;; (add-to-list 'mmm-mode-ext-classes-alist '(nil "\\.html" 'html-php))
-  (mmm-add-mode-ext-class nil "\\.html" 'html-php)
-  (setq-default mmm-global-mode 'maybe)
-  ;; (add-hook 'html-mode-hook 'mmm-mode)
+  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
   )
 
 ;; (use-package polymode)
@@ -288,6 +295,7 @@
 (use-package better-defaults) 
 (use-package switch-window)
 (use-package csv-mode)
+(use-package all-the-icons)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1075,7 +1083,16 @@ you want to quit windows on all frames."
            (org-confirm-babel-evaluate nil)
            (org-agenda-restore-windows-after-quit t)
            (org-agenda-window-setup 'only-window)
-           (org-src-window-setup 'other-window))
+           (org-src-window-setup 'other-window)
+           (org-agenda-category-icon-alist `(("home" ,(list (all-the-icons-faicon "home")) nil nil nil)
+                                             ("notes" ,(list (all-the-icons-faicon "calculator")) nil nil nil)
+                                             ("" ,(list (all-the-icons-faicon "question-circle")) nil nil nil)))
+           (org-agenda-scheduled-leaders '("Sch: " "%2dx: "))
+           (org-agenda-prefix-format '((agenda . "%i %?-12t% s%-12(let* ((rawstr (car (last (org-get-outline-path)))) (str (if (> (length rawstr) 10) (substring rawstr 0 9) rawstr))) (concat \"[\" str \"]\")))")
+                                       (todo . " %i %-12:c")
+                                       (tags . " %i %-12:c")
+                                       (search . " %i %-12:c")))
+           )
 
 
   :bind (("<f7>" . danny-orgmode)
