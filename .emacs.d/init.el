@@ -287,6 +287,18 @@
       (add-to-list 'helm-completing-read-handlers-alist
                    (cons func 'helm-completing-read-symbols)))))
 
+
+;; (use-package sublimity
+;;   :custom
+;;   ((sublimity-map-size 20)
+;;    (sublimity-map-fraction 0.3)
+;;    (sublimity-map-text-scale -7))
+                       
+;;   :config
+;;   (require 'sublimity-map)
+;;   (sublimity-mode 1)
+;;   )
+
 (use-package hydra)
 (use-package ace-window)
 (use-package sudo-edit)
