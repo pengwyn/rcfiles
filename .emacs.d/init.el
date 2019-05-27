@@ -1101,6 +1101,7 @@ you want to quit windows on all frames."
                                              ("travel" ,(list (all-the-icons-faicon "plane" :height 1.25)) nil nil)
                                              ("" ,(list (all-the-icons-faicon "question-circle" :height 1.25)) nil nil)))
            (org-agenda-scheduled-leaders '("Sch: " "%2dx: "))
+           (org-agenda-deadline-leaders '("Ded: " "%2dd: " "%2d d. ago: "))
            (org-agenda-prefix-format '((agenda . "%i %?-12t% s%-12(let* ((rawstr (car (last (org-get-outline-path)))) (str (if (> (length rawstr) 10) (substring rawstr 0 9) rawstr))) (concat \"[\" str \"]\")))")
                                        (todo . " %i %-12:c")
                                        (tags . " %i %-12:c")
