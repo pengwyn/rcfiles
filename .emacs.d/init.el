@@ -1251,6 +1251,9 @@ you want to quit windows on all frames."
     (define-key-with-fallback my-org-block-mode-map (kbd "M-RET") (my-org-execute-and-next) (org-in-src-block-p))
     (define-key-with-fallback my-org-block-mode-map (kbd "<M-enter>") (my-org-execute-and-next) (org-in-src-block-p))
     (define-key my-org-block-mode-map (kbd "C-c C-j") 'jupyter-repl-restart-kernel)
+
+    (evil-define-key '(normal visual motion) 'org-mode-map ")" 'org-babel-next-src-block)
+    (evil-define-key '(normal visual motion) 'org-mode-map "(" 'org-babel-previous-src-block)
     )
   )
 
