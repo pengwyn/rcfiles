@@ -1595,9 +1595,18 @@ you want to quit windows on all frames."
     (custom-theme-set-faces 'moe-dark '(default ((t (:background "#000000")))))
     ;; (set-background-color "black")
     )
-  (set-frame-font "GohuFont-13" nil t)
+  ;; (set-frame-font "GohuFont-14" nil t)
   ;; (set-frame-font "ProggyVector-10" nil t)
+  (set-face-font 'default "GohuFont-14")
+  (unicode-fonts-setup)
   )
+
+;; (set-fontset-font t nil (font-spec :size 20 :name "Symbola"))
+;; (set-face-font 'default "GohuFont-14")
+;; (set-fontset-font "fontset-auto2" nil (font-spec :size 14 :name "DejaVu Sans Mono"))
+(use-package 'unicode-fonts
+  :config
+  (unicode-fonts-setup))
 
 ;; (setq color-theme-is-global nil)
 (add-hook 'after-make-frame-functions 'apply-color-theme)

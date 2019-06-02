@@ -199,6 +199,9 @@ This function provides equivalent functionality, but makes no efforts to optimis
              "::" "."))
           (regexp-opt '(" #" " \n" "#" "\n"))))
 
+(defconst my/julia-logical-short-circuit
+  (regexp-opt '("&&" "||")))
+
 (defconst julia-triple-quoted-string-regex
   ;; We deliberately put a group on the first and last delimiter, so
   ;; we can mark these as string delimiters for font-lock.
@@ -308,6 +311,13 @@ This function provides equivalent functionality, but makes no efforts to optimis
      )
    'symbols))
 
+(defconst my/julia-anonymous-function-regex
+  "->")
+(defface my/font-lock-operator-face
+  '((t (:inherit font-lock-type-face
+                 :weight bold)))
+  "asdfsdf")
+
 (defconst julia-quoted-symbol-regex
   ;; :foo and :foo2 are valid, but :123 is not.
   (rx (or bol whitespace "(" "[" "," "=")
@@ -323,6 +333,8 @@ This function provides equivalent functionality, but makes no efforts to optimis
    (list julia-quoted-symbol-regex 1 ''julia-quoted-symbol-face)
    (cons julia-builtin-types-regex 'font-lock-type-face)
    (cons julia-keyword-regex 'font-lock-keyword-face)
+   (cons my/julia-anonymous-function-regex ''my/font-lock-operator-face)
+   (cons my/julia-logical-short-circuit ''my/font-lock-operator-face)
    (cons julia-macro-regex ''julia-macro-face)
    (cons
     (julia--regexp-opt
