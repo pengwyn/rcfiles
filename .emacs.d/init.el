@@ -280,7 +280,7 @@
          ("C-h v" . helpful-variable)
          ("C-h k" . helpful-key))
   :config
-  (evil-define-key 'normal 'helpful-mode-map "q" 'delete-window)
+  (evil-define-key 'normal helpful-mode-map "q" 'delete-window)
 
   (with-eval-after-load 'helm-mode
     (dolist (func '(helpful-callable helpful-variable helpful-key)) 
@@ -640,8 +640,8 @@ See `comment-region' for behavior of a prefix arg."
       (evil--mc-make-vertical-cursors beg end 'evil--mc-make-cursor-at-col-append)
       (move-to-column (- (max (col-at-point beg) (col-at-point end)) 1)))
 
-    (evil-define-key 'visual global-map "gI" 'evil-mc-insert-vertical-cursors)
-    (evil-define-key 'visual global-map "gA" 'evil-mc-append-vertical-cursors)
+    (evil-define-key 'visual 'global "gI" 'evil-mc-insert-vertical-cursors)
+    (evil-define-key 'visual 'global "gA" 'evil-mc-append-vertical-cursors)
     )
 
 
@@ -1250,7 +1250,7 @@ you want to quit windows on all frames."
     (add-hook 'org-src-mode-hook 'my-org-src-mode)
     (define-key my-org-src-mode-map (kbd "C-c C-c") 'jupyter-eval-buffer)
     ;; (evil-define-key 'insert 'jupyter-org-interaction-mode-map (kbd "M-i") (lambda () (interactive) (insert-tab)))
-    (evil-define-key 'insert 'jupyter-org-interaction-mode-map (kbd "M-i") nil)
+    (evil-define-key 'insert jupyter-org-interaction-mode-map (kbd "M-i") nil)
 
     (defvar my-org-block-mode-map (make-sparse-keymap))
     (define-minor-mode my-org-block-mode
@@ -1280,8 +1280,8 @@ you want to quit windows on all frames."
     (define-key-with-fallback my-org-block-mode-map (kbd "<M-enter>") (my-org-execute-and-next) (org-in-src-block-p))
     (define-key my-org-block-mode-map (kbd "C-c C-j") 'jupyter-repl-restart-kernel)
 
-    (evil-define-key '(normal visual motion) 'org-mode-map ")" 'org-babel-next-src-block)
-    (evil-define-key '(normal visual motion) 'org-mode-map "(" 'org-babel-previous-src-block)
+    (evil-define-key '(normal visual motion) org-mode-map ")" 'org-babel-next-src-block)
+    (evil-define-key '(normal visual motion) org-mode-map "(" 'org-babel-previous-src-block)
     )
   )
 
@@ -1465,11 +1465,11 @@ you want to quit windows on all frames."
   ;;   :jump t
   ;;   :type exclusive
   ;;   (evil-backward-end 'block count))
-  (evil-define-key '(normal visual motion) 'julia-mode-map ")" 'my/evil-forward-block-end)
-  (evil-define-key '(normal visual motion) 'julia-mode-map "(" 'my/evil-backward-block-begin)
+  (evil-define-key '(normal visual motion) julia-mode-map ")" 'my/evil-forward-block-end)
+  (evil-define-key '(normal visual motion) julia-mode-map "(" 'my/evil-backward-block-begin)
 
-  (evil-define-key '(normal visual motion) 'julia-mode-map "{" 'julia-start-of-this-block)
-  (evil-define-key '(normal visual motion) 'julia-mode-map "}" 'julia-end-of-this-block)
+  (evil-define-key '(normal visual motion) julia-mode-map "{" 'julia-start-of-this-block)
+  (evil-define-key '(normal visual motion) julia-mode-map "}" 'julia-end-of-this-block)
 
 ;; TODO: Write a "move forward/backward block"
 ;; This should replace a "sentence" move in evil.
@@ -1585,6 +1585,11 @@ you want to quit windows on all frames."
 ;; * THEME
 ;;----------------------------
 
+(use-package unicode-fonts
+  :config
+  (unicode-fonts-setup)
+  )
+
 (require 'moe-theme)
 (defun apply-color-theme (frame)
   "Apply color theme to a frame based on whether its a 'real'
@@ -1604,9 +1609,6 @@ you want to quit windows on all frames."
 ;; (set-fontset-font t nil (font-spec :size 20 :name "Symbola"))
 ;; (set-face-font 'default "GohuFont-14")
 ;; (set-fontset-font "fontset-auto2" nil (font-spec :size 14 :name "DejaVu Sans Mono"))
-(use-package 'unicode-fonts
-  :config
-  (unicode-fonts-setup))
 
 ;; (setq color-theme-is-global nil)
 (add-hook 'after-make-frame-functions 'apply-color-theme)
