@@ -267,6 +267,10 @@ END { print cnt }
 	export NO_JULIA_PACKAGE_CHECK=nocheck
 
 	function mkmachinefile() {
+		#filename=$(mktemp)
+		#srun zsh -c 'echo hostname $(hostname -s)' | grep hostname | awk '{ print $2 }' | sort > $filename
+		#echo $filename
+		
 		result=$(srun zsh -c 'echo hostname $(hostname -s)' | grep hostname | awk '{ print $2 }' | sort)
 		echo $result
 	}
