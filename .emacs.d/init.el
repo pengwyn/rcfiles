@@ -225,7 +225,7 @@
               ("C-M-y" . 'yas-expand)))
 
 (use-package mode-icons
-  ;; :if (display-graphic-p)
+  :if (or (display-graphic-p) (boundp 'server-process))
   :config
   (setq mode-icons (delete (seq-find (lambda (x) (let ((y (pop x)))
                                                    (and (string-or-null-p y)
