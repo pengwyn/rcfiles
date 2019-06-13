@@ -208,7 +208,7 @@
 ;; (use-package polymode)
 
 (use-package auto-dim-other-buffers
-  ;; :if (display-graphic-p)
+  :if (or (display-graphic-p) (daemonp))
   :diminish
   :config
   (auto-dim-other-buffers-mode t))
