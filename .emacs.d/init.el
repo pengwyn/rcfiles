@@ -225,7 +225,7 @@
               ("C-M-y" . 'yas-expand)))
 
 (use-package mode-icons
-  :if (or (display-graphic-p) (boundp 'server-process))
+  :if (or (display-graphic-p) (daemonp))
   :config
   (setq mode-icons (delete (seq-find (lambda (x) (let ((y (pop x)))
                                                    (and (string-or-null-p y)
@@ -233,7 +233,9 @@
                                      mode-icons)
                            mode-icons))
   (add-to-list 'mode-icons '("company-box"  61869 FontAwesome))
-  (mode-icons-mode))
+  ;; (mode-icons-mode)
+  (add-hook 'after-make-frame-functions (lambda (frame) (mode-icons-mode)))
+  )
 
 (use-package php-mode
   :config
@@ -264,14 +266,20 @@
       (dashboard-insert-startupify-lists)
       (switch-to-buffer dashboard-buffer-name)))
     
-  (add-hook 'after-make-frame-functions (lambda (frame)
-                                          (interactive)
-                                          (if (< (length command-line-args) 2)
-                                              (my/select-dashboard))))
-  (setq initial-buffer-choice (lambda () (if (> (length command-line-args) 1)
-                                             (find-file-noselect (nth 1 command-line-args))
-                                           (or (get-buffer dashboard-buffer-name)
-                                               (get-buffer "*scratch*")))))
+  ;; (add-hook 'after-make-frame-functions (lambda (frame)
+  ;;                                         (interactive)
+  ;;                                         (if (< (length command-line-args) 2)
+  ;;                                             (my/select-dashboard))))
+  ;; (setq initial-buffer-choice (lambda () (if (> (length command-line-args) 1)
+  ;;                                            (find-file-noselect (nth 1 command-line-args))
+  ;;                                          (or (get-buffer dashboard-buffer-name)
+  ;;                                              (get-buffer "*scratch*")))))
+  ;; (setq initial-buffer-choice (lambda () (or (get-buffer dashboard-buffer-name)
+  ;;                                            (get-buffer "*scratch*"))))
+  (setq initial-buffer-choice (lambda () (or (my/select-dashboard)
+                                             (get-buffer "*scratch*"))))
+
+  (setq inhibit-startup-screen t)
   )
 
 (use-package helpful
@@ -1600,24 +1608,15 @@ you want to quit windows on all frames."
     (custom-theme-set-faces 'moe-dark '(default ((t (:background "#000000")))))
     ;; (set-background-color "black")
     )
-  ;; (set-frame-font "GohuFont-14" nil t)
-  ;; (set-frame-font "ProggyVector-10" nil t)
   (set-face-font 'default "GohuFont-14")
   (unicode-fonts-setup)
   )
 
-;; (set-fontset-font t nil (font-spec :size 20 :name "Symbola"))
-;; (set-face-font 'default "GohuFont-14")
-;; (set-fontset-font "fontset-auto2" nil (font-spec :size 14 :name "DejaVu Sans Mono"))
-
-;; (setq color-theme-is-global nil)
-(add-hook 'after-make-frame-functions 'apply-color-theme)
-;; (add-hook 'after-make-frame-functions (lambda (frame) (interactive) (org-agenda nil "d")))
-;;(setq initial-buffer-choice (lambda () (org-agenda nil "d") (get-buffer "*Org Agenda*")))
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
-
-;; (moe-dark)
-;; (load-theme 'moe-dark t t)
-;; (apply-color-theme (selected-frame))
-
-;; (set-frame-font "GohuFont-11" nil t)
+(if (daemonp)
+    (progn
+      (add-hook 'after-make-frame-functions 'apply-color-theme)
+      (add-to-list 'default-frame-alist '(fullscreen . maximized))
+      )
+  ;; else
+  (apply-color-theme (selected-frame))
+  )
