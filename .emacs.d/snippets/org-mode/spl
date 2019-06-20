@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: split
+# key: spl
+##+BEGIN_SRC jupyter-julia :file ${1:$$(concat (make-temp-name "./ipython-") ".png")}
+## In the future, would be nice to make this copy the existing src block header from above.
+# --
+#+END_SRC
+
+#+BEGIN_SRC jupyter-julia
+$0
