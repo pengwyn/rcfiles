@@ -135,6 +135,9 @@
     (select-window (active-minibuffer-window))))
 (global-set-key (kbd "<f12>") 'switch-to-minibuffer-window)
 
+;; This is here because I mostly want it for the minibuffer but really it is for all buffers.
+(global-set-key (kbd "<f5>") LaTeX-math-mode-map)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ** Align func
 ;;----------------------------
@@ -1608,7 +1611,8 @@ you want to quit windows on all frames."
     (custom-theme-set-faces 'moe-dark '(default ((t (:background "#000000")))))
     ;; (set-background-color "black")
     )
-  (set-face-font 'default "GohuFont-14")
+  (set-face-font 'default "Gohu GohuFont-14")
+  ;; (set-face-font 'default "Mononoki-12")
   (unicode-fonts-setup)
   )
 
