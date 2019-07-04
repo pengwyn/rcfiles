@@ -136,7 +136,9 @@
 (global-set-key (kbd "<f12>") 'switch-to-minibuffer-window)
 
 ;; This is here because I mostly want it for the minibuffer but really it is for all buffers.
-(global-set-key (kbd "<f5>") LaTeX-math-mode-map)
+(use-package auctex
+  :bind ("<f5>" . LaTeX-math-mode-map)
+)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ** Align func
