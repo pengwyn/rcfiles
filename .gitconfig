@@ -9,6 +9,6 @@
 	tool = vimdiff
 [alias]
 	dannystarallremotes = "!for remote in $(git remote) ; do git remote set-branches $remote \\* ; echo $remote \\* ; done"
-	pullthis = "!f() { git pull $1 $(git branch --show-current) ; } ; f"
+	pullthis = "!f() { git pull --ff-only $1 $(git branch --show-current) ; } ; f"
 [core]
 	excludesfile = /home/pengwyn/default_gitignore

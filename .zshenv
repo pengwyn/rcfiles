@@ -73,7 +73,7 @@ alias g="git"
 
 alias grs="gr status"
 alias grf="gr git fetch ; gr status"
-alias grp="gr git pull --ff-only"
+alias grpl="gr git pullthis" 
 
 # Quickfind
 function qfind {
