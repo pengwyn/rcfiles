@@ -1,5 +1,5 @@
 [Configuration]
-FontName=GohuFont weight=101 14
+FontName=mononoki 10
 MiscAlwaysShowTabs=FALSE
 MiscBell=FALSE
 MiscBellUrgent=FALSE
@@ -32,4 +32,6 @@ ScrollingOnOutput=FALSE
 ColorPalette=rgb(0,0,0);rgb(211,0,0);rgb(0,203,0);rgb(228,114,0);rgb(37,78,255);rgb(189,0,255);rgb(0,207,207);rgb(170,170,170);rgb(85,85,85);rgb(255,85,85);rgb(85,255,85);rgb(255,255,85);rgb(130,130,255);rgb(255,85,255);rgb(85,255,255);rgb(255,255,255)
 MiscNewTabAdjacent=FALSE
 MiscShowRelaunchDialog=TRUE
+MiscSearchDialogOpacity=100
+MiscShowUnsafePasteDialog=TRUE
 
