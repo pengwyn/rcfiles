@@ -136,9 +136,16 @@
 (global-set-key (kbd "<f12>") 'switch-to-minibuffer-window)
 
 ;; This is here because I mostly want it for the minibuffer but really it is for all buffers.
-(use-package auctex
-  :bind ("<f5>" . LaTeX-math-mode-map)
-)
+;; (use-package latex
+;;   :ensure auctex
+;;   :bind ("<f5>" . LaTeX-math-mode-map)
+;; )
+;; (require 'julia)
+;; (bind-key "<f5>" LaTeX-math-keymap)
+;; (require 'julia-mode)
+;; (add-hook 'minibuffer-setup-hook 'julia-math-mode)
+;; (add-hook 'isearch-mode-hook 'julia-math-mode)
+;; (add-hook 'isearch-mode-hook (lambda () (define-key minibuffer-local-isearch-map'julia-math-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ** Align func
@@ -663,6 +670,23 @@ See `comment-region' for behavior of a prefix arg."
 
                                         ;(add-to-list 'evil-mc-custom-known-commands '(outshine-self-insert-command . ((:default . evil-mc-execute-default-call-with-count))))
   )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; * Global greek insertion
+;;----------------------------
+
+;; TODO: Need to make a function for isearch that reads a key from the map and
+;; inserts into the search thing. This is more complicated than it should be!
+(require 'julia-mode)
+(bind-key "<f5>" LaTeX-math-keymap isearch-mode-map)
+;; (defun my/latex-insert ()
+;;   nil
+;;   (interactive)
+;;   (let ((LaTeX-math-insert-function 'julia-math-insert))
+;;     (call-interactively LaTeX-math-keymap)))
+
+;; (evil-define-key 'insert 'global (kbd "<f5>") 'my/latex-insert)
+
 
 
 
