@@ -1,0 +1,23 @@
+#compdef wpa_add_network
+
+local -a args
+
+_arguments '-h[My test]:mode:(zsh sh)' \
+            ':network:->ssids'
+
+case "$state" in
+    ssids)
+        local -a wpalist esslist
+        wpalist=( "${(@f)$(wpa_cli scan_results | tail -n+3 | grep '\[.*WPA2.*\]' | awk '{ print $5 }' | grep '.')}" )
+        esslist=( "${(@f)$(wpa_cli scan_results | tail -n+3 | grep -v '\[.*WPA2.*\]' | awk '{ print $5 }' | grep '.')}" )
+        # [[ -n $wpalist ]] && _values 'WPA networks' $wpalist
+        # [[ -n $esslist ]] && _values 'Open networks' $esslist
+        # _values 'WPA networks' $wpalist
+        # _values 'Open networks' $esslist
+        _alternative \
+            'wpa:WPA networks:($wpalist)' \
+            'ess:Open networks:($esslist)'
+        ;;
+esac
+
+return 0

@@ -2,6 +2,8 @@
 autoload -Uz compinit
 compinit
 
+fpath=( $fpath "$HOME/bin/completions" )
+
 ########################################
 # * ALIASES
 
