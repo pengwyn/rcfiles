@@ -1223,6 +1223,13 @@ you want to quit windows on all frames."
   ;; TODO: Make disabled (with :eval no) source blocks show in a different colour
 
   (define-prefix-command 'danny-orgmode)
+
+  (evil-define-key 'insert org-mode-map (kbd "<shift> <tab>") 'org-indent-item)
+  (evil-define-key 'insert org-mode-map (kbd "<S-tab>") 'org-indent-item)
+  (evil-define-key 'insert org-mode-map (kbd "<S-iso-lefttab>") 'org-indent-item)
+  (evil-define-key 'insert org-mode-map (kbd "<backtab>") 'org-indent-item)
+
+
   (setq org-modules (append org-modules '(org-habit org-mouse)))
 
   (danny-add-prettify-greek 'org-mode-hook)
