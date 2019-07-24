@@ -2,14 +2,16 @@
 
 local -a args
 
-_arguments '-h[My test]:mode:(zsh sh)' \
-            ':network:->ssids'
+_arguments ':network:->ssids'
+
+# awkscript='{ for (i=5; i<=NF; i++) printf $i " "; }'
+awkscript='{ print substr($0, index($0,$5)); }'
 
 case "$state" in
     ssids)
         local -a wpalist esslist
-        wpalist=( "${(@f)$(wpa_cli scan_results | tail -n+3 | grep '\[.*WPA2.*\]' | awk '{ print $5 }' | grep '.')}" )
-        esslist=( "${(@f)$(wpa_cli scan_results | tail -n+3 | grep -v '\[.*WPA2.*\]' | awk '{ print $5 }' | grep '.')}" )
+        wpalist=( "${(@f)$(wpa_cli scan_results | tail -n+3 | grep '\[.*WPA2.*\]' | awk $awkscript | grep '.')}" )
+        esslist=( "${(@f)$(wpa_cli scan_results | tail -n+3 | grep -v '\[.*WPA2.*\]' | awk $awkscript | grep '.')}" )
         # [[ -n $wpalist ]] && _values 'WPA networks' $wpalist
         # [[ -n $esslist ]] && _values 'Open networks' $esslist
         # _values 'WPA networks' $wpalist
