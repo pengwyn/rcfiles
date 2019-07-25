@@ -136,9 +136,16 @@
 (global-set-key (kbd "<f12>") 'switch-to-minibuffer-window)
 
 ;; This is here because I mostly want it for the minibuffer but really it is for all buffers.
-(use-package auctex
-  :bind ("<f5>" . LaTeX-math-mode-map)
-)
+;; (use-package latex
+;;   :ensure auctex
+;;   :bind ("<f5>" . LaTeX-math-mode-map)
+;; )
+;; (require 'julia)
+;; (bind-key "<f5>" LaTeX-math-keymap)
+;; (require 'julia-mode)
+;; (add-hook 'minibuffer-setup-hook 'julia-math-mode)
+;; (add-hook 'isearch-mode-hook 'julia-math-mode)
+;; (add-hook 'isearch-mode-hook (lambda () (define-key minibuffer-local-isearch-map'julia-math-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ** Align func
@@ -665,10 +672,6 @@ See `comment-region' for behavior of a prefix arg."
                          prettify-symbols-alist (append prettify-symbols-alist danny-prettify-set))
                         (prettify-symbols-mode t)
                         (setq prettify-symbols-compose-predicate 'danny-prettify-predicate))))
-
-
-
-
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1204,6 +1207,13 @@ you want to quit windows on all frames."
   ;; TODO: Make disabled (with :eval no) source blocks show in a different colour
 
   (define-prefix-command 'danny-orgmode)
+
+  (evil-define-key 'insert org-mode-map (kbd "<shift> <tab>") 'org-indent-item)
+  (evil-define-key 'insert org-mode-map (kbd "<S-tab>") 'org-indent-item)
+  (evil-define-key 'insert org-mode-map (kbd "<S-iso-lefttab>") 'org-indent-item)
+  (evil-define-key 'insert org-mode-map (kbd "<backtab>") 'org-indent-item)
+
+
   (setq org-modules (append org-modules '(org-habit org-mouse)))
 
   (danny-add-prettify-greek 'org-mode-hook)
