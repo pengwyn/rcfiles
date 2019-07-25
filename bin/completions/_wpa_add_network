@@ -9,6 +9,8 @@ awkscript='{ print substr($0, index($0,$5)); }'
 
 case "$state" in
     ssids)
+		wpa_cli scan >/dev/null 2>&1
+
         local -a wpalist esslist
         wpalist=( "${(@f)$(wpa_cli scan_results | tail -n+3 | grep '\[.*WPA2.*\]' | awk $awkscript | grep '.')}" )
         esslist=( "${(@f)$(wpa_cli scan_results | tail -n+3 | grep -v '\[.*WPA2.*\]' | awk $awkscript | grep '.')}" )
