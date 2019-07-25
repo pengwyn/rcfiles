@@ -151,277 +151,6 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; * Short modes
-;;----------------------------
-
-(savehist-mode t)
-(save-place-mode t)
-(show-paren-mode t)
-(global-auto-revert-mode t)
-
-(use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode))
-;; (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
-
-(use-package powerline
-  :config
-  (use-package powerline-evil)
-  (powerline-center-evil-theme))
-
-(use-package magit
-  :bind ("<f6>" . magit-status)
-  :config
-  (use-package magit-popup)
-
-  (defun my/setup-gpg-agent (&optional force)
-    "Setup gpg agent env variables for magit."
-    (unless (or force (getenv "SSH_AUTH_SOCK"))
-      (with-temp-buffer
-        (insert-file-contents "~/.gnupg/evalstr")
-        (let* ((found-str (condition-case nil
-                              (progn
-                                (search-forward-regexp "SSH_AUTH_SOCK=[^\s;]*")
-                                (match-string 0))
-                            (error (progn (message "Unable to find SSH_AUTH_SOCK string!")
-                                          "")
-                                   )))
-               (envvar (split-string found-str "=")))
-          (when envvar
-            (apply 'setenv envvar))
-          )))
-    (call-process-shell-command "gpg-connect-agent updatestartuptty /bye")
-    )
-  (add-hook 'magit-credential-hook 'my/setup-gpg-agent)
-  )
-
-;; (use-package mmm-mode
-;;   :config
-;;   ;; (mmm-add-mode-ext-class 'html-mode "\\.php\\'" 'html-php)
-;;   ;; (add-to-list 'mmm-mode-ext-classes-alist '(nil "\\.html" 'html-php))
-;;   (mmm-add-mode-ext-class nil "\\.html" 'html-php)
-;;   (setq-default mmm-global-mode 'maybe)
-;;   ;; (add-hook 'html-mode-hook 'mmm-mode)
-;;   )
-
-(use-package web-mode
-  :custom ((web-mode-enable-engine-detect t))
-  
-  :config
-  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-  )
-
-;; (use-package polymode)
-
-(use-package auto-dim-other-buffers
-  :if (or (display-graphic-p) (daemonp))
-  :diminish
-  :config
-  (auto-dim-other-buffers-mode t))
-;; (when (display-graphic-p)
-;;  (require 'auto-dim-other-buffers)
-;;  (auto-dim-other-buffers-mode t))
-
-(use-package yasnippet
-  :config
-  (yas-global-mode 1)
-  (use-package yasnippet-snippets)
-  ;; :diminish yas-minor-mode
-  :bind (:map yas-minor-mode-map
-              ("C-M-y" . 'yas-expand)))
-
-(use-package mode-icons
-  :if (or (display-graphic-p) (daemonp))
-  :config
-  (setq mode-icons (delete (seq-find (lambda (x) (let ((y (pop x)))
-                                                   (and (string-or-null-p y)
-                                                        (string-match-p (regexp-quote "company") y))))
-                                     mode-icons)
-                           mode-icons))
-  (add-to-list 'mode-icons '("company-box"  61869 FontAwesome))
-  ;; (mode-icons-mode)
-  (add-hook 'after-make-frame-functions (lambda (frame) (mode-icons-mode)))
-  )
-
-(use-package php-mode
-  :config
-  (use-package company-php))
-
-(use-package flycheck
-  :config
-  (use-package helm-flycheck))
-
-(use-package dashboard
-  :custom
-  ((dashboard-items '((recents . 10)
-                     (bookmarks . 10)
-                     ;;(project . 5)
-                     (agenda . 15)
-                     ;;(registers . 5)
-    				 ))
-   (show-week-agenda-p t))
-  :config
-  ;; (dashboard-setup-startup-hook)
-  ;;(setq initial-buffer-choice (lambda () (switch-to-buffer (dashboard-refresh-buffer))))
-  ;; (add-to-list 'bookmark-alist '("Init file" . ((filename . "~/.emacs.d/init.el"))))
-  ;; (add-to-list 'bookmark-alist '("Diet log" . ((filename . "~/Dropbox/org/gallbladder_diet.org"))))
-  ;; (dashboard-insert-startupify-lists)
-  (defun my/select-dashboard ()
-    (if (get-buffer dashboard-buffer-name)
-        (dashboard-refresh-buffer)
-      (dashboard-insert-startupify-lists)
-      (switch-to-buffer dashboard-buffer-name)))
-    
-  ;; (add-hook 'after-make-frame-functions (lambda (frame)
-  ;;                                         (interactive)
-  ;;                                         (if (< (length command-line-args) 2)
-  ;;                                             (my/select-dashboard))))
-  ;; (setq initial-buffer-choice (lambda () (if (> (length command-line-args) 1)
-  ;;                                            (find-file-noselect (nth 1 command-line-args))
-  ;;                                          (or (get-buffer dashboard-buffer-name)
-  ;;                                              (get-buffer "*scratch*")))))
-  ;; (setq initial-buffer-choice (lambda () (or (get-buffer dashboard-buffer-name)
-  ;;                                            (get-buffer "*scratch*"))))
-  (setq initial-buffer-choice (lambda () (or (my/select-dashboard)
-                                             (get-buffer "*scratch*"))))
-
-  (setq inhibit-startup-screen t)
-  )
-
-(use-package helpful
-  :demand t
-  :bind (("C-h f" . helpful-callable)
-         ("C-h v" . helpful-variable)
-         ("C-h k" . helpful-key))
-  :config
-  (evil-define-key 'normal helpful-mode-map "q" 'delete-window)
-
-  (with-eval-after-load 'helm-mode
-    (dolist (func '(helpful-callable helpful-variable helpful-key)) 
-      (add-to-list 'helm-completing-read-handlers-alist
-                   (cons func 'helm-completing-read-symbols)))))
-
-
-;; (use-package sublimity
-;;   :custom
-;;   ((sublimity-map-size 20)
-;;    (sublimity-map-fraction 0.3)
-;;    (sublimity-map-text-scale -7))
-                       
-;;   :config
-;;   (require 'sublimity-map)
-;;   (sublimity-mode 1)
-;;   )
-
-(use-package hydra)
-(use-package ace-window)
-(use-package sudo-edit)
-(use-package pkgbuild-mode)
-(use-package yaml-mode)
-(use-package better-defaults) 
-(use-package switch-window)
-(use-package csv-mode)
-(use-package all-the-icons)
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; * Commenting things
-;;----------------------------
-
-(defun endless/comment-line (n)
-  "Comment or uncomment current line and leave point after it.
-With positive prefix, apply to N lines including current one.
-With negative prefix, apply to -N lines above."
-  (interactive "p")
-  (let ((range (list (line-beginning-position)
-                     (goto-char (line-end-position n)))))
-    (comment-or-uncomment-region
-     (apply #'min range)
-     (apply #'max range)))
-  ;; (forward-line 1)
-  (back-to-indentation))
-
-(global-set-key (kbd "C-;") 'endless/comment-line)
-(setq-default comment-style 'multi-line)
-
-;; This is copied from https://stackoverflow.com/questions/23588549/emacs-copy-region-line-and-comment-at-the-same-time
-(defun copy-and-comment-region (beg end &optional arg)
-  "Duplicate the region and comment-out the copied text.
-See `comment-region' for behavior of a prefix arg."
-  (interactive "r\nP")
-  (copy-region-as-kill beg end)
-  (goto-char end)
-  (yank)
-  (comment-region beg end arg))
-(defun copy-and-comment-line (&optional arg)
-  (interactive "P")
-  (copy-and-comment-region (line-beginning-position) (line-end-position)))
-
-(with-eval-after-load "evil" 
-  (define-key evil-visual-state-map (kbd "C-y") 'copy-and-comment-region)
-  ;; (define-key evil-insert-state-map (kbd "C-y") 'copy-and-comment-line)
-  (define-key evil-normal-state-map (kbd "C-y") 'copy-and-comment-line))
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; * Reload dir-locals automatically
-;;----------------------------------
-
-;; Stolen from https://emacs.stackexchange.com/questions/13080/reloading-directory-local-variables
-(defun my-reload-dir-locals-for-current-buffer ()
-  "reload dir locals for the current buffer"
-  (interactive)
-  (let ((enable-local-variables :all))
-    (hack-dir-local-variables-non-file-buffer)))
-(defun my-reload-dir-locals-for-all-buffer-in-this-directory ()
-  "For every buffer with the same `default-directory` as the
-   current buffer's, reload dir-locals."
-  (interactive)
-  (let ((dir default-directory))
-    (dolist (buffer (buffer-list))
-      (with-current-buffer buffer
-        (when (equal default-directory dir))
-        (my-reload-dir-locals-for-current-buffer)))))
-(defun enable-autoreload-for-dir-locals ()
-  (when (and (buffer-file-name)
-             (equal dir-locals-file
-                    (file-name-nondirectory (buffer-file-name))))
-    (add-hook (make-variable-buffer-local 'after-save-hook)
-              'my-reload-dir-locals-for-all-buffer-in-this-directory)))
-(add-hook 'emacs-lisp-mode-hook 'enable-autoreload-for-dir-locals)
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; * Prettify
-;;----------------------------
-
-(use-package prettify-greek
-  :custom
-  (prettify-symbols-unprettify-at-point "right-edge"))
-
-                                        ; Make up my own set with \ in front of them.
-(defconst danny-prettify-set 
-  (let* ((my-greek (append (copy-tree prettify-greek-lower) (copy-tree prettify-greek-upper))))
-    (dolist (item my-greek)
-      (setcar item (concat "\\" (car item))))
-    (append my-greek prettify-greek-lower prettify-greek-upper)))
-
-(defun danny-prettify-predicate (start end _match) "Only care about words and not symbols."
-       ;; (not (or (= (char-syntax (char-after end)) ?w)
-       ;;           (= (char-syntax (char-before start)) ?w))))
-       (not (or (string-match-p "[a-zA-Z]" (string (char-after end)))
-                (string-match-p "[a-zA-Z]" (string (char-before start))))))
-
-
-(defun danny-add-prettify-greek (mode) "Add prettify-greek symbols to mode."
-       (add-hook mode (lambda ()
-                        (setq
-                                        ;prettify-symbols-alist (append prettify-symbols-alist prettify-greek-lower prettify-greek-upper)))))
-                         prettify-symbols-alist (append prettify-symbols-alist danny-prettify-set))
-                        (prettify-symbols-mode t)
-                        (setq prettify-symbols-compose-predicate 'danny-prettify-predicate))))
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Evil stuff
 ;;----------------------------
 
@@ -663,6 +392,280 @@ See `comment-region' for behavior of a prefix arg."
 
                                         ;(add-to-list 'evil-mc-custom-known-commands '(outshine-self-insert-command . ((:default . evil-mc-execute-default-call-with-count))))
   )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; * Short modes
+;;----------------------------
+
+(savehist-mode t)
+(save-place-mode t)
+(show-paren-mode t)
+(global-auto-revert-mode t)
+
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
+;; (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+
+(use-package powerline
+  :config
+  (use-package powerline-evil)
+  (powerline-center-evil-theme))
+
+(use-package magit
+  :bind ("<f6>" . magit-status)
+  :config
+  (use-package magit-popup)
+
+  (defun my/setup-gpg-agent (&optional force)
+    "Setup gpg agent env variables for magit."
+    (unless (or force (getenv "SSH_AUTH_SOCK"))
+      (with-temp-buffer
+        (insert-file-contents "~/.gnupg/evalstr")
+        (let* ((found-str (condition-case nil
+                              (progn
+                                (search-forward-regexp "SSH_AUTH_SOCK=[^\s;]*")
+                                (match-string 0))
+                            (error (progn (message "Unable to find SSH_AUTH_SOCK string!")
+                                          "")
+                                   )))
+               (envvar (split-string found-str "=")))
+          (when envvar
+            (apply 'setenv envvar))
+          )))
+    (call-process-shell-command "gpg-connect-agent updatestartuptty /bye")
+    )
+  (add-hook 'magit-credential-hook 'my/setup-gpg-agent)
+  )
+
+;; (use-package mmm-mode
+;;   :config
+;;   ;; (mmm-add-mode-ext-class 'html-mode "\\.php\\'" 'html-php)
+;;   ;; (add-to-list 'mmm-mode-ext-classes-alist '(nil "\\.html" 'html-php))
+;;   (mmm-add-mode-ext-class nil "\\.html" 'html-php)
+;;   (setq-default mmm-global-mode 'maybe)
+;;   ;; (add-hook 'html-mode-hook 'mmm-mode)
+;;   )
+
+(use-package web-mode
+  :custom ((web-mode-enable-engine-detect t))
+  
+  :config
+  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+  )
+
+;; (use-package polymode)
+
+(use-package auto-dim-other-buffers
+  :if (or (display-graphic-p) (daemonp))
+  :diminish
+  :config
+  (auto-dim-other-buffers-mode t))
+;; (when (display-graphic-p)
+;;  (require 'auto-dim-other-buffers)
+;;  (auto-dim-other-buffers-mode t))
+
+(use-package yasnippet
+  :config
+  (yas-global-mode 1)
+  (use-package yasnippet-snippets)
+  ;; :diminish yas-minor-mode
+  :bind (:map yas-minor-mode-map
+              ("C-M-y" . 'yas-expand)))
+
+(use-package mode-icons
+  :if (or (display-graphic-p) (daemonp))
+  :config
+  (setq mode-icons (delete (seq-find (lambda (x) (let ((y (pop x)))
+                                                   (and (string-or-null-p y)
+                                                        (string-match-p (regexp-quote "company") y))))
+                                     mode-icons)
+                           mode-icons))
+  (add-to-list 'mode-icons '("company-box"  61869 FontAwesome))
+  ;; (mode-icons-mode)
+  (add-hook 'after-make-frame-functions (lambda (frame) (mode-icons-mode)))
+  )
+
+(use-package php-mode
+  :config
+  (use-package company-php))
+
+(use-package flycheck
+  :config
+  (use-package helm-flycheck))
+
+(use-package dashboard
+  :custom
+  ((dashboard-items '((recents . 10)
+                     (bookmarks . 10)
+                     ;;(project . 5)
+                     (agenda . 15)
+                     ;;(registers . 5)
+    				 ))
+   (show-week-agenda-p t))
+  :config
+  (my/evil-add-bindings dashboard-mode-map)
+  (evil-set-initial-state 'dashboard-mode 'emacs)
+   
+  ;; (dashboard-setup-startup-hook)
+  ;;(setq initial-buffer-choice (lambda () (switch-to-buffer (dashboard-refresh-buffer))))
+  ;; (add-to-list 'bookmark-alist '("Init file" . ((filename . "~/.emacs.d/init.el"))))
+  ;; (add-to-list 'bookmark-alist '("Diet log" . ((filename . "~/Dropbox/org/gallbladder_diet.org"))))
+  ;; (dashboard-insert-startupify-lists)
+  (defun my/select-dashboard ()
+    (if (get-buffer dashboard-buffer-name)
+        (dashboard-refresh-buffer)
+      (dashboard-insert-startupify-lists)
+      (switch-to-buffer dashboard-buffer-name)))
+    
+  ;; (add-hook 'after-make-frame-functions (lambda (frame)
+  ;;                                         (interactive)
+  ;;                                         (if (< (length command-line-args) 2)
+  ;;                                             (my/select-dashboard))))
+  ;; (setq initial-buffer-choice (lambda () (if (> (length command-line-args) 1)
+  ;;                                            (find-file-noselect (nth 1 command-line-args))
+  ;;                                          (or (get-buffer dashboard-buffer-name)
+  ;;                                              (get-buffer "*scratch*")))))
+  ;; (setq initial-buffer-choice (lambda () (or (get-buffer dashboard-buffer-name)
+  ;;                                            (get-buffer "*scratch*"))))
+  (setq initial-buffer-choice (lambda () (or (my/select-dashboard)
+                                             (get-buffer "*scratch*"))))
+
+  (setq inhibit-startup-screen t)
+  )
+
+(use-package helpful
+  :demand t
+  :bind (("C-h f" . helpful-callable)
+         ("C-h v" . helpful-variable)
+         ("C-h k" . helpful-key))
+  :config
+  (evil-define-key 'normal helpful-mode-map "q" 'delete-window)
+
+  (with-eval-after-load 'helm-mode
+    (dolist (func '(helpful-callable helpful-variable helpful-key)) 
+      (add-to-list 'helm-completing-read-handlers-alist
+                   (cons func 'helm-completing-read-symbols)))))
+
+
+;; (use-package sublimity
+;;   :custom
+;;   ((sublimity-map-size 20)
+;;    (sublimity-map-fraction 0.3)
+;;    (sublimity-map-text-scale -7))
+                       
+;;   :config
+;;   (require 'sublimity-map)
+;;   (sublimity-mode 1)
+;;   )
+
+(use-package hydra)
+(use-package ace-window)
+(use-package sudo-edit)
+(use-package pkgbuild-mode)
+(use-package yaml-mode)
+(use-package better-defaults) 
+(use-package switch-window)
+(use-package csv-mode)
+(use-package all-the-icons)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; * Commenting things
+;;----------------------------
+
+(defun endless/comment-line (n)
+  "Comment or uncomment current line and leave point after it.
+With positive prefix, apply to N lines including current one.
+With negative prefix, apply to -N lines above."
+  (interactive "p")
+  (let ((range (list (line-beginning-position)
+                     (goto-char (line-end-position n)))))
+    (comment-or-uncomment-region
+     (apply #'min range)
+     (apply #'max range)))
+  ;; (forward-line 1)
+  (back-to-indentation))
+
+(global-set-key (kbd "C-;") 'endless/comment-line)
+(setq-default comment-style 'multi-line)
+
+;; This is copied from https://stackoverflow.com/questions/23588549/emacs-copy-region-line-and-comment-at-the-same-time
+(defun copy-and-comment-region (beg end &optional arg)
+  "Duplicate the region and comment-out the copied text.
+See `comment-region' for behavior of a prefix arg."
+  (interactive "r\nP")
+  (copy-region-as-kill beg end)
+  (goto-char end)
+  (yank)
+  (comment-region beg end arg))
+(defun copy-and-comment-line (&optional arg)
+  (interactive "P")
+  (copy-and-comment-region (line-beginning-position) (line-end-position)))
+
+(with-eval-after-load "evil" 
+  (define-key evil-visual-state-map (kbd "C-y") 'copy-and-comment-region)
+  ;; (define-key evil-insert-state-map (kbd "C-y") 'copy-and-comment-line)
+  (define-key evil-normal-state-map (kbd "C-y") 'copy-and-comment-line))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; * Reload dir-locals automatically
+;;----------------------------------
+
+;; Stolen from https://emacs.stackexchange.com/questions/13080/reloading-directory-local-variables
+(defun my-reload-dir-locals-for-current-buffer ()
+  "reload dir locals for the current buffer"
+  (interactive)
+  (let ((enable-local-variables :all))
+    (hack-dir-local-variables-non-file-buffer)))
+(defun my-reload-dir-locals-for-all-buffer-in-this-directory ()
+  "For every buffer with the same `default-directory` as the
+   current buffer's, reload dir-locals."
+  (interactive)
+  (let ((dir default-directory))
+    (dolist (buffer (buffer-list))
+      (with-current-buffer buffer
+        (when (equal default-directory dir))
+        (my-reload-dir-locals-for-current-buffer)))))
+(defun enable-autoreload-for-dir-locals ()
+  (when (and (buffer-file-name)
+             (equal dir-locals-file
+                    (file-name-nondirectory (buffer-file-name))))
+    (add-hook (make-variable-buffer-local 'after-save-hook)
+              'my-reload-dir-locals-for-all-buffer-in-this-directory)))
+(add-hook 'emacs-lisp-mode-hook 'enable-autoreload-for-dir-locals)
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; * Prettify
+;;----------------------------
+
+(use-package prettify-greek
+  :custom
+  (prettify-symbols-unprettify-at-point "right-edge"))
+
+                                        ; Make up my own set with \ in front of them.
+(defconst danny-prettify-set 
+  (let* ((my-greek (append (copy-tree prettify-greek-lower) (copy-tree prettify-greek-upper))))
+    (dolist (item my-greek)
+      (setcar item (concat "\\" (car item))))
+    (append my-greek prettify-greek-lower prettify-greek-upper)))
+
+(defun danny-prettify-predicate (start end _match) "Only care about words and not symbols."
+       ;; (not (or (= (char-syntax (char-after end)) ?w)
+       ;;           (= (char-syntax (char-before start)) ?w))))
+       (not (or (string-match-p "[a-zA-Z]" (string (char-after end)))
+                (string-match-p "[a-zA-Z]" (string (char-before start))))))
+
+
+(defun danny-add-prettify-greek (mode) "Add prettify-greek symbols to mode."
+       (add-hook mode (lambda ()
+                        (setq
+                                        ;prettify-symbols-alist (append prettify-symbols-alist prettify-greek-lower prettify-greek-upper)))))
+                         prettify-symbols-alist (append prettify-symbols-alist danny-prettify-set))
+                        (prettify-symbols-mode t)
+                        (setq prettify-symbols-compose-predicate 'danny-prettify-predicate))))
+
 
 
 
@@ -1109,6 +1112,8 @@ you want to quit windows on all frames."
                                         ;"- [ ] %i%?\n\t%u"
                )))
            (org-confirm-babel-evaluate nil)
+           (org-startup-with-inline-images t)
+           (org-startup-with-latex-preview t)
            (org-agenda-restore-windows-after-quit t)
            (org-agenda-window-setup 'only-window)
            (org-src-window-setup 'other-window)
