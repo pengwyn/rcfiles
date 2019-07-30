@@ -5,7 +5,7 @@ local -a args
 _arguments ':network:->ssids'
 
 # awkscript='{ for (i=5; i<=NF; i++) printf $i " "; }'
-awkscript='{ print substr($0, index($0,$5)); }'
+	awkscript='{ if (NF >= 5) print substr($0, index($0,$5)); }'
 
 case "$state" in
     ssids)
