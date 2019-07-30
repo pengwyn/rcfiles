@@ -1080,7 +1080,9 @@ you want to quit windows on all frames."
   :hook (
          (org-mode . auto-fill-mode)
          (org-mode . org-bullets-mode)
-         (org-mode . (lambda () (setq tab-width 2))))
+         ;; The process-connection-type thing is for xdg-open to work.
+         (org-mode . (lambda () (setq tab-width 2) (setq-local process-connection-type nil)))
+         )
 
   :custom ((org-tags-column -100)
            (org-agenda-tags-column -100)
@@ -1167,7 +1169,9 @@ you want to quit windows on all frames."
   :custom-face
   (org-level-1 ((t (:height 1.5 :family "Liberation Mono"))))
   (org-level-2 ((t (:height 1.2 :family "Liberation Mono"))))
-  (org-agenda-dimmed-todo-face ((t (:foreground "grey20"))))
+  ;; (org-agenda-dimmed-todo-face ((t (:foreground "grey20" :background "#300"))))
+  ;; (org-agenda-dimmed-todo-face ((t (:background "#300"))))
+  (org-agenda-dimmed-todo-face ((t (:foreground "#5fafd7" :background "#500"))))
 
   ;; (org-code ((t (:background "#500000"))))
   (org-code ((t (:background "#500000"))))
@@ -1181,6 +1185,7 @@ you want to quit windows on all frames."
     ;; '((t :background "white" :inherit org-special-keyword))
     '((t :inherit org-code :foreground "black"))
     "asdf")
+
 
   ;; (let
   ;;     ((results-block-regex (concat (org-re-property "RESULTS" nil t) "\\(^:.*$\\)*?" "^:END:"))) 
@@ -1255,7 +1260,9 @@ you want to quit windows on all frames."
 
   (use-package evil-org)
   (use-package org-bullets)
-  (use-package htmlize)
+  (use-package htmlize
+    :custom
+    (org-html-htmlize-output-type 'css))
 
   ;; ob-jupyter requires ob-python for some things as defaults.
   (require 'ob-python)
@@ -1404,7 +1411,9 @@ you want to quit windows on all frames."
          (julia-mode . julia-math-mode)
          (julia-mode . julia-repl-mode))
   
-  ;; (add-hook 'julia-mode-hook (lambda () (setq-local ggtags-process-environment '("GTAGSLABEL=juliactags"))))
+  :config
+  ;;(add-hook 'julia-mode-hook (lambda () (setq-local ggtags-process-environment (concat ggtags-process-environment "GTAGSLABEL=julia"))))
+  (add-hook 'julia-mode-hook (lambda () (setq-local ggtags-process-environment '("GTAGSLABEL=julia"))))
                                         ; TODO: I should fix this up for that it uses something like the default julia-mode settings but handles my macro prefixes.
   ;; (add-hook 'julia-mode-hook (lambda () (setq-local imenu-create-index-function #'ggtags-build-imenu-index)))
 
@@ -1585,6 +1594,7 @@ you want to quit windows on all frames."
   (define-minor-mode my-term-mode
     :init nil
     :keymap my-term-mode-map)
+  (add-hook 'term-exec-hook (lambda () (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix)))
 
   (evil-set-initial-state 'term-mode 'emacs))
 
@@ -1617,6 +1627,8 @@ you want to quit windows on all frames."
 ;;----------------------------
 
 (use-package unicode-fonts
+  :custom
+  (unicode-fonts-fallback-font-list '("Symbola" "Quivira" "DejaVu Math Tex Gyre"))
   :config
   (unicode-fonts-setup)
   )
@@ -1630,6 +1642,7 @@ you want to quit windows on all frames."
     (load-theme 'moe-dark t)
     (custom-theme-set-faces 'moe-dark '(default ((t (:background "#000000")))))
     ;; (set-background-color "black")
+    (custom-theme-set-faces 'moe-dark '(compilation-error ((t (:foreground "#333" :background "#faa" :weight bold)))))
     )
   (set-face-font 'default "Gohu GohuFont-14")
   ;; (set-face-font 'default "Mononoki-12")
