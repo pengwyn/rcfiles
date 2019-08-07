@@ -1413,7 +1413,12 @@ you want to quit windows on all frames."
   
   :config
   ;;(add-hook 'julia-mode-hook (lambda () (setq-local ggtags-process-environment (concat ggtags-process-environment "GTAGSLABEL=julia"))))
-  (add-hook 'julia-mode-hook (lambda () (setq-local ggtags-process-environment '("GTAGSLABEL=julia"))))
+  (add-hook 'julia-mode-hook (lambda ()
+                               (setq-default ggtags-process-environment nil)
+                               (make-local-variable 'ggtags-process-environment)
+                               (setq ggtags-process-environment
+                                     (setenv-internal ggtags-process-environment "GTAGSLABEL" "julia" t))
+                               ))
                                         ; TODO: I should fix this up for that it uses something like the default julia-mode settings but handles my macro prefixes.
   ;; (add-hook 'julia-mode-hook (lambda () (setq-local imenu-create-index-function #'ggtags-build-imenu-index)))
 
@@ -1582,6 +1587,7 @@ you want to quit windows on all frames."
 
 (use-package term
   :hook (term-mode . my-term-mode)
+        (term-mode . eterm-256color-mode)
   :bind (:map my-term-mode-map
               ("<f5>" . evil-window-mru)
               ("C-w" . evil-window-map)
@@ -1595,6 +1601,8 @@ you want to quit windows on all frames."
     :init nil
     :keymap my-term-mode-map)
   (add-hook 'term-exec-hook (lambda () (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix)))
+
+  (use-package eterm-256color)
 
   (evil-set-initial-state 'term-mode 'emacs))
 

@@ -1,6 +1,6 @@
 --langdef=Julia
 --langmap=Julia:.jl
---regex-Julia=/^(@[^ ]+[ \t]*)*[ \t]*(function|abstract type|primitive type|struct|mutable struct|typealias)[ \t]+([^ \t({[]+).*$/\3/f,function/
---regex-Julia=/^(@[^ ]+[ \t]*)*[ \t]*(([^@#$ \t({[]+)|\(([^@#$ \t({[]+)\)|\((\$)\))[ \t]*(\{.*\})?[ \t]*\([^#]*\)[ \t]*=([^=].*$|$)/\3\4\5/f,function/
+--regex-Julia=/^[ \t]*(@[^ ]+[ \t]*)*(function|abstract type|primitive type|struct|mutable struct|typealias)[ \t]+([^ \t({[]+).*$/\3/f,function/
+--regex-Julia=/^[ \t]*(@[^ ]+[ \t]*)*(([^@#$ \t({[]+)|\(([^@#$ \t({[]+)\)|\((\$)\))[ \t]*(\{.*\})?[ \t]*\([^#]*\)[ \t]*=([^=].*$|$)/\3\4\5/f,function/
 --regex-Julia=/^[ \t]*module[ \t]+([^ \t({[]+).*$/\1/d,definition/
 --regex-Julia=/^(@[^ ]+[ \t]*)*[ \t]*macro[ \t]+([^ \t({[]+).*$/@\2/f,function/
