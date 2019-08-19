@@ -680,6 +680,15 @@ See `comment-region' for behavior of a prefix arg."
 
 (evil-define-key 'visual lisp-mode-shared-map (kbd "C-M-x") 'eval-region)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; * Sudo edit
+;;----------------------------
+(defun sudo-save ()
+  (interactive)
+  (if (not buffer-file-name)
+      (write-file (concat "/sudo:root@localhost:" (ido-read-file-name "File:")))
+    (write-file (concat "/sudo:root@localhost:" buffer-file-name))))
+
 ;;;;;;;;;;;;;;;;
 ;; * Company stuff
 
