@@ -1418,7 +1418,8 @@ you want to quit windows on all frames."
 (use-package julia-mode
   :hook ((julia-mode . ggtags-mode)
          (julia-mode . julia-math-mode)
-         (julia-mode . julia-repl-mode))
+         (julia-mode . julia-repl-mode)
+         (julia-repl . julia-repl-use-emacsclient))
   
   :config
   ;;(add-hook 'julia-mode-hook (lambda () (setq-local ggtags-process-environment (concat ggtags-process-environment "GTAGSLABEL=julia"))))
