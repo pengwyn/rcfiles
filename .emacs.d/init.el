@@ -313,6 +313,10 @@
       ("S" evil-mc-pause-cursors "suspend")
       ("R" evil-mc-resume-cursors "continue")
       )
+    ;; I don't want the original bindings anymore - but I don't know how to get rid of them!
+    ;; The below doesn't get rid of the evil key bindings unfortunately.
+    ;; (setq evil-mc-key-map (make-sparse-keymap))
+
     ;; (evil-define-key '(normal visual) evil-mc-key-map (kbd "g r") 'hydra-evil-mc-keys/body)
     (evil-define-key '(normal visual) evil-mc-key-map (kbd "M-m") 'hydra-evil-mc-keys/body)
 
@@ -498,7 +502,8 @@
 
 (use-package flycheck
   :config
-  (use-package helm-flycheck))
+  (use-package helm-flycheck)
+  (flycheck-julia-setup))
 
 (use-package dashboard
   :custom
