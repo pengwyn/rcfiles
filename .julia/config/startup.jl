@@ -24,6 +24,7 @@ end
 try
 	@time using Revise
 	@time using OhMyREPL
+    OhMyREPL.enable_autocomplete_brackets(false)
 	@time using Constants
 	@time using DanUtils
 catch exc
