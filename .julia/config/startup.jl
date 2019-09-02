@@ -12,15 +12,20 @@ end
 
 atreplinit() do repl
     try
-        @time @eval using Revise
-		@time @eval using Constants
-		@time @eval using DanUtils
 		@async begin
 			Revise.wait_steal_repl_backend()
 		end
-    catch
+    catch exc
+		@error "Exception in startup.jl" exc
     end
 end
 
     
-
+try
+	@time using Revise
+	@time using OhMyREPL
+	@time using Constants
+	@time using DanUtils
+catch exc
+	@error "Exception loading modules" exc
+end

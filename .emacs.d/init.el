@@ -220,6 +220,9 @@
   (evil-mode 1)
   (defalias #'forward-evil-word #'forward-evil-symbol)
   (my/evil-add-bindings package-menu-mode-map)
+  ;; (eval-after-load 'ibuffer '(my/evil-add-bindings ibuffer-mode-map))
+  ;; Don't want to override / in the ibuffer map
+  (eval-after-load 'ibuffer '(evil-add-hjkl-bindings ibuffer-mode-map 'emacs))
 
   (defun recenter-top-bottom-with-clear ()
     "Do the normal recenter and redraw the screen."
