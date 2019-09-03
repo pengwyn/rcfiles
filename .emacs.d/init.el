@@ -506,7 +506,9 @@
 (use-package flycheck
   :config
   (use-package helm-flycheck)
-  (flycheck-julia-setup))
+  (use-package flycheck-julia
+    :config
+    (flycheck-julia-setup)))
 
 (use-package dashboard
   :custom
