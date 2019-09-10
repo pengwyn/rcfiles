@@ -196,6 +196,22 @@ source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 source /usr/share/fzf/completion.zsh
 source /usr/share/fzf/key-bindings.zsh
 
+eval "$(fasd --init zsh-hook)"
+
+# Stolen from https://www.gregorykapfhammer.com/software/tool/productivity/2017/05/08/Directory-Zooming/
+fasd-fzf() {
+    input=$LBUFFER
+  fasdlist=$( fasd -d -l -r $input | \
+      fzf --query="$input " --height=50% --exit-0 --reverse --tac --no-sort --cycle) &&
+    # fzf --query="$1 " --select-1 --exit-0 --height=25% --reverse --tac --no-sort --cycle) &&
+    cd "$fasdlist"
+  zle reset-prompt
+  return 0
+}
+
+zle -N fasd-fzf
+bindkey '\er' fasd-fzf
+
 ############################
 # * gpg-agent
 
