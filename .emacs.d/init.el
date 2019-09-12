@@ -1356,13 +1356,17 @@ you want to quit windows on all frames."
          (LaTeX-mode . (lambda () (load-theme 'material-light)
                          (add-hook 'after-save-hook 'preview-buffer nil t)
                          (setq-local company-idle-delay 2.0)
-                         (setq my/in-latex-mode t)))
-         (doc-view-mode . (lambda () (setq-local display-line-numbers nil))))
+                         (setq-local my/in-latex-mode t)))
+         (doc-view-mode . (lambda () (setq-local display-line-numbers nil)))
+         (doc-view-mode . doc-view-fit-width-to-window))
+
+  :custom
+  ((latex-preview-pane-use-frame t)
+   (doc-view-resolution 300))
 
   :config
   ;; (when (string= (system-name) "pengix")
   ;;   (setq-default preview-orientation 'below))
-  (setq-default latex-preview-pane-use-frame t)
 
   (use-package latex-math-preview)
   (use-package latex-pretty-symbols)
@@ -1668,8 +1672,8 @@ you want to quit windows on all frames."
   (select-frame frame)
   (unless my/in-latex-mode
     (load-theme 'moe-dark t)
-    (custom-theme-set-faces 'moe-dark '(default ((t (:background "#000000")))))
-    ;; (set-background-color "black")
+    ;; (custom-theme-set-faces 'moe-dark '(default ((t (:background "#000000")))))
+    (set-background-color "black")
     (custom-theme-set-faces 'moe-dark '(compilation-error ((t (:foreground "#333" :background "#faa" :weight bold)))))
     )
   (set-face-font 'default "Gohu GohuFont-14")
