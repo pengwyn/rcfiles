@@ -16,7 +16,16 @@ alias ipython2r='MPLCONFIGDIR=$HOME/.config/matplotlib/nodisplay ipython2'
 #alias pacman='pacman-color'
 #alias netstat='netstat --numeric-hosts --inet -a'
 alias ..='cd ..'
-alias emacs='emacsclient -c'
+if [[ $(pgrep -lx i3) ]] ; then
+	function replacei3() {
+		i3-msg 'split vertical ; layout tabbed' >/dev/null
+		$*
+		i3-msg 'move left' >/dev/null
+	}
+	alias emacs='replacei3 emacsclient -c'
+else
+	alias emacs='emacsclient -c'
+fi
 
 if [[ $(hostname) != "mixologist" ]]
 then
