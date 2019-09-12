@@ -1357,6 +1357,7 @@ you want to quit windows on all frames."
                          (add-hook 'after-save-hook 'preview-buffer nil t)
                          (setq-local company-idle-delay 2.0)
                          (setq-local my/in-latex-mode t)))
+         (LaTeX-mode . company-auctex-init)
          (doc-view-mode . (lambda () (setq-local display-line-numbers nil)))
          (doc-view-mode . doc-view-fit-width-to-window))
 
