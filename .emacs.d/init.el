@@ -44,7 +44,7 @@
 ;; * Diminish basic modes
 ;;----------------------------
 
-(require 'undo-tree)
+(use-package undo-tree)
 ;; (diminish 'undo-tree-mode)
 (diminish 'abbrev-mode)
 (diminish 'auto-fill-function)
