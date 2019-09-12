@@ -187,6 +187,8 @@ bar {
 
 exec dropbox
 
+# Shortcuts
+bindsym $mod+g [title="Chromium$"] focus
 
 # Window choices
 set $ws1 "1: main"
