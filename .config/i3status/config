@@ -57,38 +57,51 @@
 # }
 
 general {
-        # output_format = "dzen2"
+        output_format = "i3bar"
         colors = true
         interval = 5
+        markup = "pango"
 }
 
+order += "read_file alarmpi_restart"
 # order += "ipv6"
 order += "disk /"
 # order += "run_watch DHCP"
 # order += "run_watch VPNC"
 # order += "path_exists VPN"
 # order += "wireless wlan0"
-order += "ethernet enp0s31f6"
-# order += "battery 0"
+order += "ethernet _first_"
+order += "battery 0"
 order += "cpu_temperature 0"
 order += "memory"
 order += "load"
 order += "tztime local"
 # order += "tztime berlin"
+order += "volume master"
+order += "ddate"
+
+volume master {
+       device = "pulse"
+}
+
+read_file alarmpi_restart {
+        path = "/home/pengwyn/alarmpi_restart"
+        format = "RPI: %content"
+}    
 
 wireless wlan0 {
         format_up = "W: (%quality at %essid, %bitrate) %ip"
         format_down = "W: down"
 }
 
-ethernet enp0s31f6 {
-        format_up = "E: %ip"
+ethernet _first_ {
+        format_up = "%ip"
         format_down = "E: down"
 }
 
 battery 0 {
         format = "%status %percentage %remaining %emptytime"
-        format_down = "No battery"
+        format_down = ""
         status_chr = "⚡ CHR"
         status_bat = "🔋 BAT"
         status_unk = "? UNK"
@@ -112,7 +125,8 @@ path_exists VPN {
 }
 
 tztime local {
-        format = "%Y-%m-%d %H:%M:%S"
+        format_time = "%Y-%m-%d %H:%M:%S"
+        format = "<b><span foreground='#00ffff'>%time</span></b>"
         # hide_if_equals_localtime = true
 }
 
@@ -122,12 +136,13 @@ tztime local {
 # }
 
 load {
-        format = "%5min"
+        format = "Load: %5min"
 }
 
 cpu_temperature 0 {
-        format = "T: %degrees °C"
+        format = "%degrees °C"
         path = "/sys/devices/platform/coretemp.0/hwmon/hwmon2/temp1_input"
+        max_threshold = 70
 }
 
 memory {
@@ -137,7 +152,11 @@ memory {
 }
 
 disk "/" {
-        format = "%free"
+        # format = "<span foreground=good>%free(%percentage_free)</span>"
+        format = "Root: %free<span foreground='#00ff00'> (%percentage_free)</span>"
+        format_below_threshold = "Warning only %free (%percentage_free) free"
+        low_threshold = 25
+        threshold_type = percentage_free
 }
 
 read_file uptime {
