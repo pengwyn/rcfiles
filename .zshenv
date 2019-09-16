@@ -22,10 +22,10 @@ if [[ $(pgrep -lx i3) ]] ; then
 		$*
 		i3-msg 'move left' >/dev/null
 	}
-	alias emacs='replacei3 emacsclient -c'
-else
-	alias emacs='emacsclient -c'
+	alias emacs3='replacei3 emacsclient -c'
 fi
+
+alias emacs='emacsclient -c'
 
 if [[ $(hostname) != "mixologist" ]]
 then
