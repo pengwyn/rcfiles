@@ -152,7 +152,7 @@ function pacfull()
 	# sudo pacman -Syu --needed $ignored
 	#yay -Syu --needed $ignored
 	/bin/yes | sudo pacman -Syu --needed $ignored
-	yay -Syu --answerclean N --answerdiff N --answeredit N --answerupgrade N
+	yay -Syu --nocleanmenu --nodiffmenu --noeditmenu --noupgrademenu --noremovemake
 }
 
 ############################
