@@ -469,14 +469,14 @@
 
 ;; (use-package polymode)
 
-(use-package auto-dim-other-buffers
-  :if (or (display-graphic-p) (daemonp))
-  :diminish
-  :config
-  (auto-dim-other-buffers-mode t))
-;; (when (display-graphic-p)
-;;  (require 'auto-dim-other-buffers)
-;;  (auto-dim-other-buffers-mode t))
+;; (use-package auto-dim-other-buffers
+;;   :if (or (display-graphic-p) (daemonp))
+;;   :diminish
+;;   :config
+;;   (auto-dim-other-buffers-mode t))
+;; ;; (when (display-graphic-p)
+;; ;;  (require 'auto-dim-other-buffers)
+;; ;;  (auto-dim-other-buffers-mode t))
 
 (use-package yasnippet
   :config
@@ -1672,15 +1672,14 @@ you want to quit windows on all frames."
    window or a console window."
   (select-frame frame)
   (unless my/in-latex-mode
-    (load-theme 'moe-dark t)
-    ;; (custom-theme-set-faces 'moe-dark '(default ((t (:background "#000000")))))
-    (set-background-color "black")
-    (custom-theme-set-faces 'moe-dark '(compilation-error ((t (:foreground "#333" :background "#faa" :weight bold)))))
+    ;; (set-background-color "black")
     )
-  (set-face-font 'default "Gohu GohuFont-14")
-  ;; (set-face-font 'default "Mononoki-12")
-  (unicode-fonts-setup)
   )
+
+(load-theme 'moe-dark t)
+(custom-theme-set-faces 'moe-dark '(default ((t (:background "#000000")))))
+(custom-theme-set-faces 'moe-dark '(compilation-error ((t (:foreground "#333" :background "#faa" :weight bold)))))
+(set-face-font 'default "Gohu GohuFont-14")
 
 (if (daemonp)
     (progn
