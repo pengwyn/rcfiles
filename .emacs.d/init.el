@@ -1373,6 +1373,7 @@ you want to quit windows on all frames."
   (use-package latex-pretty-symbols)
   (use-package latex-preview-pane)
   (use-package material-theme)
+  (use-package company-auctex)
 
                                         ; Hopefully fix being able to read font in error regions
   ;; (add-hook 'LaTeX-mode-hook (lambda () (set-face-attribute 'preview-face nil :inverse-video t)))
