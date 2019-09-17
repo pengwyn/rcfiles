@@ -153,7 +153,10 @@
 (defun my/simple-align (beg end)
      "Align using any 2+ space with 4 spaces"
      (interactive "r")
-     (align-regexp beg end (rx (group (>= 2 (syntax whitespace)))) 1 4 t))
+     (align-regexp beg end (rx (group (or
+                                       (>= 2 (syntax whitespace))
+                                       (group (* (syntax whitespace)) (1+ "\t") (* (syntax whitespace))))
+                                      )) 1 4 t))
 
 
 
@@ -1353,7 +1356,8 @@ you want to quit windows on all frames."
          (LaTeX-mode . flyspell-mode)
          (LaTeX-mode . prettify-symbols-mode)
          (LaTeX-mode . latex-preview-pane-mode)
-         (LaTeX-mode . (lambda () (load-theme 'material-light)
+         (LaTeX-mode . (
+                        ;; lambda () (load-theme 'material-light)
                          (add-hook 'after-save-hook 'preview-buffer nil t)
                          (setq-local company-idle-delay 2.0)
                          (setq-local my/in-latex-mode t)))
@@ -1675,6 +1679,7 @@ you want to quit windows on all frames."
   (unless my/in-latex-mode
     ;; (set-background-color "black")
     )
+  (set-face-font 'default "Gohu GohuFont-14")
   )
 
 (load-theme 'moe-dark t)
