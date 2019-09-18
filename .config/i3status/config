@@ -21,7 +21,7 @@ order += "load"
 order += "tztime local"
 # order += "tztime berlin"
 order += "volume master"
-order += "ddate"
+# order += "ddate"
 
 volume master {
        device = "pulse"
@@ -30,6 +30,7 @@ volume master {
 read_file alarmpi_restart {
         path = "/home/pengwyn/alarmpi_restart"
         format = "RPI: %content"
+        format_bad = ""
 }    
 
 wireless wlan0 {
@@ -65,28 +66,29 @@ load {
 }
 
 cpu_usage {
-        format = "%usage"
+        format = "CPU: %usage"
         degraded_threshold = 25
         max_threshold = 25
 }
 
 cpu_temperature 0 {
         format = "%degrees °C"
-        path = "/sys/devices/platform/coretemp.0/hwmon/hwmon1/temp1_input"
+        # path = "/sys/devices/platform/coretemp.0/hwmon/hwmon1/temp1_input"
+        path = "/sys/devices/platform/coretemp.0/hwmon/hwmon?/temp1_input"
         max_threshold = 70
 }
 
 memory {
-        format = "%used"
+        format = "<span foreground='#ffaa33'>%used (%percentage_used)</span>"
         threshold_degraded = "10%"
         format_degraded = "MEMORY: %free"
 }
 
 disk "/" {
         # format = "<span foreground=good>%free(%percentage_free)</span>"
-        format = "Root: %free<span foreground='#00ff00'> (%percentage_free)</span>"
+        format = "<span foreground='#ffff00'>Root: %free (%percentage_free)</span>"
         format_below_threshold = "Warning only %free (%percentage_free) free"
-        low_threshold = 25
+        low_threshold = 15
         threshold_type = percentage_free
 }
 
