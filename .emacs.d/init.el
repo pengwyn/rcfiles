@@ -1679,13 +1679,13 @@ you want to quit windows on all frames."
   (unless my/in-latex-mode
     ;; (set-background-color "black")
     )
+  (load-theme 'moe-dark t)
+  (custom-theme-set-faces 'moe-dark '(default ((t (:background "#000000")))))
+  (custom-theme-set-faces 'moe-dark '(compilation-error ((t (:foreground "#333" :background "#faa" :weight bold)))))
+  (set-face-font 'default "Gohu GohuFont-14")
   (set-face-font 'default "Gohu GohuFont-14")
   )
 
-(load-theme 'moe-dark t)
-(custom-theme-set-faces 'moe-dark '(default ((t (:background "#000000")))))
-(custom-theme-set-faces 'moe-dark '(compilation-error ((t (:foreground "#333" :background "#faa" :weight bold)))))
-(set-face-font 'default "Gohu GohuFont-14")
 
 (if (daemonp)
     (progn
