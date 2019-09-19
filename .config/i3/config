@@ -205,7 +205,8 @@ bindsym $mod+r mode "resize"
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
-        status_command i3status
+        # status_command i3status
+        status_command ~/bin/i3_status_wrapper.sh
 }
 
 # * Danny stuff below here.
@@ -220,6 +221,9 @@ bindsym $mod+z exec --no-startup-id i3-easyfocus -a -f 'lucidasans-bold-12' --co
 
 # Need a jump back
 
+
+bindsym $mod+x [urgent=latest] focus
+
 # * Shortcuts
 # Need to store original window 
 bindsym $mod+g [title="Chromium$"] focus
@@ -227,7 +231,7 @@ bindsym $mod+g [title="Chromium$"] focus
 # Window choices
 
 assign [class="Steam"] $ws8
-assign [class="Thunar"] $ws9
+# assign [class="thunar"] $ws9
 assign [class="Chromium"] $ws10
 assign [class="Evolution"] $ws10
 
