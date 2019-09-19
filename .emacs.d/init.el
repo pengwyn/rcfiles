@@ -899,6 +899,7 @@ See `comment-region' for behavior of a prefix arg."
 ;; * ggtags
 ;;----------------------------
 (use-package ggtags
+  :demand t
   :hook (c-mode-common .
                        (lambda ()
                          (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
@@ -1447,8 +1448,7 @@ you want to quit windows on all frames."
   :config
   ;;(add-hook 'julia-mode-hook (lambda () (setq-local ggtags-process-environment (concat ggtags-process-environment "GTAGSLABEL=julia"))))
   (add-hook 'julia-mode-hook (lambda ()
-                               (ggtags-mode)
-                               (setq-default ggtags-process-environment nil)
+                               ;; (setq-default ggtags-process-environment nil)
                                (make-local-variable 'ggtags-process-environment)
                                (setq ggtags-process-environment
                                      (setenv-internal ggtags-process-environment "GTAGSLABEL" "julia" t))
