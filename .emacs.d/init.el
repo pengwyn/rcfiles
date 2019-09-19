@@ -217,6 +217,8 @@
               ;; ("<tab>" . indent-region)
               :map evil-motion-state-map
               ("<down-mouse-1>" . nil)
+              :map evil-normal-state-map
+              ("K" . nil)
               )
 
   :config
