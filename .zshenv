@@ -145,7 +145,7 @@ export PYTHONPATH="$HOME/work4/python:$HOME/work_helium34/python:$HOME/work3/pyt
 export PATH="$PATH:$HOME/bin:$HOME/.local/bin"
 
 export EDITOR="vim"
-export VISUAL="emacsclient -c -n"
+export VISUAL="emacsclient -c"
 
 export LESS=-R
 
