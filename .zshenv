@@ -23,7 +23,10 @@ if [[ $(pgrep -lx i3) ]] ; then
 		i3-msg 'move left' >/dev/null
 	}
 	# alias e3='replacei3 emacsclient -c -n'
-	alias e3='emacsclient -c -n ; exit'
+	function e3() {
+        emacsclient -c -n "$@"
+        exit
+    }
 fi
 
 alias e='emacsclient -c -n'
