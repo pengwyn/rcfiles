@@ -1356,11 +1356,11 @@ you want to quit windows on all frames."
          (LaTeX-mode . flyspell-mode)
          (LaTeX-mode . prettify-symbols-mode)
          (LaTeX-mode . latex-preview-pane-mode)
-         (LaTeX-mode . (
+         (LaTeX-mode . (lambda () (progn
                         ;; lambda () (load-theme 'material-light)
                          (add-hook 'after-save-hook 'preview-buffer nil t)
                          (setq-local company-idle-delay 2.0)
-                         (setq-local my/in-latex-mode t)))
+                         (setq-local my/in-latex-mode t))))
          (LaTeX-mode . company-auctex-init)
          (doc-view-mode . (lambda () (setq-local display-line-numbers nil)))
          (doc-view-mode . doc-view-fit-width-to-window))
@@ -1671,6 +1671,9 @@ you want to quit windows on all frames."
   (unicode-fonts-setup)
   )
 
+
+(defvar my/loaded-theme nil)
+
 (require 'moe-theme)
 (defun apply-color-theme (frame)
   "Apply color theme to a frame based on whether its a 'real'
@@ -1679,12 +1682,13 @@ you want to quit windows on all frames."
   (unless my/in-latex-mode
     ;; (set-background-color "black")
     )
-  (load-theme 'moe-dark t)
-  (custom-theme-set-faces 'moe-dark '(default ((t (:background "#000000")))))
-  (custom-theme-set-faces 'moe-dark '(compilation-error ((t (:foreground "#333" :background "#faa" :weight bold)))))
-  (set-face-font 'default "Gohu GohuFont-14")
-  (set-face-font 'default "Gohu GohuFont-14")
-  )
+  (when (and (eq (length (frame-list)) 2) (not my/loaded-theme))
+      (load-theme 'moe-dark t)
+      (custom-theme-set-faces 'moe-dark '(default ((t (:background "#000000")))))
+      (custom-theme-set-faces 'moe-dark '(compilation-error ((t (:foreground "#333" :background "#faa" :weight bold)))))
+      (set-face-font 'default "Gohu GohuFont-14")
+      (setq my/loaded-theme t)
+  ))
 
 
 (if (daemonp)
