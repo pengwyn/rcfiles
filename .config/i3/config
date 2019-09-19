@@ -169,7 +169,7 @@ bindsym $mod+Shift+9 move container to workspace number 9, workspace number 9
 bindsym $mod+Shift+0 move container to workspace number 10, workspace number 10
 
 # reload the configuration file
-bindsym $mod+Shift+c reload ; set $refresh_i3status killall -SIGUSR1 i3status
+bindsym $mod+Shift+c reload ; $refresh_i3status
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
@@ -215,9 +215,13 @@ bindsym $mod+n move workspace to output right, focus output right
 bindsym $mod+m move container to output right, focus output right
 bindsym $mod+Shift+m move container to output primary, focus output primary, fullscreen enable
 
-bindsym $mod+z exec --no-startup-id i3-easyfocus -f 'lucidasans-bold-12' --color-unfocused-fg 00FF00 --color-unfocused-bg FF00FF --keys alpha
+# Need to store original window 
+bindsym $mod+z exec --no-startup-id i3-easyfocus -a -f 'lucidasans-bold-12' --color-unfocused-fg 00FF00 --color-unfocused-bg FF00FF --keys alpha
 
-# Shortcuts
+# Need a jump back
+
+# * Shortcuts
+# Need to store original window 
 bindsym $mod+g [title="Chromium$"] focus
 
 # Window choices

@@ -22,10 +22,11 @@ if [[ $(pgrep -lx i3) ]] ; then
 		$*
 		i3-msg 'move left' >/dev/null
 	}
-	alias emacs3='replacei3 emacsclient -c'
+	# alias e3='replacei3 emacsclient -c -n'
+	alias e3='emacsclient -c -n ; exit'
 fi
 
-alias emacs='emacsclient -c'
+alias e='emacsclient -c -n'
 
 if [[ $(hostname) != "mixologist" ]]
 then
@@ -117,7 +118,18 @@ alias jupyat="tmux attach -t Jupy"
 
 alias pacupdatekernel="s pacman -Syu --needed linux linux-firmware"
 
-alias r="ranger"
+function ranger-cd {
+    tempfile="$(mktemp -t tmp.XXXXXX)"
+    ranger --choosedir="$tempfile" "${@:-$(pwd)}"
+    test -f "$tempfile" &&
+    if [ "$(cat -- "$tempfile")" != "$(echo -n `pwd`)" ]; then
+        cd -- "$(cat "$tempfile")"
+    fi
+    rm -f -- "$tempfile"
+}
+
+
+alias r="ranger-cd"
 
 ############################
 # * Common ENV vars
@@ -130,7 +142,7 @@ export PYTHONPATH="$HOME/work4/python:$HOME/work_helium34/python:$HOME/work3/pyt
 export PATH="$PATH:$HOME/bin:$HOME/.local/bin"
 
 export EDITOR="vim"
-export VISUAL="emacsclient -c"
+export VISUAL="emacsclient -c -n"
 
 export LESS=-R
 
