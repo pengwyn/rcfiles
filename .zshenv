@@ -4,6 +4,8 @@ compinit
 
 fpath=( $fpath "$HOME/bin/completions" )
 
+source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+
 ########################################
 # * ALIASES
 
