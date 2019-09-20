@@ -237,6 +237,10 @@ assign [class="Evolution"] $ws10
 
 for_window [class="vlc"] floating enable
 for_window [title="Figure*"] floating enable
+for_window [title="Evolution-alarm-notify"] floating enable
+
+
+
 for_window [class="Chromium"] layout tabbed
 for_window [class="Evolution"] layout tabbed
 
