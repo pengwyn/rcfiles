@@ -137,7 +137,7 @@ set $ws5 "5"
 set $ws6 "6"
 set $ws7 "7"
 set $ws8 "8: steam"
-set $ws9 "9: file"
+set $ws9 "9: evolution"
 set $ws10 "10: browser"
 
 workspace $ws8 output primary
@@ -210,6 +210,8 @@ bar {
 }
 
 # * Danny stuff below here.
+
+focus_follows_mouse no
 
 # Move to monitors
 bindsym $mod+n move workspace to output right, focus output right
