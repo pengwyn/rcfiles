@@ -68,7 +68,7 @@ floating_modifier $mod
 bindsym $mod+Return exec /home/pengwyn/bin/danny_i3_open_terminal.sh
 
 # kill focused window
-bindsym $mod+Shift+q kill
+bindsym $mod+q kill
 
 # start dmenu (a program launcher)
 bindsym $mod+d exec dmenu_run -i -l 30 -nb '#003355' -sb '#883300' -nf '#ffffff' -p 'Search:'
@@ -237,7 +237,8 @@ assign [class="Evolution"] $ws10
 
 for_window [class="vlc"] floating enable
 for_window [title="Figure*"] floating enable
-for_window [title="Evolution-alarm-notify"] floating enable
+for_window [class="Evolution-alarm-notify"] floating enable
+for_window [class="gksqt"] floating enable
 
 
 
