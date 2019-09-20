@@ -28,7 +28,7 @@ rpi_status() {
     fi
 
     lastupdate=$(date --date="$(< /srv/http/rpi/lastupdate.txt )" +"%H:%M %d/%m")
-    text="RPI: ($lastupdate) $text"
+    text="Π ($lastupdate) $text"
 
     return 0
 }

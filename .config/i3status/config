@@ -29,7 +29,7 @@ volume master {
 
 read_file alarmpi_restart {
         path = "/home/pengwyn/alarmpi_restart"
-        format = "RPI: %content"
+        format = " %content"
         format_bad = ""
 }    
 
@@ -62,11 +62,11 @@ tztime local {
 }
 
 load {
-        format = "Load: %5min"
+        format = " %5min"
 }
 
 cpu_usage {
-        format = "CPU: %usage"
+        format = " %usage"
         degraded_threshold = 25
         max_threshold = 25
 }
@@ -86,7 +86,7 @@ memory {
 
 disk "/" {
         # format = "<span foreground=good>%free(%percentage_free)</span>"
-        format = "<span foreground='#ffff00'>Root: %free (%percentage_free)</span>"
+        format = "<span foreground='#ffff00'> %free (%percentage_free)</span>"
         format_below_threshold = "Warning only %free (%percentage_free) free"
         low_threshold = 15
         threshold_type = percentage_free
