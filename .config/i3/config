@@ -59,6 +59,11 @@ bindsym $mod+F9 exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle &
 
 bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
 
+
+bindsym XF86AudioPlay exec --no-startup-id playerctl play-pause
+bindsym XF86AudioNext exec --no-startup-id playerctl next
+bindsym XF86AudioPrev exec --no-startup-id playerctl previous
+
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 
@@ -236,7 +241,7 @@ bindsym $mod+g [title="Chromium$"] focus
 assign [class="Steam"] $ws8
 # assign [class="thunar"] $ws9
 assign [class="Chromium"] $ws10
-assign [class="Evolution"] $ws10
+assign [class="Evolution"] $ws9
 
 for_window [class="vlc"] floating enable
 for_window [title="Figure*"] floating enable
@@ -245,9 +250,11 @@ for_window [class="gksqt"] floating enable
 
 
 
-for_window [class="Chromium"] layout tabbed
-for_window [class="Evolution"] layout tabbed
+# for_window [class="Chromium"] layout tabbed
+# for_window [class="Evolution"] layout tabbed
 
 # Danny autostarts
 exec --no-startup-id dropbox
 exec --no-startup-id steam-native
+exec --no-startup-id chromium
+exec --no-startup-id evolution
