@@ -207,6 +207,7 @@ bindsym $mod+r mode "resize"
 bar {
         # status_command i3status
         status_command ~/bin/i3_status_wrapper.sh
+        font pango:mononoki Nerd Font 10
 }
 
 # * Danny stuff below here.

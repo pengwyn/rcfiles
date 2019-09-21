@@ -1379,8 +1379,10 @@ you want to quit windows on all frames."
   (use-package latex-math-preview)
   (use-package latex-pretty-symbols)
   (use-package latex-preview-pane)
-  (use-package material-theme)
+  ;; (use-package material-theme)
   (use-package company-auctex)
+
+  (TeX-global-PDF-mode nil)
 
                                         ; Hopefully fix being able to read font in error regions
   ;; (add-hook 'LaTeX-mode-hook (lambda () (set-face-attribute 'preview-face nil :inverse-video t)))
@@ -1683,17 +1685,25 @@ you want to quit windows on all frames."
   "Apply color theme to a frame based on whether its a 'real'
    window or a console window."
   (select-frame frame)
-  (unless my/in-latex-mode
-    ;; (set-background-color "black")
-    )
-  (when (and (eq (length (frame-list)) 2) (not my/loaded-theme))
-      (load-theme 'moe-dark t)
-      (custom-theme-set-faces 'moe-dark '(default ((t (:background "#000000")))))
-      (custom-theme-set-faces 'moe-dark '(compilation-error ((t (:foreground "#333" :background "#faa" :weight bold)))))
-      (set-face-font 'default "Gohu GohuFont-14")
-      (setq my/loaded-theme t)
-  ))
+  ;; (unless my/in-latex-mode
+  ;;   ;; (set-background-color "black")
+  ;;   )
+  (when (and (>= (length (frame-list)) 2) (not my/loaded-theme) (display-graphic-p))
+  ;; (when t
+    ;; (load-theme 'moe-dark t)
+    ;; (enable-theme 'moe-dark)
+    (let (moe-theme-revert-theme)
+      (moe-dark))
+    ;; (custom-theme-set-faces 'moe-dark '(default ((t (:background "#000000" :foreground "#c6c6c6")))))
+    ;; (custom-theme-set-faces 'moe-dark '(compilation-error ((t (:foreground "#333" :background "#faa" :weight bold)))))
+    (set-face-font 'default "Gohu GohuFont-14")
+    (setq my/loaded-theme t)
+    ))
 
+
+(load-theme 'moe-dark t nil)
+(custom-theme-set-faces 'moe-dark '(default ((t (:background "#000000" :foreground "#c6c6c6")))))
+(custom-theme-set-faces 'moe-dark '(compilation-error ((t (:foreground "#333" :background "#faa" :weight bold)))))
 
 (if (daemonp)
     (progn

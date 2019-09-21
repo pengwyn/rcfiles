@@ -86,7 +86,7 @@ memory {
 
 disk "/" {
         # format = "<span foreground=good>%free(%percentage_free)</span>"
-        format = "<span foreground='#ffff00'> %free (%percentage_free)</span>"
+        format = "<span foreground='#ffff00'> %free (%percentage_free)</span>"
         format_below_threshold = "Warning only %free (%percentage_free) free"
         low_threshold = 15
         threshold_type = percentage_free
