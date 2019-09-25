@@ -59,7 +59,8 @@ battery 0 {
 
 tztime local {
         # format_time = "%Y-%m-%d %H:%M:%S"
-        format_time = "%a %d %b %H:%M:%S"
+        # format_time = "%a %d %b %H:%M:%S"
+        format_time = "%d %b %H:%M"
         format = "<b><span foreground='#00ffff'>%time</span></b>"
         # hide_if_equals_localtime = true
 }
