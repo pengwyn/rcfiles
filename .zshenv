@@ -1,5 +1,5 @@
 
-source .profile
+source ~/.profile
 
 autoload -Uz compinit
 compinit
