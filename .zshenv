@@ -1,4 +1,6 @@
 
+source .profile
+
 autoload -Uz compinit
 compinit
 
@@ -144,7 +146,7 @@ export PYTHONPATH="$HOME/work4/python:$HOME/work_helium34/python:$HOME/work3/pyt
 
 #export PYTHONDOCS='/usr/share/doc/python/html/'
 
-export PATH="$PATH:$HOME/bin:$HOME/.local/bin"
+# export PATH="$PATH:$HOME/bin:$HOME/.local/bin"
 
 export EDITOR="vim"
 export VISUAL="emacsclient -c"
