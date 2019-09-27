@@ -240,6 +240,9 @@ bindsym $mod+z exec --no-startup-id i3-easyfocus -a -f 'lucidasans-bold-12' --co
 
 
 bindsym $mod+x [urgent=latest] focus
+bindsym $mod+o exec --no-startup-id i3_open_empty.py
+bindsym $mod+comma workspace prev_on_output
+bindsym $mod+period workspace next_on_output
 
 
 
