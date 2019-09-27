@@ -232,7 +232,7 @@ bar {
 focus_follows_mouse no
 
 # Move to monitors
-bindsym $mod+n move workspace to output right, focus output right
+bindsym $mod+n move workspace to output right
 bindsym $mod+m move container to output right, focus output right
 bindsym $mod+Shift+m move container to output primary, focus output primary, fullscreen enable
 
@@ -255,6 +255,7 @@ bindsym $mod+period workspace next_on_output
 # Need to store original window 
 bindsym $mod+g [title="Chromium$"] focus
 bindsym $mod+Ctrl+e exec --no-startup-id emacsclient -c
+bindsym $mod+Ctrl+r exec --no-startup-id "xfce4-terminal -x zsh -c 'r ; zsh -i'"
 
 set $mode_launcher Screenshot: [r]egion [f]ullscreen [w]indow
 bindsym Print mode "$mode_launcher"
