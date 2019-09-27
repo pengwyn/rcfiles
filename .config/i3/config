@@ -252,6 +252,10 @@ bindsym $mod+period workspace next_on_output
 
 # * Shortcuts
 
+# Need to store original window 
+bindsym $mod+g [title="Chromium$"] focus
+bindsym $mod+Ctrl+e exec --no-startup-id emacsclient -c
+
 set $mode_launcher Screenshot: [r]egion [f]ullscreen [w]indow
 bindsym Print mode "$mode_launcher"
 
@@ -261,9 +265,6 @@ mode "$mode_launcher" {
     bindsym --release w exec --no-startup-id scrot_wrapper.sh window ; mode "default"
     bindsym Escape mode "default"
 }
-
-# Need to store original window 
-bindsym $mod+g [title="Chromium$"] focus
 
 # Window choices
 
@@ -288,3 +289,4 @@ exec --no-startup-id steam-native
 exec --no-startup-id chromium
 exec --no-startup-id evolution
 exec --no-startup-id gpmdp
+exec --no-startup-id skypeforlinux
