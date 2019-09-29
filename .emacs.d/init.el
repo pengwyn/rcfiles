@@ -1297,7 +1297,7 @@ you want to quit windows on all frames."
                                                            (:session . "defaultdanny")
                                                            (:async . "yes")
                                                            ;; (:kernel . "julia-1.1_pre")
-                                                           (:kernel . "julia-1.1")
+                                                           (:kernel . "julia-1.2")
                                                            (:eval . "never-export")))
     :config
     (require 'ob-jupyter)
