@@ -246,7 +246,9 @@ bindsym $mod+x [urgent=latest] focus
 bindsym $mod+o exec --no-startup-id i3_open_empty.py
 bindsym $mod+Shift+o exec --no-startup-id i3_open_empty.py move
 bindsym $mod+comma workspace prev_on_output
+bindsym $mod+Shift+comma move container to workspace prev_on_output, workspace prev_on_output
 bindsym $mod+period workspace next_on_output
+bindsym $mod+Shift+period move container to workspace next_on_output, workspace next_on_output
 
 
 
