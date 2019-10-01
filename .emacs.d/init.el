@@ -187,6 +187,7 @@
               ("C-w" . evil-window-mru)
               ("C-a" . ace-window)
               ("C-d" . kill-buffer-and-window)
+              ("C-c" . my/delete-window-or-frame)
               ;; :map evil-insert-state-map
               ;; ("C-e" . evil-end-of-line)
               :map evil-visual-state-map
@@ -260,6 +261,8 @@
     (evil-paste-after 1 ?+ yank-handler))
   (evil-define-key '(normal visual) 'global (kbd "C-M-y") 'danny-evil-clip-yank)
   (evil-define-key '(normal insert) 'global (kbd "C-M-p") 'danny-evil-clip-paste)
+  (evil-define-key '(normal insert) 'global (kbd "C-p") 'evil-paste-after)
+  (evil-define-key '(normal insert) 'global (kbd "M-p") 'evil-paste-pop)
 
   (dolist (map '(minibuffer-local-map minibuffer-local-ns-map minibuffer-local-completion-map minibuffer-local-must-match-map minibuffer-local-isearch-map minibuffer-local-shell-command-map))
     (define-key (eval map) (kbd "C-r") 'evil-paste-from-register))
@@ -431,7 +434,9 @@
   (powerline-center-evil-theme))
 
 (use-package magit
-  :bind ("<f6>" . magit-status)
+  :bind (("<F6>" . magit-status)
+         :map magit-mode-map
+         ("q" . (lambda () (interactive) (magit-mode-bury-buffer 16))))
   :config
   (use-package magit-popup)
 
@@ -1647,24 +1652,22 @@ you want to quit windows on all frames."
 ;;----------------------------
 
 (setq display-buffer-alist
-      '(("\\*julia\\*" . ((display-buffer-reuse-window display-buffer-pop-up-frame)
-                          ((reusable-frames . t) (inhibit-switch-frame . t))))
-        ("\\*.*\\*" (display-buffer-reuse-window display-buffer-pop-up-window))
+      `(("\\*julia\\*" . ((display-buffer-reuse-window display-buffer-pop-up-frame)
+                          (reusable-frames . t) (inhibit-switch-frame . t)))
+        (,(rx (or (seq "*" (* anything) "*")
+                  (seq string-start "magit" (* (not (any ":"))) ":")
+                  (seq string-start "COMMIT"))) . ((display-buffer-reuse-window display-buffer-pop-up-window)
+                                                   (reuseable-frames . t)))
         ("\\*minibuffer\\*" (display-buffer-reuse-window))))
 (setq display-buffer-base-action '((display-buffer-reuse-window display-buffer-pop-up-frame)
                                    (reusable-frames . t)))
 
-(defun my/try-frame-switch (orig-fun &rest args)
-  (message "in this %S" args)
-  (if nil
-    (apply orig-fun args)
-    (apply #'switch-to-buffer-other-frame args))
-  ;; (if nil
-  ;;   (message "asdfsdf")
-  ;;   (message "zxcvxcvz"))
-  )
-                                     
-;; (advice-add 'switch-to-buffer-other-window :around #'my/try-frame-switch)
+;; From https://emacs.stackexchange.com/questions/34343/attempt-to-delete-minibuffer-or-sole-ordinary-window
+(defun my/delete-window-or-frame (&optional window frame force)
+  (interactive)
+  (if (= 1 (length (window-list frame)))
+      (delete-frame frame force)
+    (delete-window window)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Key bindings
