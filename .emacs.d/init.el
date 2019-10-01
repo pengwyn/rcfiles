@@ -1642,6 +1642,29 @@ you want to quit windows on all frames."
 
   (evil-set-initial-state 'term-mode 'emacs))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; * Frames over windows
+;;----------------------------
+
+(setq display-buffer-alist
+      '(("\\*julia\\*" . ((display-buffer-reuse-window display-buffer-pop-up-frame)
+                          ((reusable-frames . t) (inhibit-switch-frame . t))))
+        ("\\*.*\\*" (display-buffer-reuse-window display-buffer-pop-up-window))
+        ("\\*minibuffer\\*" (display-buffer-reuse-window))))
+(setq display-buffer-base-action '((display-buffer-reuse-window display-buffer-pop-up-frame)
+                                   (reusable-frames . t)))
+
+(defun my/try-frame-switch (orig-fun &rest args)
+  (message "in this %S" args)
+  (if nil
+    (apply orig-fun args)
+    (apply #'switch-to-buffer-other-frame args))
+  ;; (if nil
+  ;;   (message "asdfsdf")
+  ;;   (message "zxcvxcvz"))
+  )
+                                     
+;; (advice-add 'switch-to-buffer-other-window :around #'my/try-frame-switch)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Key bindings
