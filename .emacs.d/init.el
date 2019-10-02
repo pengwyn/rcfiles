@@ -434,7 +434,7 @@
   (powerline-center-evil-theme))
 
 (use-package magit
-  :bind (("<F6>" . magit-status)
+  :bind (("<f6>" . magit-status)
          :map magit-mode-map
          ("q" . (lambda () (interactive) (magit-mode-bury-buffer 16))))
   :config

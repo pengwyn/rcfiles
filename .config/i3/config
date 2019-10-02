@@ -278,6 +278,7 @@ assign [class="Chromium"] $ws10
 
 for_window [class="vlc"] floating enable
 for_window [title="Figure*"] floating enable
+no_focus [title="Figure*"]
 for_window [class="Evolution-alarm-notify"] floating enable
 for_window [class="gksqt"] floating enable
 
