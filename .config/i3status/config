@@ -72,7 +72,7 @@ load {
 cpu_usage {
         format = " %usage"
         degraded_threshold = 25
-        max_threshold = 25
+        max_threshold = 75
 }
 
 cpu_temperature 0 {
