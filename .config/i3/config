@@ -60,12 +60,14 @@ bindsym $mod+F9 exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle
 bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle
 
 
-bindsym XF86AudioPlay exec --no-startup-id playerctl play-pause
-bindsym $mod+F5       exec --no-startup-id playerctl play-pause
 bindsym XF86AudioPrev exec --no-startup-id playerctl previous
-bindsym $mod+F7       exec --no-startup-id playerctl previous
+bindsym $mod+F5       exec --no-startup-id playerctl previous
 bindsym XF86AudioNext exec --no-startup-id playerctl next
 bindsym $mod+F6       exec --no-startup-id playerctl next
+bindsym XF86AudioPlay exec --no-startup-id playerctl play-pause
+bindsym $mod+F7       exec --no-startup-id playerctl play-pause
+bindsym XF86AudioStop exec --no-startup-id playerctl stop
+bindsym $mod+F8       exec --no-startup-id playerctl stop
 
 
 
