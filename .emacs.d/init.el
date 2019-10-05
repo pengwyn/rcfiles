@@ -1145,7 +1145,12 @@ you want to quit windows on all frames."
                (file+headline "" "Misc")
                                         ;(file "")
                                         ;"- [ ] %i%?\n\t%u"
-               )))
+               )
+              ("f" "Cookbook" entry (file "~/Dropbox/org/cookbook.org")
+               "%(org-chef-get-recipe-from-url)"
+               :empty-lines 1)
+              ("g" "Manual Cookbook" entry (file "~/Dropbox/org/cookbook.org")
+               "* %^{Recipe title: }\n  :PROPERTIES:\n  :source-url:\n  :servings:\n  :prep-time:\n  :cook-time:\n  :ready-in:\n  :END:\n** Ingredients\n   %?\n** Directions\n\n")))
            (org-confirm-babel-evaluate nil)
            (org-startup-with-inline-images t)
            (org-startup-with-latex-preview t)
@@ -1216,6 +1221,8 @@ you want to quit windows on all frames."
     '((t :inherit org-code :foreground "black"))
     "asdf")
 
+  ;; Stop org from ignoring buffer directions
+  (advice-add 'org-switch-to-buffer-other-window :override 'switch-to-buffer-other-window)
 
   ;; (let
   ;;     ((results-block-regex (concat (org-re-property "RESULTS" nil t) "\\(^:.*$\\)*?" "^:END:"))) 
@@ -1290,6 +1297,7 @@ you want to quit windows on all frames."
 
   (use-package evil-org)
   (use-package org-bullets)
+  (use-package org-chef)
   (use-package htmlize
     :custom
     (org-html-htmlize-output-type 'css))
@@ -1658,7 +1666,8 @@ you want to quit windows on all frames."
                   (seq string-start "magit" (* (not (any ":"))) ":")
                   (seq string-start "COMMIT"))) . ((display-buffer-reuse-window display-buffer-pop-up-window)
                                                    (reuseable-frames . t)))
-        ("\\*minibuffer\\*" (display-buffer-reuse-window))))
+        ;; ("\\*minibuffer\\*" (display-buffer-reuse-window))
+        ))
 (setq display-buffer-base-action '((display-buffer-reuse-window display-buffer-pop-up-frame)
                                    (reusable-frames . t)))
 
