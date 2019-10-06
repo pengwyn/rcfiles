@@ -459,6 +459,15 @@
     (call-process-shell-command "gpg-connect-agent updatestartuptty /bye")
     )
   (add-hook 'magit-credential-hook 'my/setup-gpg-agent)
+
+
+  ;; Stolen from https://stackoverflow.com/questions/40091077/equivalent-of-git-add-force-to-add-ignored-files-in-emacs-magit
+  (defun my/magit-add-current-buffer ()
+    "Adds (with force) the file from the current buffer to the git repo"
+    (interactive)
+    (shell-command (concat "git add -f "
+                           (shell-quote-argument buffer-file-name))))
+
   )
 
 ;; (use-package mmm-mode

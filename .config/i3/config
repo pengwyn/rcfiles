@@ -126,6 +126,9 @@ bindsym $mod+b split h
 # split in vertical orientation
 bindsym $mod+v split v
 
+# Danny: split into a tabbed window
+bindsym $mod+c split h, layout tabbed
+
 # enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen toggle
 
@@ -224,9 +227,28 @@ bindsym $mod+r mode "resize"
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
+        id bar-0
         # status_command i3status
         status_command ~/bin/i3_status_wrapper.sh
         font pango:mononoki Nerd Font 10
+        separator_symbol " "
+
+        modifier Mod4
+        mode hide
+        output primary
+        tray_output primary
+        tray_padding 1
+}
+
+bar {
+        id bar-1
+        status_command i3status --config ~/.config/i3status/just-time.conf
+        font pango:mononoki Nerd Font 10
+
+        modifier Mod4
+        mode hide
+        output DP-0
+        tray_output none
 }
 
 # * Danny stuff below here.
