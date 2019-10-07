@@ -32,16 +32,14 @@ class fasd_select(Command):
     """
     :fasd_select
 
-    Find a file using fzf.
-
-    With a prefix argument select only directories.
-
+    Danny modified this from
     See: https://github.com/junegunn/fzf
     """
     def execute(self):
         import subprocess
         import os.path
-        command="fasd -d -l -r | fzf --height=50% --reverse --tac --no-sort --cycle"
+        # command="fasd -d -l -r | fzf --height=50% --reverse --tac --no-sort --cycle"
+        command="fasd -d -l -r | fzf --reverse --cycle --preview='ls -A --color=always {}' --preview-window=down:50%"
 
         fzf = self.fm.execute_command(command, universal_newlines=True, stdout=subprocess.PIPE)
         stdout, stderr = fzf.communicate()

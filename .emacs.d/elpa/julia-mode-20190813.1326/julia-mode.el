@@ -789,7 +789,7 @@ Return nil if point is not in a function, otherwise point."
         ;;                 (t count)))))
         (julia-start-of-next-block)
         (forward-sexp)
-        (julia-end-of-block)
+        (julia-end-of-this-block)
       ;; (end-of-line)
       (point)))))
 

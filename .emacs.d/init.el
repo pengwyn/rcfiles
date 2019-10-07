@@ -1178,6 +1178,11 @@ you want to quit windows on all frames."
                                        (search . " %i %-12:c")))
            )
 
+  :config
+  (add-to-list 'recentf-exclude "notes.org")
+  (add-to-list 'recentf-exclude "home.org")
+  (add-to-list 'recentf-exclude "init.el")
+
 
   :bind (("<f7>" . danny-orgmode)
          :map danny-orgmode
