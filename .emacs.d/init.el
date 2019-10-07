@@ -188,6 +188,7 @@
               ("C-a" . ace-window)
               ("C-d" . kill-buffer-and-window)
               ("C-c" . my/delete-window-or-frame)
+              ("c" . my/delete-window-or-frame)
               ;; :map evil-insert-state-map
               ;; ("C-e" . evil-end-of-line)
               :map evil-visual-state-map
