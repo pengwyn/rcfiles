@@ -1246,9 +1246,9 @@ you want to quit windows on all frames."
     (add-hook 'org-agenda-mode-hook 'org-fancy-priorities-mode)
     (add-hook 'org-mode-hook 'org-fancy-priorities-mode)
     (setq org-fancy-priorities-list
-          '((?A . "❗") (?B . "⬆") (?C . "⬇") (?D . "☕")
-            (?1 . "⚡") (?2 . "⮬") (?3 . "⮮") (?4 . "☕")
-            (?I . "Imaportant"))))
+          '((?A . "!") (?B . "") (?C . "") (?D . "")
+            (?1 . "⚡") (?2 . "⮬") (?3 . "⮮") (?4 . "")
+            (?I . "Important"))))
 
   ;; Stop org from ignoring buffer directions
   (advice-add 'org-switch-to-buffer-other-window :override 'switch-to-buffer-other-window)
