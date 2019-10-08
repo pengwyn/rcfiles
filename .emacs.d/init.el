@@ -604,6 +604,11 @@
 (use-package switch-window)
 (use-package csv-mode)
 (use-package all-the-icons)
+(use-package indent-guide
+  :config
+  (indent-guide-global-mode)
+  (setq indent-guide-recursive t)
+  (add-to-list 'indent-guide-inhibit-modes 'org-agenda-mode))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1236,6 +1241,15 @@ you want to quit windows on all frames."
     '((t :inherit org-code :foreground "black"))
     "asdf")
 
+  (use-package org-fancy-priorities
+    :config
+    (add-hook 'org-agenda-mode-hook 'org-fancy-priorities-mode)
+    (add-hook 'org-mode-hook 'org-fancy-priorities-mode)
+    (setq org-fancy-priorities-list
+          '((?A . "❗") (?B . "⬆") (?C . "⬇") (?D . "☕")
+            (?1 . "⚡") (?2 . "⮬") (?3 . "⮮") (?4 . "☕")
+            (?I . "Imaportant"))))
+
   ;; Stop org from ignoring buffer directions
   (advice-add 'org-switch-to-buffer-other-window :override 'switch-to-buffer-other-window)
 
@@ -1675,7 +1689,8 @@ you want to quit windows on all frames."
 ;;----------------------------
 
 (setq display-buffer-alist
-      `(("\\*julia\\*" . ((display-buffer-reuse-window display-buffer-pop-up-frame)
+      `(("*Org Agenda*" . ((display-buffer-same-window)))
+        ("\\*julia\\*" . ((display-buffer-reuse-window display-buffer-pop-up-frame)
                           (reusable-frames . t) (inhibit-switch-frame . t)))
         (,(rx (or (seq "*" (* anything) "*")
                   (seq string-start "magit" (* (not (any ":"))) ":")

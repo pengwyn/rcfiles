@@ -233,12 +233,11 @@ bar {
         font pango:mononoki Nerd Font 10
         separator_symbol " "
 
-        position top
+        # position top
         modifier Mod4
         mode hide
         output primary
-        tray_output primary
-        tray_padding 1
+        tray_output none
 }
 
 bar {
@@ -249,7 +248,9 @@ bar {
         modifier Mod4
         mode dock
         output DP-0
-        tray_output none
+        output DVI-0
+        # tray_output primary
+        tray_padding 1
 }
 
 # * Danny stuff below here.
