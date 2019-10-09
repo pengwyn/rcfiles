@@ -1,7 +1,9 @@
 export PATH="$PATH:$HOME/bin:$HOME/.local/bin"
 
 export EDITOR="vim"
-export VISUAL="emacsclient -c"
+if [[ $(hostname) != "mixologist" ]] ; then
+	export VISUAL="emacsclient -c"
+fi
 
 export TERMCMD="xfce4-terminal"
 

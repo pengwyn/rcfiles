@@ -158,7 +158,9 @@ function pacfull()
 
 ############################
 # * Cluster specific
-if [[ $(hostname) == "mixologist" ]]
+#if [[ $(hostname) == "mixologist" ]]
+# Need to do this so it works on all nodes too
+if (which slurmd >/dev/null)
 then
 	function sq () {
 		output=$(squeue -O jobarrayid,name,username,partition,state,timeused,batchhost,reason,starttime $* )
