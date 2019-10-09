@@ -39,7 +39,7 @@ class fasd_select(Command):
         import subprocess
         import os.path
         # command="fasd -d -l -r | fzf --height=50% --reverse --tac --no-sort --cycle"
-        command="fasd -d -l -r | fzf --reverse --cycle --preview='ls -A --color=always {}' --preview-window=down:50%"
+        command="fasd -d -l -r | fzf --reverse --cycle --preview='ls -A --color=always -C {}' --preview-window=down:50%"
 
         fzf = self.fm.execute_command(command, universal_newlines=True, stdout=subprocess.PIPE)
         stdout, stderr = fzf.communicate()
