@@ -607,6 +607,7 @@
 (use-package csv-mode)
 (use-package all-the-icons)
 (use-package indent-guide
+  :diminish indent-guide-mode
   :config
   (indent-guide-global-mode)
   (setq indent-guide-recursive t)
@@ -1244,6 +1245,7 @@ you want to quit windows on all frames."
     "asdf")
 
   (use-package org-fancy-priorities
+    :diminish org-fancy-priorities-mode
     :config
     (add-hook 'org-agenda-mode-hook 'org-fancy-priorities-mode)
     (add-hook 'org-mode-hook 'org-fancy-priorities-mode)
