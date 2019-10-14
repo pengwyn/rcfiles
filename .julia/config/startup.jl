@@ -27,6 +27,7 @@ try
     OhMyREPL.enable_autocomplete_brackets(false)
 	@time using Constants
 	@time using DanUtils
+    @time using Debugger
 catch exc
 	@error "Exception loading modules" exc
 end

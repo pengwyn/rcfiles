@@ -326,6 +326,7 @@
       ("\C-h" evil-mc-make-cursor-here "make here")
       ("S" evil-mc-pause-cursors "suspend")
       ("R" evil-mc-resume-cursors "continue")
+      ("m" evil-mc-make-all-cursors "make all" :exit t)
       )
     ;; I don't want the original bindings anymore - but I don't know how to get rid of them!
     ;; The below doesn't get rid of the evil key bindings unfortunately.
