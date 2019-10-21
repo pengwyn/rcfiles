@@ -235,7 +235,7 @@ bar {
 
         # position top
         modifier Mod4
-        mode hide
+        # mode hide
         output primary
         tray_output none
 }
