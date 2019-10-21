@@ -223,6 +223,7 @@
               ("<down-mouse-1>" . nil)
               :map evil-normal-state-map
               ("K" . nil)
+              ("C-I" . (lambda () (interactive) (evil-beginning-of-line) (evil-insert-state 1)))
               )
 
   :config
