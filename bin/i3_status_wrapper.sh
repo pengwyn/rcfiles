@@ -9,25 +9,36 @@ BLUE="'#0000FF'"
 
 text=""
 rpi_status() {
-    val=$(< ~/alarmpi_restart)
-    if [[ $val == "YES" ]] ; then
-        text="<span foreground=$GREEN>PwrSave</span>"
-    else
-        text="<span foreground=$RED>StayOn</span>"
-    fi
-    
-    if $(ping -w 1 -c 1 10.1.1.101 >/dev/null 2>&1)
-    then
-        text="<span foreground=$GREEN>Up</span> $text"
-    else
-        if [[ $val = "YES" ]] ; then
-            text="Down $text"
+    text=""
+
+    if [[ $(hostname) = "pengix" ]] ; then
+        val=$(< ~/alarmpi_restart)
+        if [[ $val == "YES" ]] ; then
+            text="<span foreground=$GREEN>PwrSave</span>"
         else
-            text="<span foreground=$RED>Down</span> $text"
+            text="<span foreground=$RED>StayOn</span>"
+        fi
+    
+        if $(ping -w 1 -c 1 10.1.1.101 >/dev/null 2>&1)
+        then
+            text="<span foreground=$GREEN>Up</span> $text"
+        else
+            if [[ $val = "YES" ]] ; then
+                text="Down $text"
+            else
+                text="<span foreground=$RED>Down</span> $text"
+            fi
+        fi
+
+        lastupdate=$(date --date="$(< /srv/http/rpi/lastupdate.txt )" +"%H:%M %d/%m")
+    else
+        data="$(curl pengix/rpi/lastupdate.txt --connect-timeout 1)"
+        if [[ $? == 0 ]] ; then
+            lastupdate=$(date --date="$data" +"%H:%M %d/%m")
+        else
+            lastupdate="N/C"
         fi
     fi
-
-    lastupdate=$(date --date="$(< /srv/http/rpi/lastupdate.txt )" +"%H:%M %d/%m")
     text=" ($lastupdate) $text"
 
     return 0
@@ -107,10 +118,8 @@ i3status | (
         read line
         echo ",["
 
-        if [[ $(hostname) = "pengix" ]] ; then
-            rpi_status || exit 1
-            do_line $text
-        fi
+        rpi_status || exit 1
+        do_line $text
 
         update_rate
         do_line $rate
