@@ -1152,7 +1152,7 @@ you want to quit windows on all frames."
            (org-agenda-skip-deadline-if-done t)
            (org-agenda-skip-scheduled-if-done t)
            (org-clock-out-when-done '("WAITING" "DONE" "CANCELLED"))
-           (org-insert-heading-respect-content t)
+           ;; (org-insert-heading-respect-content t)
            ;; TODO: make the tasks thing a bit more automatic.
            (org-capture-templates
             '(("c" "Coding todo entry" entry
