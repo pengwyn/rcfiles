@@ -8,6 +8,8 @@ RED="'#FF0000'"
 BLUE="'#0000FF'"
 
 text=""
+lastupdate_time=0
+
 rpi_status() {
     text=""
 
@@ -32,11 +34,16 @@ rpi_status() {
 
         lastupdate=$(date --date="$(< /srv/http/rpi/lastupdate.txt )" +"%H:%M %d/%m")
     else
-        data="$(curl pengix/rpi/lastupdate.txt --connect-timeout 1)"
-        if [[ $? == 0 ]] ; then
-            lastupdate=$(date --date="$data" +"%H:%M %d/%m")
-        else
-            lastupdate="N/C"
+        # Only update if the last time was more than 5min ago
+        if (( $(date +%s) - $lastupdate_time > 300 )) ; then
+            data="$(curl pengix/rpi/lastupdate.txt --connect-timeout 1)"
+            if [[ $? == 0 ]] ; then
+                lastupdate=$(date --date="$data" +"%H:%M %d/%m")
+            else
+                lastupdate="N/C"
+            fi
+
+            lastupdate_time=$(date +%s)
         fi
     fi
     text=" ($lastupdate) $text"
