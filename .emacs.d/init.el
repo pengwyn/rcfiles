@@ -1709,12 +1709,14 @@ you want to quit windows on all frames."
 ;;----------------------------
 
 (setq display-buffer-alist
-      `(("*Org Agenda*" . ((display-buffer-same-window)))
+      `(("\\*Org Agenda\\*" . ((display-buffer-same-window)))
+        ("\\*helpful.*:" . ((display-buffer-reuse-window display-buffer-reuse-mode-window display-buffer-below-selected)))
+        ("\\*.*_region_ output\\*" . ((display-buffer-no-window)))
         ("\\*julia\\*" . ((display-buffer-reuse-window display-buffer-pop-up-frame)
                           (reusable-frames . t) (inhibit-switch-frame . t)))
         (,(rx (or (seq "*" (* anything) "*")
                   (seq string-start "magit" (* (not (any ":"))) ":")
-                  (seq string-start "COMMIT"))) . ((display-buffer-reuse-window display-buffer-pop-up-window)
+                  (seq string-start "COMMIT"))) . ((display-buffer-reuse-window display-buffer-below-selected)
                                                    (reuseable-frames . t)))
         ;; ("\\*minibuffer\\*" (display-buffer-reuse-window))
         ))
