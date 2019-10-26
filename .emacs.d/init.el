@@ -190,6 +190,7 @@
               ("C-c" . my/delete-window-or-frame)
               ("c" . my/delete-window-or-frame)
               ("C-n" . make-frame-command)
+              ("C-f" . tear-off-window)
 
               ;; :map evil-insert-state-map
               ;; ("C-e" . evil-end-of-line)
@@ -1223,7 +1224,7 @@ you want to quit windows on all frames."
          ("R" . remember-notes)
          ("m" . outshine-imenu)
          :map org-mode-map
-         ("<C-M-return>" . org-insert-todo-subheading)
+         ("<C-M-return>" . org-insert-heading)
          ("C-4" . org-archive-subtree)
          ("<return>" . org-return-indent)
          ("M-a" . nil)
@@ -1351,6 +1352,14 @@ you want to quit windows on all frames."
     :custom
     (org-html-htmlize-output-type 'css))
 
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((ditaa . t))) ; this line activates ditaa
+
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((plantuml . t))) ; this line activates dot
+  
   ;; ob-jupyter requires ob-python for some things as defaults.
   (require 'ob-python)
   (use-package jupyter
