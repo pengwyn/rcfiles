@@ -224,6 +224,9 @@
               :map evil-normal-state-map
               ("K" . nil)
               ("C-I" . (lambda () (interactive) (evil-beginning-of-line) (evil-insert-state 1)))
+              :map evil-insert-state-map
+              ("C-n" . nil)
+              ("C-p" . nil)
               )
 
   :config
@@ -233,6 +236,17 @@
   ;; (eval-after-load 'ibuffer '(my/evil-add-bindings ibuffer-mode-map))
   ;; Don't want to override / in the ibuffer map
   (eval-after-load 'ibuffer '(evil-add-hjkl-bindings ibuffer-mode-map 'emacs))
+  
+
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; *** Minibuffer stuff
+  ;;----------------------------
+  (defvar my/evil-minibuffer-mode-map (make-sparse-keymap))
+  (define-minor-mode my/evil-minibuffer-mode
+    :init-value nil
+    :keymap my/evil-minibuffer-mode-map)
+  (add-hook 'minibuffer-setup-hook 'my/evil-minibuffer-mode)
+  (define-key my/evil-minibuffer-mode-map (kbd "C-r") 'evil-paste-from-register)
 
   (defun recenter-top-bottom-with-clear ()
     "Do the normal recenter and redraw the screen."
@@ -241,7 +255,7 @@
     (evil-search-highlight-persist-remove-all))
 
   (dolist (map '(evil-normal-state-map evil-insert-state-map evil-motion-state-map))
-    (define-key (eval map) (kbd "C-w") 'evil-window-map)
+    ;; (define-key (eval map) (kbd "C-w") 'evil-window-map)
     (define-key (eval map) (kbd "C-c +") 'evil-numbers/inc-at-pt)
     (define-key (eval map) (kbd "C-c -") 'evil-numbers/dec-at-pt)
 
@@ -268,8 +282,8 @@
   (evil-define-key '(normal insert) 'global (kbd "C-p") 'evil-paste-after)
   (evil-define-key '(normal insert) 'global (kbd "M-p") 'evil-paste-pop)
 
-  (dolist (map '(minibuffer-local-map minibuffer-local-ns-map minibuffer-local-completion-map minibuffer-local-must-match-map minibuffer-local-isearch-map minibuffer-local-shell-command-map))
-    (define-key (eval map) (kbd "C-r") 'evil-paste-from-register))
+  ;; (dolist (map '(minibuffer-local-map minibuffer-local-ns-map minibuffer-local-completion-map minibuffer-local-must-match-map minibuffer-local-isearch-map minibuffer-local-shell-command-map))
+  ;;   (define-key (eval map) (kbd "C-r") 'evil-paste-from-register))
 
   (use-package evil-magit)
   
