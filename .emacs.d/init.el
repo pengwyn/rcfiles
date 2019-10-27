@@ -72,7 +72,8 @@
               display-line-numbers nil
               indent-tabs-mode nil
               tab-width 4
-              dired-auto-revert-buffer t)
+              dired-auto-revert-buffer t
+              sentence-end-double-space nil)
 
 
 (scroll-bar-mode -1)
