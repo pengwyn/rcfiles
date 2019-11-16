@@ -221,17 +221,18 @@
               ("C-w" . evil-window-map)
               ;; :map evil-visual-state-map
               ;; ("<tab>" . indent-region)
-              :map evil-motion-state-map
-              ("<down-mouse-1>" . nil)
               :map evil-normal-state-map
-              ("K" . nil)
               ("C-I" . (lambda () (interactive) (evil-beginning-of-line) (evil-insert-state 1)))
-              :map evil-insert-state-map
-              ("C-n" . nil)
-              ("C-p" . nil)
               )
 
   :config
+
+  (evil-global-set-key 'insert (kbd "<C-n>") nil)
+  (evil-global-set-key 'insert (kbd "<C-p>") nil)
+  (evil-global-set-key 'motion "K" nil)
+  (evil-global-set-key 'normal "K" nil)
+  (evil-global-set-key 'motion (kbd "<down-mouse-1>") nil)
+
   (evil-mode 1)
   (defalias #'forward-evil-word #'forward-evil-symbol)
   (my/evil-add-bindings package-menu-mode-map)
@@ -1459,6 +1460,7 @@ you want to quit windows on all frames."
                                         ; Hopefully fix being able to read font in error regions
   ;; (add-hook 'LaTeX-mode-hook (lambda () (set-face-attribute 'preview-face nil :inverse-video t)))
 
+  (unbind-key "k" image-mode-map)
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

@@ -32,13 +32,13 @@ rpi_status() {
             fi
         fi
 
-        lastupdate=$(date --date="$(< /srv/http/rpi/lastupdate.txt )" +"%H:%M %d/%m")
+        lastupdate=$(TZ="Australia/Canberra" date --date="$(< /srv/http/rpi/lastupdate.txt )" +"%H:%M %d/%m")
     else
         # Only update if the last time was more than 5min ago
         if (( $(date +%s) - $lastupdate_time > 300 )) ; then
             data="$(curl pengix/rpi/lastupdate.txt --connect-timeout 1)"
             if [[ $? == 0 ]] ; then
-                lastupdate=$(date --date="$data" +"%H:%M %d/%m")
+                lastupdate=$(TZ="Australia/Canberra" date --date="$data" +"%H:%M %d/%m")
             else
                 lastupdate="N/C"
             fi
