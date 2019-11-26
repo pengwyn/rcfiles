@@ -151,20 +151,30 @@ bindsym $mod+Shift+a focus child
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
-set $ws1 "1: Main"
-set $ws2 "2"
-set $ws3 "3"
-set $ws4 "4"
-set $ws5 "5: Latex"
-set $ws6 "6: Preview"
-set $ws7 "7: Music"
-set $ws8 "8: Steam"
-set $ws9 "9: Evolution"
-set $ws10 "10: Browser"
+# set $ws1 "1: Main"
+# set $ws2 "2"
+# set $ws3 "3"
+# set $ws4 "4"
+# set $ws5 "5: Latex"
+# set $ws6 "6: Preview"
+# set $ws7 "7: Music"
+# set $ws8 "8: Steam"
+# set $ws9 "9: Evolution"
+# set $ws10 "10: Browser"
+set $ws1 number 1
+set $ws2 number 2
+set $ws3 number 3
+set $ws4 number 4
+set $ws5 number 5
+set $ws6 number 6
+set $ws7 number 7
+set $ws8 number 8
+set $ws9 number 9
+set $ws10 number 10
 
-workspace $ws8 output primary
-workspace $ws9 output DP-0
-workspace $ws10 output DP-0
+# workspace $ws8 output primary
+# workspace $ws9 output DP-0
+# workspace $ws10 output DP-0
 
 # switch to workspace
 # bindsym $mod+1 workspace number 1
@@ -187,6 +197,7 @@ bindsym $mod+7 workspace $ws7
 bindsym $mod+8 workspace $ws8
 bindsym $mod+9 workspace $ws9
 bindsym $mod+0 workspace $ws10
+bindsym $mod+Tab workspace back_and_forth
 
 # move focused container to workspace
 # bindsym $mod+Shift+1 move container to workspace number 1, workspace number 1
@@ -338,6 +349,8 @@ for_window [title="Enter LaTeX Formula*"] floating enable
 # for_window [class="Evolution"] layout tabbed
 
 # Danny autostarts
+exec --no-startup-id i3icons2
+
 exec --no-startup-id dropbox
 exec --no-startup-id steam-native
 exec --no-startup-id chromium
