@@ -1240,6 +1240,8 @@ you want to quit windows on all frames."
          ("L" . (lambda () (interactive) (org-agenda-date-later 1)))
          ("M-H" . (lambda () (interactive) (org-agenda-date-earlier 7)))
          ("M-L" . (lambda () (interactive) (org-agenda-date-later 7)))
+         ("K" . (lambda () (interactive) (org-agenda-priority-up)))
+         ("J" . (lambda () (interactive) (org-agenda-priority-down)))
          ("s" . org-agenda-schedule))
 
 
@@ -1443,7 +1445,8 @@ you want to quit windows on all frames."
 
   :custom
   ((latex-preview-pane-use-frame t)
-   (doc-view-resolution 300))
+   (doc-view-resolution 300)
+   (preview-gs-options '("-q" "-dNOSAFER" "-dNOPAUSE" "-DNOPLATFONTS" "-dPrinted" "-dTextAlphaBits=4" "-dGraphicsAlphaBits=4")))
 
   :config
   ;; (when (string= (system-name) "pengix")
