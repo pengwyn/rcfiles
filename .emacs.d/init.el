@@ -1142,6 +1142,7 @@ you want to quit windows on all frames."
 ;;------------------------------------------------
 (use-package org
   :init (require 'org-agenda)
+         (require 'org-habit)
   :demand t
 
   :hook (
@@ -1741,6 +1742,8 @@ you want to quit windows on all frames."
 ;; From https://emacs.stackexchange.com/questions/34343/attempt-to-delete-minibuffer-or-sole-ordinary-window
 (defun my/delete-window-or-frame (&optional window frame force)
   (interactive)
+  ;; Also delete the buffer
+  (kill-buffer)
   (if (= 1 (length (window-list frame)))
       (delete-frame frame force)
     (delete-window window)))
