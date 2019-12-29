@@ -1373,7 +1373,7 @@ you want to quit windows on all frames."
                                                            (:session . "defaultdanny")
                                                            (:async . "yes")
                                                            ;; (:kernel . "julia-1.1_pre")
-                                                           (:kernel . "julia-1.2")
+                                                           (:kernel . "julia-1.3")
                                                            (:eval . "never-export")))
     :config
     (require 'ob-jupyter)
@@ -1743,7 +1743,8 @@ you want to quit windows on all frames."
 (defun my/delete-window-or-frame (&optional window frame force)
   (interactive)
   ;; Also delete the buffer
-  (kill-buffer)
+  (when (= 1 (length (get-buffer-window-list (current-buffer) nil t)))
+    (kill-buffer))
   (if (= 1 (length (window-list frame)))
       (delete-frame frame force)
     (delete-window window)))

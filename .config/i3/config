@@ -333,7 +333,7 @@ mode "$mode_launcher" {
 assign [class="Google Play Music Desktop Player"] $ws7
 assign [class="Steam"] $ws8
 assign [class="Evolution"] $ws9
-assign [class="Chromium"] $ws10
+# assign [class="Chromium"] $ws10
 
 for_window [class="vlc"] floating enable
 for_window [class="MPlayer"] floating enable
