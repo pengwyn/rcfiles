@@ -93,7 +93,11 @@ alias g="git"
 
 alias grs="gr status"
 alias grf="gr git fetch ; gr status"
-alias grpl="gr git pullthis" 
+function grpl() {
+    (( $# < 1 )) && echo "Need a target" && return 1
+    gr git pullthis $@
+    gr status
+}
 
 # Quickfind
 function qfind {
