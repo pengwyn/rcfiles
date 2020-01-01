@@ -293,7 +293,8 @@ focus_wrapping no
 bindsym $mod+n move workspace to output right
 bindsym $mod+m move container to output right, focus output right
 # bindsym $mod+Shift+m move container to output primary, focus output primary, fullscreen enable
-bindsym $mod+Shift+m exec --no-startup-id i3_open_empty.py move, move workspace to output right
+# bindsym $mod+Shift+m exec --no-startup-id i3_open_empty.py move, move workspace to output right
+bindsym $mod+Shift+m exec --no-startup-id i3_open_empty.py newwin
 
 # Need to store original window 
 bindsym $mod+z exec --no-startup-id i3-easyfocus -a -f 'lucidasans-bold-12' --color-unfocused-fg 00FF00 --color-unfocused-bg FF00FF --keys alpha

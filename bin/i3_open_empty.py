@@ -9,5 +9,12 @@ next_num = next(i for i in range(1, 100) if not [ws for ws in workspaces if ws['
 
 import sys
 if len(sys.argv) == 2:
+    action = sys.argv[1]
+else:
+    action = "empty"
+
+if action in ["move","newwin"]:
     subprocess.call(['i3-msg', 'move container to workspace number %i' % next_num])
 subprocess.call(['i3-msg', 'workspace number %i' % next_num])
+if action == "newwin":
+    subprocess.call(['i3-msg', 'move workspace to output right'])
