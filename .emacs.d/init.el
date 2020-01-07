@@ -251,6 +251,10 @@
   (add-hook 'minibuffer-setup-hook 'my/evil-minibuffer-mode)
   (define-key my/evil-minibuffer-mode-map (kbd "C-r") 'evil-paste-from-register)
 
+  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; *** Misc
+  ;;----------------------------
+
   (defun recenter-top-bottom-with-clear ()
     "Do the normal recenter and redraw the screen."
     (interactive)
@@ -283,7 +287,7 @@
   (evil-define-key '(normal visual) 'global (kbd "C-M-y") 'danny-evil-clip-yank)
   (evil-define-key '(normal insert) 'global (kbd "C-M-p") 'danny-evil-clip-paste)
   (evil-define-key '(normal insert) 'global (kbd "C-p") 'evil-paste-after)
-  (evil-define-key '(normal insert) 'global (kbd "M-p") 'evil-paste-pop)
+  (evil-define-key '(normal insert) 'global (kbd "M-P") 'evil-paste-pop)
 
   ;; (dolist (map '(minibuffer-local-map minibuffer-local-ns-map minibuffer-local-completion-map minibuffer-local-must-match-map minibuffer-local-isearch-map minibuffer-local-shell-command-map))
   ;;   (define-key (eval map) (kbd "C-r") 'evil-paste-from-register))
@@ -1520,7 +1524,7 @@ you want to quit windows on all frames."
 ;;----------------------------
 (use-package julia-mode
   :hook (
-         ;; (julia-mode . ggtags-mode)
+         (julia-mode . ggtags-mode)
          (julia-mode . julia-math-mode)
          (julia-mode . julia-repl-mode)
          (julia-repl . julia-repl-use-emacsclient))
