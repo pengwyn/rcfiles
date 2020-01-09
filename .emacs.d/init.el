@@ -620,6 +620,15 @@
 ;;   (sublimity-mode 1)
 ;;   )
 
+(use-package hl-todo
+  :config
+  (global-hl-todo-mode))
+
+(use-package magit-todos
+  :after magit
+  :after hl-todo
+  (magit-todos-mode))
+
 (use-package hydra)
 (use-package ace-window)
 (use-package sudo-edit)
@@ -1774,6 +1783,7 @@ you want to quit windows on all frames."
 (define-key danny-completions (kbd "C-c") 'company-complete)
 (define-key danny-completions (kbd "C-f") 'company-files)
 (define-key danny-completions (kbd "q") 'evil-record-macro)
+(define-key danny-completions (kbd "C-t") 'helm-magit-todos)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
