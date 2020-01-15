@@ -83,9 +83,9 @@ cpu_temperature 0 {
 }
 
 memory {
-        format = "<span foreground='#ffaa33'>%free (%percentage_free)</span>"
+        format = "<span foreground='#ffaa33'>%available (%percentage_available)</span>"
         threshold_degraded = "10%"
-        format_degraded = "MEMORY: %free"
+        format_degraded = "MEMORY: %available"
 }
 
 disk "/" {
