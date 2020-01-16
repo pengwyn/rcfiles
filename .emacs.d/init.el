@@ -44,7 +44,9 @@
 ;; * Diminish basic modes
 ;;----------------------------
 
-(use-package undo-tree)
+(use-package undo-tree
+  :custom (undo-tree-enable-undo-in-region nil))
+
 ;; (diminish 'undo-tree-mode)
 (diminish 'abbrev-mode)
 (diminish 'auto-fill-function)
@@ -629,6 +631,8 @@
   :after hl-todo
   (magit-todos-mode))
 
+(use-package highlight-symbol)
+
 (use-package hydra)
 (use-package ace-window)
 (use-package sudo-edit)
@@ -749,6 +753,7 @@ See `comment-region' for behavior of a prefix arg."
 ;;----------------------------
 
 (evil-define-key 'visual lisp-mode-shared-map (kbd "C-M-x") 'eval-region)
+(add-hook 'lisp-mode-hook 'highlight-symbol-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Sudo edit
@@ -1526,6 +1531,7 @@ you want to quit windows on all frames."
   ;; (add-hook 'outline-minor-mode-hook (lambda () (setq-local outshine-imenu-preliminary-generic-expression
   ;;                `((nil ,(concat (message "%s" (outshine-calc-outline-regexp)) "\\(.*$\\)") 1)))))
 
+  (defvaralias 'outline-promotion-headings 'outshine-promotion-headings)
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1536,7 +1542,8 @@ you want to quit windows on all frames."
          (julia-mode . ggtags-mode)
          (julia-mode . julia-math-mode)
          (julia-mode . julia-repl-mode)
-         (julia-repl . julia-repl-use-emacsclient))
+         (julia-repl . julia-repl-use-emacsclient)
+         (julia-mode . highlight-symbol-mode))
   
   :config
   ;;(add-hook 'julia-mode-hook (lambda () (setq-local ggtags-process-environment (concat ggtags-process-environment "GTAGSLABEL=julia"))))
