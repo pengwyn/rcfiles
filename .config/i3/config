@@ -280,6 +280,7 @@ bar {
         mode dock
         output DP-0
         output DVI-0
+        output HDMI-1
         # tray_output primary
         tray_padding 1
 }
@@ -343,6 +344,7 @@ no_focus [title="Figure*"]
 for_window [class="Evolution-alarm-notify"] floating enable
 for_window [class="gksqt"] floating enable
 for_window [title="Enter LaTeX Formula*"] floating enable
+for_window [title="Steam Guard*"] floating enable
 
 
 
@@ -356,7 +358,7 @@ exec --no-startup-id dropbox
 exec --no-startup-id steam-native
 exec --no-startup-id chromium
 exec --no-startup-id evolution
-exec --no-startup-id gpmdp
+#exec --no-startup-id gpmdp
 
 exec --no-startup-id i3-msg 'workspace $ws1; move workspace to output primary'
 exec --no-startup-id skypeforlinux
