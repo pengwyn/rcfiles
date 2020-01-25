@@ -1792,6 +1792,26 @@ you want to quit windows on all frames."
 (define-key danny-completions (kbd "q") 'evil-record-macro)
 (define-key danny-completions (kbd "C-t") 'helm-magit-todos)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; * Size adjustments
+;;----------------------------
+(defun my/exit-text-scale-mode ()
+  (interactive)
+  (text-scale-mode 0))
+
+(defhydra hydra-window-adjust ()
+  "danny-window-adjust"
+  ("-" text-scale-decrease "decrease")
+  ("C--" text-scale-decrease nil)
+  ("+" text-scale-increase "increase")
+  ("=" text-scale-increase nil)
+  ("C-=" text-scale-increase nil)
+  ("0" my/exit-text-scale-mode "reset" :exit t)
+  ("C-0" my/exit-text-scale-mode "reset" nil :exit t))
+(global-set-key (kbd "C-x C--") 'hydra-window-adjust/text-scale-decrease)
+(global-set-key (kbd "C-x C-+") 'hydra-window-adjust/text-scale-increase)
+(global-set-key (kbd "C-x C-=") 'hydra-window-adjust/text-scale-increase)
+(global-set-key (kbd "C-x C-0") 'hydra-window-adjust/my/exit-text-scale-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * THEME
