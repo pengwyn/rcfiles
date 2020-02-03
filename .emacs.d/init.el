@@ -287,7 +287,9 @@
     (interactive "P<x>")
     (evil-paste-after 1 ?+ yank-handler))
   (evil-define-key '(normal visual) 'global (kbd "C-M-y") 'danny-evil-clip-yank)
-  (evil-define-key '(normal insert) 'global (kbd "C-M-p") 'danny-evil-clip-paste)
+  ;; (evil-define-key '(normal insert) 'global (kbd "C-M-p") 'danny-evil-clip-paste)
+  (evil-define-key 'normal 'global (kbd "C-M-p") 'danny-evil-clip-paste)
+  (evil-define-key 'insert 'global (kbd "C-M-p") (lambda () (interactive) (evil-paste-from-register ?+)))
   (evil-define-key '(normal insert) 'global (kbd "C-p") 'evil-paste-after)
   (evil-define-key '(normal insert) 'global (kbd "M-P") 'evil-paste-pop)
 
