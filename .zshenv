@@ -128,9 +128,13 @@ alias d="disown %%"
 alias jupy="tmux new -s Jupy -d env JUPYTER_CONFIG_DIR=${HOME}/Dropbox/Physics/MyCalcs/JupyterNotebooks/.jupyter jupyter notebook --notebook-dir=${HOME}/Dropbox/Physics/MyCalcs/JupyterNotebooks"
 alias jupyat="tmux attach -t Jupy"
 
+# sysimage="ROPD_sysimage.so"
+sysimage="extra_sysimage.so"
 # alias jul="julia --startup-file=no"
 alias jl="julia --startup-file=no"
-alias jul="julia --startup-file=no --load ${HOME}/.julia/config/reduced_startup.jl"
+alias jul="julia --startup-file=no --sysimage ${HOME}/.julia/config/$sysimage"
+alias juli="julia --startup-file=no --sysimage ${HOME}/.julia/config/$sysimage --load ${HOME}/.julia/config/reduced_startup.jl"
+alias julia="julia --sysimage ${HOME}/.julia/config/$sysimage"
 
 alias pacupdatekernel="s pacman -Syu --needed linux linux-firmware"
 
