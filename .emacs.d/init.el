@@ -469,6 +469,7 @@
          ("q" . (lambda () (interactive) (magit-mode-bury-buffer 16))))
   :config
   (use-package magit-popup)
+  (use-package magit-todos)
 
   (defun my/setup-gpg-agent (&optional force)
     "Setup gpg agent env variables for magit."
