@@ -1561,6 +1561,8 @@ you want to quit windows on all frames."
 
   :custom
   (julia-max-block-lookback 50000)
+  ;; (julia-arguments '("-i" "--color=yes" "--sysimage=/home/pengwyn/.julia/config/extra_sysimage.so"))
+  (julia-repl-switches "-i --color=yes --sysimage=/home/pengwyn/.julia/config/extra_sysimage.so")
 
   ;; (setq-default julia-repl-switches "-J /home/pengwyn/.julia/dev/PackageCompiler/sysimg/sys.so")
 
