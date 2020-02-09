@@ -1684,6 +1684,8 @@ you want to quit windows on all frames."
            ;; (concat "includet(\"" file "\")")
          (concat "include(\"" file "\")")
          (buffer-substring-no-properties (point-min) (point-max))))))
+
+  (define-key LaTeX-math-keymap "'" 'LaTeX-math-prime)
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
