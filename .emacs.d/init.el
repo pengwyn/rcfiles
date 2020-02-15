@@ -1772,11 +1772,12 @@ you want to quit windows on all frames."
 (defun my/delete-window-or-frame (&optional window frame force)
   (interactive)
   ;; Also delete the buffer
-  (when (= 1 (length (get-buffer-window-list (current-buffer) nil t)))
-    (kill-buffer))
-  (if (= 1 (length (window-list frame)))
+  (let ((buf (current-buffer)))
+    (if (= 1 (length (window-list frame)))
       (delete-frame frame force)
-    (delete-window window)))
+      (delete-window window))
+    (when (= 0 (length (get-buffer-window-list (current-buffer) nil t)))
+      (kill-buffer buf))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Key bindings
