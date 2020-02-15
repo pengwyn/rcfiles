@@ -378,6 +378,7 @@
                 (goto-char pt)
                 (evil-mc-make-cursor-here))))))
     (global-set-key (kbd "C-S-<mouse-1>") 'danny-make-evil-mc-cursor-on-click)
+    (global-set-key (kbd "C-S-<mouse-3>") 'evil-mc-undo-all-cursors)
 
     ;; (defun danny-evil-mc-edit-lines (&optional arg)
     ;;   "Stolen from multiple cursors"
