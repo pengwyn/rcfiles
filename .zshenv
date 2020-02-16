@@ -129,7 +129,7 @@ alias jupy="tmux new -s Jupy -d env JUPYTER_CONFIG_DIR=${HOME}/Dropbox/Physics/M
 alias jupyat="tmux attach -t Jupy"
 
 # sysimage="ROPD_sysimage.so"
-sysimage="extra_sysimage.so"
+sysimage="ijulia_sysimage.so"
 # alias jul="julia --startup-file=no"
 alias jl="julia --startup-file=no"
 alias jul="julia --startup-file=no --sysimage ${HOME}/.julia/config/$sysimage"
