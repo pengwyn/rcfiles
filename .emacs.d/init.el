@@ -635,6 +635,45 @@
   :after hl-todo
   (magit-todos-mode))
 
+(use-package ibuffer-projectile
+  :custom  
+  (add-hook 'ibuffer-hook
+            (lambda ()
+              (ibuffer-projectile-set-filter-groups)
+              (unless (eq ibuffer-sorting-mode 'alphabetic)
+                (ibuffer-do-sort-by-alphabetic))))
+  (setq ibuffer-formats
+        '((mark modified read-only " "
+                (name 18 18 :left :elide)
+                " "
+                (size 9 -1 :right)
+                " "
+                (mode 16 16 :left :elide)
+                " "
+                project-relative-file)
+          (mark modified " "
+                (name 18 18 :left :elide)))))
+
+(use-package ibuffer-sidebar
+  ;; :bind (("C-<f8>" . ibuffer-sidebar-toggle-sidebar))
+  :bind (("C-<f8>" . (lambda ()
+                       (interactive)
+                       (ibuffer-sidebar-toggle-sidebar)
+                       (if (ibuffer-sidebar-showing-sidebar-p)
+                           (call-interactively 'ibuffer-update)))))
+  :custom
+  ;; (add-hook 'ibuffer-sidebar-mode-hook
+  ;;           (lambda ()
+  ;;             (ibuffer-projectile-set-filter-groups)
+  ;;             (unless (eq ibuffer-sorting-mode 'alphabetic)
+  ;;               (ibuffer-do-sort-by-alphabetic)))))
+  (add-hook 'ibuffer-sidebar-mode-hook
+            (lambda ()
+              (setq-local ibuffer-filter-groups (ibuffer-projectile-generate-filter-groups))
+              (setq-local ibuffer-current-format 1)
+              (ibuffer-update-format)
+              (ibuffer-redisplay t))))
+
 (use-package highlight-symbol)
 
 (use-package hydra)
