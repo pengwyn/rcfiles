@@ -91,11 +91,15 @@ alias gb="git branch"
 alias gf="git fetch"
 alias g="git"
 
-alias grs="gr status"
+# alias grs="gr status"
 alias grf="gr git fetch ; gr status"
 function grpl() {
     (( $# < 1 )) && echo "Need a target" && return 1
     gr git pullthis $@
+    gr status
+}
+function grs() {
+    (( $# >= 1 )) && gr git setupto $@
     gr status
 }
 
