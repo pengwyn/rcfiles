@@ -94,8 +94,12 @@ alias g="git"
 # alias grs="gr status"
 alias grf="gr git fetch ; gr status"
 function grpl() {
-    (( $# < 1 )) && echo "Need a target" && return 1
-    gr git pullthis $@
+    gpg-connect-agent updatestartuptty /bye
+    if (( $# < 1 )) ; then
+        gr git pull
+    else
+        gr git pullthis $@
+    fi
     gr status
 }
 function grs() {
