@@ -28,6 +28,7 @@ try
 	@time using Constants
 	@time using DanUtils
     @time using Debugger
+    @time using Plots
 catch exc
 	@error "Exception loading modules" exc
 end
