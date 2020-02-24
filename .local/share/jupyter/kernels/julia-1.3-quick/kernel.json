@@ -3,12 +3,10 @@
   "argv": [
     "/usr/bin/julia",
     "-i",
-    "--startup-file=no",
-    "--load", "/home/pengwyn/.julia/config/reduced_startup.jl",
     "--sysimage", "/home/pengwyn/.julia/config/ijulia_sysimage.so",
     "--color=yes",
     "--project=@.",
-    "/home/pengwyn/.julia/packages/IJulia/F1GUo/src/kernel.jl",
+    "/home/pengwyn/.local/share/jupyter/kernels/julia-1.3-quick/danny_load_kernel.jl",
     "{connection_file}"
   ],
   "language": "julia",
