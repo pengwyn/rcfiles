@@ -1861,7 +1861,7 @@ you want to quit windows on all frames."
   ("=" text-scale-increase nil)
   ("C-=" text-scale-increase nil)
   ("0" my/exit-text-scale-mode "reset" :exit t)
-  ("C-0" my/exit-text-scale-mode "reset" nil :exit t))
+  ("C-0" my/exit-text-scale-mode "reset" :exit t))
 (global-set-key (kbd "C-x C--") 'hydra-window-adjust/text-scale-decrease)
 (global-set-key (kbd "C-x C-+") 'hydra-window-adjust/text-scale-increase)
 (global-set-key (kbd "C-x C-=") 'hydra-window-adjust/text-scale-increase)
