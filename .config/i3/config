@@ -332,9 +332,9 @@ mode "$mode_launcher" {
 
 # Window choices
 
-assign [class="Google Play Music Desktop Player"] $ws7
-assign [class="Steam"] $ws8
-assign [class="Evolution"] $ws9
+# assign [class="Google Play Music Desktop Player"] $ws7
+# assign [class="Steam"] $ws8
+# assign [class="Evolution"] $ws9
 # assign [class="Chromium"] $ws10
 
 for_window [class="vlc"] floating enable
