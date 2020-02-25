@@ -1,7 +1,7 @@
 ENV["PLOTS_DEFAULT_BACKEND"] = "gr"
 
 packages = [:Revise, :OhMyREPL, :Debugger, :IJulia, :MacroTools,
-                 :Plots, :GR,
+                 #:Plots, :GR,
                  #:Interact, :Blink, :WebIO,
 # All of my util packages
             :AndExport,
