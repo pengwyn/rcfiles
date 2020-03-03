@@ -312,6 +312,7 @@ bindsym $mod+period workspace next_on_output
 bindsym $mod+Shift+period move container to workspace next_on_output, workspace next_on_output
 
 
+bindsym --whole-window $mod+button2 floating toggle
 
 # * Shortcuts
 
@@ -345,6 +346,10 @@ for_window [class="Evolution-alarm-notify"] floating enable
 for_window [class="gksqt"] floating enable
 for_window [title="Enter LaTeX Formula*"] floating enable
 for_window [title="Steam Guard*"] floating enable
+
+#steam chat to float.
+for_window [class="Steam"] floating enable
+for_window [title="Steam"] floating disable
 
 
 

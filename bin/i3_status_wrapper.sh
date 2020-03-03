@@ -14,7 +14,7 @@ rpi_status() {
     text=""
 
     if [[ $(hostname) = "pengix" ]] ; then
-        val=$(< ~/alarmpi_restart)
+        val=$(< ~/rpi_ansible/alarmpi_restart)
         if [[ $val == "YES" ]] ; then
             text="<span foreground=$GREEN>PwrSave</span>"
         else
