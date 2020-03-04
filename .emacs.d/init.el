@@ -306,7 +306,19 @@
     :custom
     (evil-exchange-key (kbd "zx"))
     :config
-    (evil-exchange-install))
+    (evil-exchange-install)
+    (defun my/create-and-exchange (name)
+      "Create a new variable name and exchange it with the previously selected text."
+      (interactive "M")
+      (insert name " = ")
+      (let ((beg (point)))
+        (insert name)
+        (let ((end (point)))
+          (message "Beg/end: %d %d" beg end)
+          (evil-exchange beg end :inclusive)
+          )))
+    (evil-define-key 'insert 'global (kbd "C-x C-z") 'my/create-and-exchange)
+    )
 
   (use-package evil-avy
     :bind
@@ -445,6 +457,7 @@
 
                                         ;(add-to-list 'evil-mc-custom-known-commands '(outshine-self-insert-command . ((:default . evil-mc-execute-default-call-with-count))))
   )
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Short modes
