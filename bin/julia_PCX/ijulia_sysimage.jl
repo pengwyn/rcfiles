@@ -1,6 +1,6 @@
 # ENV["PLOTS_DEFAULT_BACKEND"] = "unicodeplots"
 
-packages = [:Revise, :OhMyREPL, :Debugger, :MacroTools,
+packages = [:OhMyREPL, :Debugger, :MacroTools,
             :IJulia,
             #:Plots, :GR,
             :PyCall,
@@ -16,6 +16,9 @@ packages = [:Revise, :OhMyREPL, :Debugger, :MacroTools,
 			:AutoNamedTuples,
 			:Constants,
             :DanUtils,
+
+# Revise should come last to not cause problems loading new packages
+			:Revise, 
 			]
 
 
