@@ -357,13 +357,16 @@ for_window [title="Steam"] floating disable
 # for_window [class="Evolution"] layout tabbed
 
 # Danny autostarts
-exec --no-startup-id i3icons2
+exec --no-startup-id ~/.config/i3/danny_autostarts.sh
+# exec_always --no-startup-id pkill i3icons2
+# exec_always --no-startup-id i3icons2
+exec_always --no-startup-id "pkill i3icons2 ; i3icons2 &"
 
-exec --no-startup-id dropbox
-exec --no-startup-id steam-native
-exec --no-startup-id chromium
-exec --no-startup-id evolution
-#exec --no-startup-id gpmdp
+# exec --no-startup-id dropbox
+# exec --no-startup-id steam-native
+# exec --no-startup-id chromium
+# exec --no-startup-id evolution
+# #exec --no-startup-id gpmdp
 
-exec --no-startup-id i3-msg 'workspace $ws1; move workspace to output primary'
-exec --no-startup-id skypeforlinux
+# exec --no-startup-id i3-msg 'workspace $ws1; move workspace to output primary'
+# exec --no-startup-id skypeforlinux
