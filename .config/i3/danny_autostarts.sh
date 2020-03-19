@@ -29,6 +29,9 @@ function waitforwindow() {
 
 dropbox &!
 
+i3-msg 'workspace number 7; move workspace to output primary'
+i3-msg 'exec zoom'
+
 i3-msg 'workspace number 4; move workspace to output primary'
 # skypeforlinux &!
 # sleep 1
@@ -49,6 +52,7 @@ if [[ $(hostname) != "penganuix" ]] ; then
     i3-msg 'workspace number 8; move workspace to output primary'
     i3-msg 'exec steam-native'
     waitforwindow steam
+    sleep 3
 fi
 
 # If there's no steam at all - break. Otherwise wait until the renderer starts up.
