@@ -1770,12 +1770,20 @@ you want to quit windows on all frames."
   
   (define-prefix-command 'danny-projectile)
 
+  (defun my/projectile-compile (arg)
+    (interactive "P")
+    (projectile-save-project-buffers)
+    (let ((compilation-save-buffers-predicate 'ignore)
+          (compilation-read-command nil))
+      (projectile-compile-project arg)))
+
   :bind (("<f9>" . danny-projectile)
          :map danny-projectile
          ("<f9>" . 'helm-projectile-switch-project)
          ("f" . 'helm-projectile-find-file-dwim)
          ;; ("p" . 'org-publish-current-project)
-         ("p" . 'projectile-compile-project)
+         ;; ("p" . 'projectile-compile-project)
+         ("p" . 'my/projectile-compile)
          ("a" . 'helm-projectile-ag)
          ("d" . 'projectile-dired)
          ("x" . 'my/open-projectile-or-current-directory)))
