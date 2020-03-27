@@ -1,0 +1,14 @@
+{
+  "display_name": "Julia 1.4.0 Danny Quick",
+  "argv": [
+    "/usr/bin/julia",
+    "-i",
+    "--sysimage", "/home/pengwyn/.julia/config/ijulia_sysimage.so",
+    "--color=yes",
+    "/home/pengwyn/.local/share/jupyter/kernels/julia-1.4-quick/danny_load_kernel.jl",
+    "{connection_file}"
+  ],
+  "language": "julia",
+  "env": {},
+  "interrupt_mode": "signal"
+}

@@ -1453,7 +1453,7 @@ you want to quit windows on all frames."
                                                            (:async . "yes")
                                                            ;; (:kernel . "julia-1.1_pre")
                                                            ;; (:kernel . "julia-1.3")
-                                                           (:kernel . "julia-1.3-quick")
+                                                           (:kernel . "julia-1.4-quick")
                                                            (:eval . "never-export")))
     :config
     (require 'ob-jupyter)
@@ -1621,7 +1621,7 @@ you want to quit windows on all frames."
   :custom
   (julia-max-block-lookback 50000)
   ;; (julia-arguments '("-i" "--color=yes" "--sysimage=/home/pengwyn/.julia/config/extra_sysimage.so"))
-  (julia-repl-switches "-i --color=yes --sysimage=/home/pengwyn/.julia/config/extra_sysimage.so")
+  (julia-repl-switches "-i --color=yes --sysimage=/home/pengwyn/.julia/config/ijulia_sysimage.so")
 
   ;; (setq-default julia-repl-switches "-J /home/pengwyn/.julia/dev/PackageCompiler/sysimg/sys.so")
 
