@@ -136,6 +136,7 @@ alias d="disown %%"
 alias jupy="tmux new -s Jupy -d env JUPYTER_CONFIG_DIR=${HOME}/Dropbox/Physics/MyCalcs/JupyterNotebooks/.jupyter jupyter notebook --notebook-dir=${HOME}/Dropbox/Physics/MyCalcs/JupyterNotebooks"
 alias jupyat="tmux attach -t Jupy"
 
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/home/pengwyn/.julia/artifacts/b3e6e77906cabeabfc0295792186e01f33613385/lib"
 # sysimage="ROPD_sysimage.so"
 sysimage="ijulia_sysimage.so"
 # alias jul="julia --startup-file=no"
