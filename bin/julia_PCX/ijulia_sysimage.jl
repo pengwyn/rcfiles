@@ -6,7 +6,7 @@ packages = [:OhMyREPL, :Debugger, :MacroTools,
             :PyCall,
             # :UnicodePlots,
             # :GR,
-            :Plots,
+            # :Plots,
             # :PyPlot,
             #:Interact, :Blink, :WebIO,
 
