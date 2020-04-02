@@ -2,7 +2,7 @@
 
 packages = [:OhMyREPL, :Debugger, :MacroTools,
             :IJulia,
-            #:Plots, :GR,
+            :Plots, :GR,
             :PyCall,
             # :UnicodePlots,
             # :GR,
