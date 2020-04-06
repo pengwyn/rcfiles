@@ -1841,7 +1841,7 @@ you want to quit windows on all frames."
     (if (= 1 (length (window-list frame)))
       (delete-frame frame force)
       (delete-window window))
-    (when (= 0 (length (get-buffer-window-list (current-buffer) nil t)))
+    (when (= 0 (length (get-buffer-window-list buf nil t)))
       (kill-buffer buf))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
