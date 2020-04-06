@@ -1,14 +1,10 @@
-# ENV["PLOTS_DEFAULT_BACKEND"] = "unicodeplots"
-
 packages = [:OhMyREPL, :Debugger, :MacroTools,
             :IJulia,
-            :Plots, :GR,
+            :Plots,
             :PyCall,
             # :UnicodePlots,
             # :GR,
-            # :Plots,
             # :PyPlot,
-            #:Interact, :Blink, :WebIO,
 
 # All of my util packages
             :AndExport,
@@ -29,4 +25,10 @@ end
 using PackageCompiler
 
 # create_sysimage(packages, sysimage_path=expanduser("~/.julia/config/ijulia_sysimage.so"), precompile_statements_file="OMR_trace.jl", precompile_execution_file="precompile_plots.jl")
-create_sysimage(packages, sysimage_path=expanduser("~/.julia/config/ijulia_sysimage.so"), precompile_statements_file="OMR_trace.jl")
+create_sysimage(packages,
+                sysimage_path=expanduser("~/.julia/config/ijulia_sysimage.so"),
+                # precompile_statements_file="OMR_trace.jl",
+                # precompile_execution_file="snoop.jl"
+                # precompile_statements_file="traced.jl",
+                precompile_statements_file="comb_traced.jl",
+                )
