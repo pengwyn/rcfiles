@@ -113,6 +113,13 @@ do_line() {
 }
 
     
+# _usr1() {
+#     echo "asdf" >> /tmp/i3statusdebug
+#     echo $child >> /tmp/i3statusdebug
+#     kill -USR1 $child >> /tmp/i3statusdebug 2>>&1
+# }
+
+# trap _usr1 SIGUSR1
 
 i3status | (
     for i in $(seq 3)
@@ -132,4 +139,8 @@ i3status | (
         do_line $rate
 
         echo "${line#,\[}"
-    done)
+    done) &
+
+# child=$(pgrep -P $$ i3status)
+
+wait 
