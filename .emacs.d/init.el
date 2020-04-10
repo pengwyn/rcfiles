@@ -579,8 +579,8 @@
   ((dashboard-items '((recents . 10)
                      (bookmarks . 10)
                      ;;(project . 5)
-                     (agenda . 15)
-                     ;;(registers . 5)
+                     ;; (agenda . 15)
+                     (registers . 5)
     				 ))
    (show-week-agenda-p t))
   :config
@@ -596,7 +596,7 @@
     (if (get-buffer dashboard-buffer-name)
         (dashboard-refresh-buffer)
       (dashboard-insert-startupify-lists)
-      (switch-to-buffer dashboard-buffer-name)))
+      (switch-to-buffer dashboard-buffer-name nil t)))
     
   ;; (add-hook 'after-make-frame-functions (lambda (frame)
   ;;                                         (interactive)
@@ -1843,6 +1843,12 @@ you want to quit windows on all frames."
       (delete-window window))
     (when (= 0 (length (get-buffer-window-list buf nil t)))
       (kill-buffer buf))))
+
+(defun my/open-file-maybe (&optional path)
+  (if path (let ((buf (find-file-noselect path)))
+             (display-buffer buf))
+    (make-frame)
+    (funcall initial-buffer-choice)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Visit files with line numbers
