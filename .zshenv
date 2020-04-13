@@ -34,8 +34,12 @@ if [[ $(pgrep -lx i3) ]] ; then
 fi
 
 # alias e='emacsclient -c -n'
-alias e='emacsclient -e (my/open-file-maybe)'
+#alias e='emacsclient -e "(my/open-file-maybe)"'
 alias et='emacsclient -c -t'
+
+function e() {
+    emacsclient -e "(my/open-file-maybe \"$1\")"
+}
 
 if [[ $(hostname) != "mixologist" ]]
 then
