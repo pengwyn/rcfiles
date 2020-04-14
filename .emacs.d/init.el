@@ -1845,7 +1845,9 @@ you want to quit windows on all frames."
       (kill-buffer buf))))
 
 (defun my/open-file-maybe (&optional path)
-  (if path (let ((buf (find-file-noselect path)))
+  (if path (let ((buf (find-file-noselect path))
+                 (pop-up-frame-alist `((window-system . x)
+                                       (display . ,(getenv "DISPLAY")))))
              (display-buffer buf))
     (make-frame)
     (funcall initial-buffer-choice)))
