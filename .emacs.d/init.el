@@ -82,9 +82,6 @@
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 
-;; (set-frame-font "GohuFont-11")
-;; (set-frame-font "Hack Nerd Font Mono-11")
-
 (global-set-key (kbd "C-x c") 'delete-frame)
 (global-set-key (kbd "M-w") 'ace-window)
 
@@ -183,8 +180,6 @@
               ("C-n" . make-frame-command)
               ("C-f" . tear-off-window)
 
-              ;; :map evil-insert-state-map
-              ;; ("C-e" . evil-end-of-line)
               :map evil-visual-state-map
               (">" . (lambda ()
                        (interactive)
@@ -209,10 +204,7 @@
                        ))
               :map evil-emacs-state-map
               ("C-w" . evil-window-map)
-              ;; :map evil-visual-state-map
-              ;; ("<tab>" . indent-region)
               :map evil-normal-state-map
-              ;;("C-I" . (lambda () (interactive) (evil-beginning-of-line) (evil-insert-state 1)))
               )
 
   :config
@@ -262,9 +254,6 @@
     (define-key (eval map) (kbd "C-.") nil)
     (define-key (eval map) (kbd "M-.") nil)
 
-    ;; (define-key (eval map) (kbd "C-n") nil)
-    ;; (define-key (eval map) (kbd "C-p") nil)
-
     (dolist (key '("C-x C-<space>" "C-x <space>" "C-l"))
       (define-key (eval map) (kbd key) 'recenter-top-bottom-with-clear))
     )
@@ -280,9 +269,6 @@
   (evil-define-key 'insert 'global (kbd "C-M-p") (lambda () (interactive) (evil-paste-from-register ?+)))
   (evil-define-key '(normal insert) 'global (kbd "C-p") 'evil-paste-after)
   (evil-define-key '(normal insert) 'global (kbd "M-P") 'evil-paste-pop)
-
-  ;; (dolist (map '(minibuffer-local-map minibuffer-local-ns-map minibuffer-local-completion-map minibuffer-local-must-match-map minibuffer-local-isearch-map minibuffer-local-shell-command-map))
-  ;;   (define-key (eval map) (kbd "C-r") 'evil-paste-from-register))
 
   (use-package evil-magit)
   
@@ -380,30 +366,6 @@
     (global-set-key (kbd "C-S-<mouse-1>") 'danny-make-evil-mc-cursor-on-click)
     (global-set-key (kbd "C-S-<mouse-3>") 'evil-mc-undo-all-cursors)
 
-    ;; (defun danny-evil-mc-edit-lines (&optional arg)
-    ;;   "Stolen from multiple cursors"
-    ;;   (interactive "P")
-    ;;   (when (not (and mark-active (/= (point) (mark))))
-    ;;  (error "Mark a set of lines first"))
-    ;;   (let* ((col (current-column))
-    ;;       (point-line (line-number-at-pos))
-    ;;       (mark-line (progn (exchange-point-and-mark) (line-number-at-pos)))
-    ;;       (direction (if (< point-line mark-line) :up :down)))
-    ;;  (deactivate-mark)
-    ;;  (when (and (eq direction :up) (bolp))
-    ;;    (previous-logical-line 1 nil)
-    ;;    (move-to-column col))
-    ;;  ;; Add the cursors
-    ;;  (while (not (eq (line-number-at-pos) point-line))
-    ;;    ;; create the cursor
-    ;;    (evil-mc-make-cursor-here)
-    ;;    ;; proceed to next
-    ;;    (if (eq direction :up)
-    ;;        (previous-logical-line 1 nil)
-    ;;      (next-logical-line 1 nil))
-    ;;    (move-to-column col))
-    ;;  ))
-
     (defun col-at-point (point)
       (save-excursion (goto-char point) (current-column)))
 
@@ -441,9 +403,6 @@
     (evil-define-key 'visual 'global "gI" 'evil-mc-insert-vertical-cursors)
     (evil-define-key 'visual 'global "gA" 'evil-mc-append-vertical-cursors)
     )
-
-
-                                        ;(add-to-list 'evil-mc-custom-known-commands '(outshine-self-insert-command . ((:default . evil-mc-execute-default-call-with-count))))
   )
 
 
@@ -503,32 +462,12 @@
 
   )
 
-;; (use-package mmm-mode
-;;   :config
-;;   ;; (mmm-add-mode-ext-class 'html-mode "\\.php\\'" 'html-php)
-;;   ;; (add-to-list 'mmm-mode-ext-classes-alist '(nil "\\.html" 'html-php))
-;;   (mmm-add-mode-ext-class nil "\\.html" 'html-php)
-;;   (setq-default mmm-global-mode 'maybe)
-;;   ;; (add-hook 'html-mode-hook 'mmm-mode)
-;;   )
-
 (use-package web-mode
   :custom ((web-mode-enable-engine-detect t))
   
   :config
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
   )
-
-;; (use-package polymode)
-
-;; (use-package auto-dim-other-buffers
-;;   :if (or (display-graphic-p) (daemonp))
-;;   :diminish
-;;   :config
-;;   (auto-dim-other-buffers-mode t))
-;; ;; (when (display-graphic-p)
-;; ;;  (require 'auto-dim-other-buffers)
-;; ;;  (auto-dim-other-buffers-mode t))
 
 (use-package yasnippet
   :config
@@ -576,27 +515,12 @@
   (my/evil-add-bindings dashboard-mode-map)
   (evil-set-initial-state 'dashboard-mode 'emacs)
    
-  ;; (dashboard-setup-startup-hook)
-  ;;(setq initial-buffer-choice (lambda () (switch-to-buffer (dashboard-refresh-buffer))))
-  ;; (add-to-list 'bookmark-alist '("Init file" . ((filename . "~/.emacs.d/init.el"))))
-  ;; (add-to-list 'bookmark-alist '("Diet log" . ((filename . "~/Dropbox/org/gallbladder_diet.org"))))
-  ;; (dashboard-insert-startupify-lists)
   (defun my/select-dashboard ()
     (if (get-buffer dashboard-buffer-name)
         (dashboard-refresh-buffer)
       (dashboard-insert-startupify-lists)
       (switch-to-buffer dashboard-buffer-name nil t)))
     
-  ;; (add-hook 'after-make-frame-functions (lambda (frame)
-  ;;                                         (interactive)
-  ;;                                         (if (< (length command-line-args) 2)
-  ;;                                             (my/select-dashboard))))
-  ;; (setq initial-buffer-choice (lambda () (if (> (length command-line-args) 1)
-  ;;                                            (find-file-noselect (nth 1 command-line-args))
-  ;;                                          (or (get-buffer dashboard-buffer-name)
-  ;;                                              (get-buffer "*scratch*")))))
-  ;; (setq initial-buffer-choice (lambda () (or (get-buffer dashboard-buffer-name)
-  ;;                                            (get-buffer "*scratch*"))))
   (setq initial-buffer-choice (lambda () (or (my/select-dashboard)
                                              (get-buffer "*scratch*"))))
 
@@ -661,18 +585,12 @@
                   (name)))))
 
   (use-package ibuffer-sidebar
-    ;; :bind (("C-<f8>" . ibuffer-sidebar-toggle-sidebar))
     :bind (("C-<f8>" . (lambda ()
                          (interactive)
                          (ibuffer-sidebar-toggle-sidebar)
                          (if (ibuffer-sidebar-showing-sidebar-p)
                              (call-interactively 'ibuffer-update)))))
     :config
-    ;; (add-hook 'ibuffer-sidebar-mode-hook
-    ;;           (lambda ()
-    ;;             (ibuffer-projectile-set-filter-groups)
-    ;;             (unless (eq ibuffer-sorting-mode 'alphabetic)
-    ;;               (ibuffer-do-sort-by-alphabetic)))))
     (add-hook 'ibuffer-sidebar-mode-hook
               (lambda ()
                 (setq-local ibuffer-filter-groups (ibuffer-projectile-generate-filter-groups))
@@ -888,54 +806,6 @@ See `comment-region' for behavior of a prefix arg."
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; ** Hippie-expand
-;;----------------------------
-;; (defun my-hippie-expand-completions (&optional hippie-expand-function)
-;;       "Return the full list of possible completions generated by `hippie-expand'.
-;;     The optional argument can be generated with `make-hippie-expand-function'."
-;;       (let ((this-command 'my-hippie-expand-completions)
-;;             (last-command last-command)
-;;             (buffer-modified (buffer-modified-p))
-;;             (hippie-expand-function (or hippie-expand-function 'hippie-expand)))
-;;         (flet ((ding)) ; avoid the (ding) when hippie-expand exhausts its options.
-;;           (while (progn
-;;                    (funcall hippie-expand-function nil)
-;;                    (setq last-command 'my-hippie-expand-completions)
-;;                    (not (equal he-num -1)))))
-;;         ;; Evaluating the completions modifies the buffer, however we will finish
-;;         ;; up in the same state that we began.
-;;         (set-buffer-modified-p buffer-modified)
-;;         ;; Provide the options in the order in which they are normally generated.
-;;         (delete he-search-string (reverse he-tried-table))))
-
-;; (defun my-ido-hippie-expand-with (hippie-expand-function)
-;;  "Offer ido-based completion using the specified hippie-expand function."
-;;  (let* ((options (my-hippie-expand-completions hippie-expand-function))
-;;          (selection (and options
-;;                          (ido-completing-read "Completions: " options))))
-;;  (if selection
-;;      (he-substitute-string selection t)
-;;      (message "No expansion found"))))
-
-;; (defun my-ido-hippie-expand ()
-;;  "Offer ido-based completion for the word at point."
-;;  (interactive)
-;;  (my-ido-hippie-expand-with 'hippie-expand))
-
-;; (global-set-key (kbd "C-c /") 'my-ido-hippie-expand)
-
-;; (require 'cl-lib)
-
-;; (defun company-hippie-backend (command &optional arg &rest ignored)
-;;   (interactive (list 'interactive))
-;;   (cl-case command
-;;     (interactive (company-begin-backend 'company-hippie-backend))
-;;     (prefix (company-grab-symbol))
-;;     (candidates (my-hippie-expand-completions))
-;;     (meta (format "This value is named %s" arg))))
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Helm stuff
 ;;----------------------------
 (use-package helm
@@ -1033,52 +903,7 @@ See `comment-region' for behavior of a prefix arg."
 
   )
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; * General semantic stuff
-;;----------------------------
 
-;; (use-package semantic
-;;   :config
-;;   (require 'semantic/db-global)
-
-;;   (global-semanticdb-minor-mode 1)
-;;   (global-semantic-idle-scheduler-mode 1)
-
-;;   ;; This inteferes with too many other things.
-;;   ;; (global-semantic-idle-summary-mode 1)
-;;   (add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode)
-
-;;   ;;(semantic-mode 1)
-;;   ;; (global-set-key (kbd "<f5>") 'compile)
-;;   ;; (global-set-key (kbd "C-j") 'next-error)
-;;   )
-
-
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; * C Stuff
-;;----------------------------
-;; (use-package cc-mode
-;;   :hook ('c-mode-common . (lambda ()
-;;                             (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
-;;                               (semantic-mode 1)
-;;                               (flycheck-mode 1))
-;;                             (setq tab-width 4
-;;                                   indent-tabs-mode t)
-;;                             ))
-;;   :custom ((c-default-style "linux")
-;;            (c-basic-offset 4)
-;;            (compilation-read-command nil)
-;;            (compile-command "make"))
-;;   :config
-;;   (semanticdb-enable-gnu-global-databases 'c-mode)
-;;   (semanticdb-enable-gnu-global-databases 'c++-mode)
-
-;;   :bind (:map c-mode-map
-;;               ("<f5>" . compile)
-;;               ("C-j" . next-error))
-;;   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Quit help windows
@@ -1119,26 +944,6 @@ you want to quit windows on all frames."
   (define-key evil-window-map "r" 'my/quit-help-windows)
   (define-key evil-window-map (kbd "C-r") 'my/quit-help-windows))
 
-;; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; ;; * Speedbar
-;; ;;----------------------------
-
-;; (require 'sr-speedbar)
-;; ;(setq-default speedbar-show-unknown-files t) ; show all files
-;; (setq-default speedbar-use-images nil) ; use text for buttons
-;; ;(setq-default sr-speedbar-right-side nil) ; put on left side
-;; (setq-default speedbar-hide-button-brackets-flag t)
-;; (setq-default speedbar-tag-hierarchy-method '(speedbar-sort-tag-hierarchy))
-
-;; (speedbar-add-supported-extension ".jl")
-
-;; ;; (add-hook
-;; ;;  'speedbar-timer-hook
-;; ;;  (lambda ()
-;; ;;     (save-excursion
-;; ;;         (set-buffer speedbar-buffer)
-;; ;;         (speedbar-expand-line-descendants))))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Treemacs
 ;;----------------------------
@@ -1164,45 +969,6 @@ you want to quit windows on all frames."
 
 ;; I think this is techinically separate
 (use-package treemacs-icons-dired)
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; * GUD
-;;----------------------------
-
-;; (setq-default
-;;  gdb-many-windows t
-
-;;  ;; Non-nil means display source file containing the main routine at startup
-;;  ;; gdb-show-main t
-;;  gdb-show-main nil
-;;  )
-
-;; (require 'gud)
-;; (define-key gud-minor-mode-map (kbd "<f9>") 'gud-next)
-;; (add-hook 'gud-mode-hook
-;;        (lambda () (tool-bar-mode t)))
-
-;; (eval-after-load 'comint
-;;   '(progn
-;;  (defun danny-prev-match (n) "" (interactive "p")
-;;                             (if (not (comint-after-pmark-p)) (end-of-buffer))
-;;                             (comint-previous-matching-input-from-input n)
-;;                             (setq this-command 'comint-previous-matching-input-from-input))
-;;  (defun danny-next-match (n) "" (interactive "p")
-;;                             (if (not (comint-after-pmark-p)) (end-of-buffer))
-;;                             (comint-next-matching-input-from-input n)
-;;                             (setq this-command 'comint-next-matching-input-from-input))
-
-;;     ;(define-key comint-mode-map (kbd "<up>") 'comint-previous-matching-input-from-input)
-;;     ;(define-key comint-mode-map (kbd "C-p") 'comint-previous-matching-input-from-input)
-;;     ;(define-key comint-mode-map (kbd "<down>") 'comint-next-matching-input-from-input)
-;;     ;(define-key comint-mode-map (kbd "C-n") 'comint-next-matching-input-from-input)
-;;     (define-key comint-mode-map (kbd "<up>") 'danny-prev-match)
-;;     (define-key comint-mode-map (kbd "C-p") 'danny-prev-match)
-;;     (define-key comint-mode-map (kbd "<down>") 'danny-next-match)
-;;     (define-key comint-mode-map (kbd "C-n") 'danny-next-match)
-;;  ))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1317,20 +1083,15 @@ you want to quit windows on all frames."
   :custom-face
   (org-level-1 ((t (:height 1.5 :family "Liberation Mono"))))
   (org-level-2 ((t (:height 1.2 :family "Liberation Mono"))))
-  ;; (org-agenda-dimmed-todo-face ((t (:foreground "grey20" :background "#300"))))
-  ;; (org-agenda-dimmed-todo-face ((t (:background "#300"))))
   (org-agenda-dimmed-todo-face ((t (:foreground "#5fafd7" :background "#500"))))
 
-  ;; (org-code ((t (:background "#500000"))))
   (org-code ((t (:background "#500000"))))
-  ;; (org-special-keyword ((t (:background "#500000" :foreground "black"))))
 
   (org-block-begin-line ((t (:background "#3a3a3a" :foreground "#777"))))
   (org-block-end-line ((t (:background "#3a3a3a" :foreground "black"))))
 
   :config
   (defface my/org-results-keyword
-    ;; '((t :background "white" :inherit org-special-keyword))
     '((t :inherit org-code :foreground "black"))
     "asdf")
 
@@ -1347,11 +1108,6 @@ you want to quit windows on all frames."
   ;; Stop org from ignoring buffer directions
   (advice-add 'org-switch-to-buffer-other-window :override 'switch-to-buffer-other-window)
 
-  ;; (let
-  ;;     ((results-block-regex (concat (org-re-property "RESULTS" nil t) "\\(^:.*$\\)*?" "^:END:"))) 
-  ;;   (font-lock-add-keywords 'org-mode '((results-block-regex (0 'my/org-results-keyword t))) t))
-;; (font-lock-add-keywords nil `((,(org-re-property "RESULTS" nil t)  (0 'my/org-results-keyword t))) t)
-;; (font-lock-add-keywords nil '(("RESULTS" . 'my/org-results-keyword)))
   (defun my/find-RESULTS-END (limit)
     ""
     ;; (message "Did my find original with limit = %d" limit)
@@ -1678,28 +1434,16 @@ you want to quit windows on all frames."
          (julia-mode . highlight-symbol-mode))
   
   :config
-  ;;(add-hook 'julia-mode-hook (lambda () (setq-local ggtags-process-environment (concat ggtags-process-environment "GTAGSLABEL=julia"))))
   (add-hook 'julia-mode-hook (lambda ()
-                               ;; (setq-default ggtags-process-environment nil)
                                (make-local-variable 'ggtags-process-environment)
                                (setq ggtags-process-environment
                                      (setenv-internal ggtags-process-environment "GTAGSLABEL" "julia" t))
                                ))
-                                        ; TODO: I should fix this up for that it uses something like the default julia-mode settings but handles my macro prefixes.
-  ;; (add-hook 'julia-mode-hook (lambda () (setq-local imenu-create-index-function #'ggtags-build-imenu-index)))
 
 
   :custom
   (julia-max-block-lookback 50000)
-  ;; (julia-arguments '("-i" "--color=yes" "--sysimage=/home/pengwyn/.julia/config/extra_sysimage.so"))
   (julia-repl-switches "-i --color=yes --sysimage=/home/pengwyn/.julia/config/ijulia_sysimage.so")
-
-  ;; (setq-default julia-repl-switches "-J /home/pengwyn/.julia/dev/PackageCompiler/sysimg/sys.so")
-
-  ;; (require 'ein)
-  ;; (setq-default ein:completion-backend 'ein:company-backend)
-  ;; (setq-default ein:cell-traceback-level nil)
-  ;; (add-hook 'ein:notebook-multilang-mode-hook (lambda () (setq-local company-idle-delay nil)))
 
   :bind (:map julia-mode-map
          ("<f5>" . julia-repl)
@@ -1710,24 +1454,6 @@ you want to quit windows on all frames."
          ("C-c C-b" . my/julia-repl-send-buffer))
 
   :config
-
-  ;; I now have a lot of this in the custom julia-mode.el
-
-                                        ;; Fixing up imenu in julia-mode to work with my macros
-  ;; (let ((macroprefix "^\\(?:[[:blank:]]*@[^[:blank:]@]+\\)*"))
-  ;;   (setq julia-imenu-generic-expression
-  ;;         ;; don't use syntax classes, screws egrep
-  ;;         `(
-  ;;                                       ;("Function (_)" ,(concat macroprefix "[[:blank:]]*function[[:blank:]]+\\(_[^[:blank:]]*\\)") 1)
-  ;;           ("Function" ,(concat macroprefix "[[:blank:]]*function[[:blank:]]+\\(.*)\\)[[:blank:]]*") 1)
-  ;;           ("Function" ,(concat macroprefix "[[:blank:]]*\\([^[:blank:](]*(.*)\\)[[:blank:]]*=[^=]+") 1)
-  ;;           ("Const" "[ \t]*const \\([^ \t\n]*\\)" 1)
-  ;;           ;; ("Type"  ,(concat macroprefix "^[ \t]*[a-zA-Z0-9_]*type[a-zA-Z0-9_]* \\([^ \t\n]*\\)") 1)
-  ;;           ("Struct" ,(concat macroprefix "\\(?:[[:blank:]]*mutable\\)?[[:blank:]]+struct[[:blank:]]+\\([^{[:blank:]\n]+\\)") 1)
-  ;;           ;; ("Require"      " *\\(\\brequire\\)(\\([^ \t\n)]*\\)" 2)
-  ;;           ;; ("Include"      ,(concat macroprefix " *\\(\\binclude\\)(\\([^ \t\n)]*\\)") 2)
-  ;;           ("Using"      ,(concat macroprefix "[[:blank:]]*using[[:blank:]]*\\(.*\\)") 1)
-  ;;           )))
 
   (require 'company-gtags)
   (setq company-gtags-modes (append company-gtags-modes '(julia-mode-prog-mode)))
@@ -1759,12 +1485,6 @@ you want to quit windows on all frames."
         (setq n (1+ n)))
        ))
 
-  ;; (add-hook 'julia-mode-hook (lambda () (setq-local forward-block 'julia-forward-block)))
-
-  ;; (evil-define-motion evil-forward-block-begin (count)
-  ;;   :jump t
-  ;;   :type exclusive
-  ;;   (evil-forward-begin 'block count))
   (defvar julia-block 'danny-julia-block)
   (put julia-block 'forward-op 'julia-forward-block)
   (evil-define-motion my/evil-forward-block-end (count)
@@ -1775,10 +1495,6 @@ you want to quit windows on all frames."
     :jump t
     :type exclusive
     (evil-backward-beginning julia-block count))
-  ;; (evil-define-motion evil-backward-block-end (count)
-  ;;   :jump t
-  ;;   :type exclusive
-  ;;   (evil-backward-end 'block count))
   (evil-define-key '(normal visual motion) julia-mode-map ")" 'my/evil-forward-block-end)
   (evil-define-key '(normal visual motion) julia-mode-map "(" 'my/evil-backward-block-begin)
 
