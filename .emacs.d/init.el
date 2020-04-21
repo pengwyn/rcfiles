@@ -1876,6 +1876,7 @@ you want to quit windows on all frames."
         (,(rx (seq "*" (* nonl) "_region_" (* nonl) "*")) . ((display-buffer-no-window)))
         ("\\*julia\\*" . ((display-buffer-reuse-window display-buffer-pop-up-frame)
                           (reusable-frames . t) (inhibit-switch-frame . t)))
+        ("\\*helm.*\\*" . ((display-buffer-pop-up-window)))
         (,(rx (or (seq "*" (* nonl) "*")
                   (seq string-start "magit" (* (not (any ":"))) ":")
                   (seq string-start "COMMIT"))) . ((display-buffer-reuse-window display-buffer-below-selected)
@@ -2013,3 +2014,4 @@ you want to quit windows on all frames."
   ;; else
   (apply-color-theme (selected-frame))
   )
+
