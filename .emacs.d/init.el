@@ -138,18 +138,6 @@
     (select-window (active-minibuffer-window))))
 (global-set-key (kbd "<f12>") 'switch-to-minibuffer-window)
 
-;; This is here because I mostly want it for the minibuffer but really it is for all buffers.
-;; (use-package latex
-;;   :ensure auctex
-;;   :bind ("<f5>" . LaTeX-math-mode-map)
-;; )
-;; (require 'julia)
-;; (bind-key "<f5>" LaTeX-math-keymap)
-;; (require 'julia-mode)
-;; (add-hook 'minibuffer-setup-hook 'julia-math-mode)
-;; (add-hook 'isearch-mode-hook 'julia-math-mode)
-;; (add-hook 'isearch-mode-hook (lambda () (define-key minibuffer-local-isearch-map'julia-math-mode)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ** Align func
 ;;----------------------------
@@ -570,6 +558,7 @@
 (use-package flycheck
   :config
   (use-package helm-flycheck)
+  ;; TODO: Fix the Lint.jl package
   (use-package flycheck-julia
     :config
     (flycheck-julia-setup)))
@@ -1596,10 +1585,72 @@ you want to quit windows on all frames."
   (defvaralias 'outline-promotion-headings 'outshine-promotion-headings)
   )
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; * Polymode
+;;------------------------------
+
+(use-package poly-markdown)
+
+(use-package poly-org
+  :config
+  (set-slot-value poly-org-innermode 'adjust-face 10)
+  )
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; * LSP
+;;----------------------------
+
+(add-to-list 'load-path "~/.emacs.d/mypackages/lsp-julia/")
+(require 'lsp-julia)
+
+(setq lsp-julia-package-dir nil)
+(setq lsp-keymap-prefix "s-i")
+(use-package lsp-mode
+  :hook ((julia-mode . lsp)
+         (lsp-mode .lsp-enable-which-key-integration))
+  :config
+  (use-package lsp-ui :commands lsp-ui-mode)
+  (use-package company-lsp :commands company-lsp)
+  ;; if you are helm user
+  (use-package helm-lsp :commands helm-lsp-workspace-symbol)
+  (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+
+  ;; optionally if you want to use debugger
+  (use-package dap-mode)
+  ;; (use-package dap-LANGUAGE) to load the dap adapter for your language
+
+  ;; optional if you want which-key integration
+  (use-package which-key
+    :config
+    (which-key-mode))
+
+  )
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Julia
 ;;----------------------------
+(define-hostmode poly-julia-hostmode
+  :mode 'julia-mode)
+
+(define-innermode poly-julia-docstring-innermode
+  :mode 'markdown-mode
+  :head-matcher "\n[ \t\n]*\n\"\"\"\n"
+  :tail-matcher "^\"\"\"[ \t]*\n"
+  :head-mode 'host
+  :tail-mode 'host
+  :adjust-face 10)
+(define-polymode poly-julia-mode
+  :hostmode 'poly-julia-hostmode
+  :innermodes '(poly-julia-docstring-innermode))
+(add-to-list 'auto-mode-alist '("\\.jl\\'" . poly-julia-mode))
+
+
+(add-to-list 'load-path "~/.emacs.d/mypackages/julia-emacs/")
+(require 'julia-mode)
+
 (use-package julia-mode
+  :ensure nil
   :hook (
          (julia-mode . ggtags-mode)
          (julia-mode . julia-math-mode)
@@ -1617,6 +1668,7 @@ you want to quit windows on all frames."
                                ))
                                         ; TODO: I should fix this up for that it uses something like the default julia-mode settings but handles my macro prefixes.
   ;; (add-hook 'julia-mode-hook (lambda () (setq-local imenu-create-index-function #'ggtags-build-imenu-index)))
+
 
   :custom
   (julia-max-block-lookback 50000)
