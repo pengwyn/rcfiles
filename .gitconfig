@@ -13,3 +13,5 @@
 	setupto = "!f() { git branch --set-upstream-to=$@/$(git branch --show-current) ; } ; f"
 [core]
 	excludesfile = /home/pengwyn/default_gitignore
+[github]
+	user = pengwyn
