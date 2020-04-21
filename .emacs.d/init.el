@@ -1799,6 +1799,25 @@ you want to quit windows on all frames."
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; * Javascript
+;;----------------------------
+(use-package web-mode
+  :mode (("\\.html\\'" . web-mode)
+         ("\\.js\\'" . web-mode))
+  :config
+  (add-hook 'web-mode-hook 'flymake-eslint-enable)
+  ;; (add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
+  (setq web-mode-content-types-alist '(("jsx" . "\\.js[x]?\\'")))
+
+  (use-package fontawesome)
+  (add-hook 'web-mode-hook (lambda () 
+                             (setq-local prettify-symbols-alist (mapcar (lambda (fa-cons)
+                                                                    (cons (concat "fa-" (car fa-cons))
+                                                                          (aref (cdr fa-cons) 0)))
+                                                                  fontawesome-alist))))
+  )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Projectile
 ;;----------------------------
 (use-package projectile
