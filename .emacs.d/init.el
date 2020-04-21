@@ -212,7 +212,7 @@
               ;; :map evil-visual-state-map
               ;; ("<tab>" . indent-region)
               :map evil-normal-state-map
-              ("C-I" . (lambda () (interactive) (evil-beginning-of-line) (evil-insert-state 1)))
+              ;;("C-I" . (lambda () (interactive) (evil-beginning-of-line) (evil-insert-state 1)))
               )
 
   :config
@@ -658,7 +658,7 @@
                   " "
                   project-relative-file)
             (mark modified " "
-                  (name 18 18 :left :elide)))))
+                  (name)))))
 
   (use-package ibuffer-sidebar
     ;; :bind (("C-<f8>" . ibuffer-sidebar-toggle-sidebar))
@@ -1451,6 +1451,8 @@ you want to quit windows on all frames."
     (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 
 
+    (add-hook 'org-mode (lambda () (julia-repl--setup-compilation-mode (current-buffer) nil)))
+
     (defvar my-org-src-mode-map (make-sparse-keymap))
     (define-minor-mode my-org-src-mode
       :init-value nil
@@ -1644,6 +1646,23 @@ you want to quit windows on all frames."
   :hostmode 'poly-julia-hostmode
   :innermodes '(poly-julia-docstring-innermode))
 (add-to-list 'auto-mode-alist '("\\.jl\\'" . poly-julia-mode))
+
+(defvar my/org-src-block-override-map (make-sparse-keymap "Just for running src blocks"))
+(define-key my/org-src-block-override-map (kbd "C-c C-c") 'my/test-asdf)
+(define-polymode poly-org-mode
+  :hostmode 'poly-org-hostmode
+  :innermodes '(poly-org-innermode)
+  ;; :keymap `((,(kbd "C-c C-c") . my/test-asdf))
+  (setq-local org-src-fontify-natively nil)
+  (make-local-variable 'polymode-move-these-minor-modes-from-old-buffer)
+  (push 'org-indent-mode polymode-move-these-minor-modes-from-old-buffer)
+  (add-to-list (make-local-variable 'minor-mode-overriding-map-alist) `(julia-repl-mode . ,my/org-src-block-override-map))
+)
+
+(defun my/test-asdf ()
+  (interactive)
+  (with-current-buffer (buffer-base-buffer)
+    (org-babel-execute-src-block-maybe)))
 
 
 (add-to-list 'load-path "~/.emacs.d/mypackages/julia-emacs/")
@@ -1891,7 +1910,8 @@ you want to quit windows on all frames."
 
 (setq display-buffer-alist
       `(("\\*Org Agenda\\*" . ((display-buffer-same-window)))
-        ("\\*helpful.*:" . ((display-buffer-reuse-window display-buffer-reuse-mode-window display-buffer-below-selected)))
+        ;;("\\*helpful.*:" . ((display-buffer-reuse-window display-buffer-reuse-mode-window display-buffer-below-selected)))
+        ("\\*helpful.*:" . ((display-buffer-below-selected)))
         (,(rx (seq "*" (* nonl) "_region_" (* nonl) "*")) . ((display-buffer-no-window)))
         ("\\*julia\\*" . ((display-buffer-reuse-window display-buffer-pop-up-frame)
                           (reusable-frames . t) (inhibit-switch-frame . t)))
@@ -1904,6 +1924,15 @@ you want to quit windows on all frames."
         ))
 (setq display-buffer-base-action '((display-buffer-reuse-window display-buffer-pop-up-frame)
                                    (reusable-frames . t)))
+
+
+;; Need to special case helpful--describe for button pushes
+(defun my/inwindow-helpful--describe (orig-fun &rest args)
+  "Force helpful--describe to reuse the same window"
+  (let ((display-buffer-overriding-action '(display-buffer-same-window)))
+    (apply orig-fun args)))
+(advice-add 'helpful--describe :around #'my/inwindow-helpful--describe)
+(setq evil--jumps-buffer-targets "\\*\\(new\\|scratch\\|helpful.*\\)\\*")
 
 ;; From https://emacs.stackexchange.com/questions/34343/attempt-to-delete-minibuffer-or-sole-ordinary-window
 (defun my/delete-window-or-frame (&optional window frame force)
