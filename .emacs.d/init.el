@@ -426,9 +426,9 @@
   (setq powerline-display-buffer-size nil)
   (setq powerline-gui-use-vcs-glyph t)
 
-  ;; (powerline-center-evil-theme)
+  (powerline-center-evil-theme)
   ;; Based on powerline-center-evil-theme
-  (setq mode-line-format
+  (setq-default mode-line-format
                 '("%e"
                   (:eval
                    (let* ((active (powerline-selected-window-active))
@@ -601,7 +601,8 @@
          ("C-h v" . helpful-variable)
          ("C-h k" . helpful-key))
   :config
-  (evil-define-key 'normal helpful-mode-map "q" 'delete-window)
+  ;; (evil-define-key 'normal helpful-mode-map "q" 'delete-window)
+  (evil-define-key 'normal helpful-mode-map "q" 'my/delete-window-or-frame)
 
   (with-eval-after-load 'helm-mode
     (dolist (func '(helpful-callable helpful-variable helpful-key)) 
@@ -1017,6 +1018,7 @@ you want to quit windows on all frames."
 ;;----------------------------
 (use-package treemacs
   :bind (("<f8>" . treemacs)
+         ("<M-f8>" . treemacs-add-and-display-current-project)
          :map treemacs-mode-map
          ([mouse-1] . treemacs-single-click-expand-action))
   :config
@@ -1275,7 +1277,8 @@ you want to quit windows on all frames."
     (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
 
 
-    (add-hook 'org-mode (lambda () (julia-repl--setup-compilation-mode (current-buffer) nil)))
+    (add-hook 'org-mode (lambda () (julia-repl--setup-compilation-mode (current-buffer) nil)
+                          (compilation-shell-minor-mode)))
 
     (defvar my-org-src-mode-map (make-sparse-keymap))
     (define-minor-mode my-org-src-mode
@@ -1427,14 +1430,17 @@ you want to quit windows on all frames."
 ;; * LSP
 ;;----------------------------
 
+(setq lsp-keymap-prefix "s-i")
+
+(setq lsp-julia-package-dir nil)
 (add-to-list 'load-path "~/.emacs.d/mypackages/lsp-julia/")
 (require 'lsp-julia)
 
-(setq lsp-julia-package-dir nil)
-(setq lsp-keymap-prefix "s-i")
 (use-package lsp-mode
-  :hook ((julia-mode . lsp)
-         (lsp-mode .lsp-enable-which-key-integration))
+  :hook ((julia-mode . my/check-julia-lsp)
+         (lsp-mode . lsp-enable-which-key-integration)
+         (lsp-mode . lsp-ui-mode))
+  ;; :custom ((lsp-auto-guess-root t))
   :config
   (use-package lsp-ui :commands lsp-ui-mode)
   (use-package company-lsp :commands company-lsp)
@@ -1445,6 +1451,13 @@ you want to quit windows on all frames."
   ;; optionally if you want to use debugger
   (use-package dap-mode)
   ;; (use-package dap-LANGUAGE) to load the dap adapter for your language
+
+
+  (defun my/check-julia-lsp ()
+    "Make sure that the current buffer is a .jl file and not jupyter etc..."
+    (when (and (s-ends-with-p ".jl" (buffer-file-name))
+               (not (string-equal "/home/pengwyn" (lsp--suggest-project-root))))
+      (lsp)))
 
   ;; optional if you want which-key integration
   (use-package which-key
@@ -1472,7 +1485,13 @@ you want to quit windows on all frames."
 (add-to-list 'auto-mode-alist '("\\.jl\\'" . poly-julia-mode))
 
 (defvar my/org-src-block-override-map (make-sparse-keymap "Just for running src blocks"))
-(define-key my/org-src-block-override-map (kbd "C-c C-c") 'my/test-asdf)
+
+(define-key my/org-src-block-override-map (kbd "C-c C-c") 'my/base-buffer-execute-src-block)
+(define-key my/org-src-block-override-map (kbd "M-RET") 'my/base-buffer-execute-src-block-and-next)
+;; This doesn't work - probably because the override doesn't lock in with evil emulation mode.
+(evil-define-key '(normal visual motion) my/org-src-block-override-map ")" 'my/base-buffer-next-block)
+(evil-define-key '(normal visual motion) my/org-src-block-override-map "(" 'my/base-buffer-previous-block)
+
 (define-polymode poly-org-mode
   :hostmode 'poly-org-hostmode
   :innermodes '(poly-org-innermode)
@@ -1483,10 +1502,23 @@ you want to quit windows on all frames."
   (add-to-list (make-local-variable 'minor-mode-overriding-map-alist) `(julia-repl-mode . ,my/org-src-block-override-map))
 )
 
-(defun my/test-asdf ()
+(defun my/base-buffer-execute-src-block ()
   (interactive)
   (with-current-buffer (buffer-base-buffer)
     (org-babel-execute-src-block-maybe)))
+(defun my/base-buffer-execute-src-block-and-next ()
+  (interactive)
+  (with-current-buffer (buffer-base-buffer)
+    (my-org-execute-and-next)))
+
+(defun my/base-buffer-next-block ()
+  (interactive)
+  (with-current-buffer (buffer-base-buffer)
+  (org-babel-next-src-block)))
+(defun my/base-buffer-previous-block ()
+  (interactive)
+  (with-current-buffer (buffer-base-buffer)
+  (org-babel-previous-src-block)))
 
 
 (add-to-list 'load-path "~/.emacs.d/mypackages/julia-emacs/")
@@ -1695,7 +1727,8 @@ you want to quit windows on all frames."
 (setq display-buffer-alist
       `(("\\*Org Agenda\\*" . ((display-buffer-same-window)))
         ;;("\\*helpful.*:" . ((display-buffer-reuse-window display-buffer-reuse-mode-window display-buffer-below-selected)))
-        ("\\*helpful.*:" . ((display-buffer-below-selected)))
+        ;; ("\\*helpful.*:" . ((display-buffer-below-selected)))
+        ("\\*helpful.*:" . ((display-buffer-reuse-window display-buffer-pop-up-frame)))
         (,(rx (seq "*" (* nonl) "_region_" (* nonl) "*")) . ((display-buffer-no-window)))
         ("\\*julia\\*" . ((display-buffer-reuse-window display-buffer-pop-up-frame)
                           (reusable-frames . t) (inhibit-switch-frame . t)))
@@ -1714,6 +1747,7 @@ you want to quit windows on all frames."
 (defun my/inwindow-helpful--describe (orig-fun &rest args)
   "Force helpful--describe to reuse the same window"
   (let ((display-buffer-overriding-action '(display-buffer-same-window)))
+    (evil-set-jump)
     (apply orig-fun args)))
 (advice-add 'helpful--describe :around #'my/inwindow-helpful--describe)
 (setq evil--jumps-buffer-targets "\\*\\(new\\|scratch\\|helpful.*\\)\\*")
@@ -1736,6 +1770,7 @@ you want to quit windows on all frames."
              (display-buffer buf))
     (make-frame)
     (funcall initial-buffer-choice)))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Visit files with line numbers

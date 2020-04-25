@@ -28,6 +28,7 @@ function waitforwindow() {
 # pkill i3icons2 ; i3icons2
 
 dropbox &!
+discord &!
 
 i3-msg 'workspace number 7; move workspace to output primary'
 i3-msg 'exec zoom'
