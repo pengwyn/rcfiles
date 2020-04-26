@@ -3,6 +3,6 @@
 # key: sec
 # --
 ///////////////////////////////////////////////////////////////////////////////
-///${1:$(make-string (/ (- 74 (string-width yas-text)) 2) ? )}$1${1:$(make-string (/ (- 74 (string-width yas-text)) 2) ? )}///
+///${1:$(make-string (floor (/ (- 73 (string-width yas-text)) 2.0)) ? )}$1${1:$(make-string (ceiling (/ (- 73 (string-width yas-text)) 2.0)) ? )}///
 ///////////////////////////////////////////////////////////////////////////////
 $0
