@@ -122,6 +122,8 @@ zle -N history-beginning-search-forward-end history-search-end
 
 bindkey "\e[B" history-beginning-search-forward-end
 bindkey "\e[A" history-beginning-search-backward-end
+bindkey "\eOB" history-beginning-search-forward-end
+bindkey "\eOA" history-beginning-search-backward-end
 
 bindkey "^[[3~" delete-char
 bindkey "^[3;5~" delete-char
