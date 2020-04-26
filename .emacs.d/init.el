@@ -168,44 +168,53 @@
            (evil-operator-state-cursor '("red" hollow)))
 
   :bind (:map evil-window-map
-              ("C-l" . evil-window-right)
-              ("C-h" . evil-window-left)
-              ("C-k" . evil-window-up)
-              ("C-j" . evil-window-down)
-              ("C-w" . evil-window-mru)
-              ("C-a" . ace-window)
-              ("C-d" . kill-buffer-and-window)
-              ("C-c" . my/delete-window-or-frame)
-              ("c" . my/delete-window-or-frame)
-              ("C-n" . make-frame-command)
-              ("C-f" . tear-off-window)
+         ("C-l" . evil-window-right)
+         ("C-h" . evil-window-left)
+         ("C-k" . evil-window-up)
+         ("C-j" . evil-window-down)
+         ("C-w" . evil-window-mru)
+         ("C-a" . ace-window)
+         ("C-d" . kill-buffer-and-window)
+         ("C-c" . my/delete-window-or-frame)
+         ("c" . my/delete-window-or-frame)
+         ("C-n" . make-frame-command)
+         ("C-f" . tear-off-window)
 
-              :map evil-visual-state-map
-              (">" . (lambda ()
-                       (interactive)
-                                        ; ensure mark is less than point
-                       (when (> (mark) (point)) 
-                         (exchange-point-and-mark)
-                         )
-                       (evil-normal-state)
-                       (evil-shift-right (mark) (point))
-                       (evil-visual-restore) ; re-select last visual-mode selection
-                       ))
+         :map evil-visual-state-map
+         (">" . (lambda ()
+                  (interactive)
+                                   ; ensure mark is less than point
+                  (when (> (mark) (point)) 
+                    (exchange-point-and-mark)
+                    )
+                  (evil-normal-state)
+                  (evil-shift-right (mark) (point))
+                  (evil-visual-restore) ; re-select last visual-mode selection
+                  ))
 
-              ("<" . (lambda ()
-                       (interactive)
-                                        ; ensure mark is less than point
-                       (when (> (mark) (point)) 
-                         (exchange-point-and-mark)
-                         )
-                       (evil-normal-state)
-                       (evil-shift-left (mark) (point))
-                       (evil-visual-restore) ; re-select last visual-mode selection
-                       ))
-              :map evil-emacs-state-map
-              ("C-w" . evil-window-map)
-              :map evil-normal-state-map
-              )
+         ("<" . (lambda ()
+                  (interactive)
+                                   ; ensure mark is less than point
+                  (when (> (mark) (point)) 
+                    (exchange-point-and-mark)
+                    )
+                  (evil-normal-state)
+                  (evil-shift-left (mark) (point))
+                  (evil-visual-restore) ; re-select last visual-mode selection
+                  ))
+         ("n" . (lambda (beg end)
+                  (interactive "r")
+                  (evil-search (filter-buffer-substring beg end) t)))
+         ("n" . (lambda (beg end)
+                  (interactive "r")
+                  (my/evil-search-visual beg end t)))
+         ("N" . (lambda (beg end)
+                  (interactive "r")
+                  (my/evil-search-visual beg end nil)))
+         :map evil-emacs-state-map
+         ("C-w" . evil-window-map)
+         :map evil-normal-state-map
+         )
 
   :config
 
@@ -222,6 +231,14 @@
   ;; Don't want to override / in the ibuffer map
   (eval-after-load 'ibuffer '(evil-add-hjkl-bindings ibuffer-mode-map 'emacs))
   
+
+  (defun my/evil-search-visual (beg end forward)
+    "Search using the current visual selection"
+    (let ((text (regexp-quote (filter-buffer-substring beg end))))
+      (evil-exit-visual-state)
+      ;;(evil-push-search-history text forward)
+      (isearch-update-ring text t)
+      (evil-search text forward)))
 
   ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
   ;; *** Minibuffer stuff
