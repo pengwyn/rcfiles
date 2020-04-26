@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: jsclass
+# key: cls
+# --
+class $1 extends $2 {
+    $0
+}

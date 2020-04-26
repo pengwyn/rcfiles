@@ -494,6 +494,7 @@
 
 (use-package magit
   :bind (("<f6>" . magit-status)
+         ("<c-f6>" . my/magit-add-current-buffer)
          :map magit-mode-map
          ("q" . (lambda () (interactive) (magit-mode-bury-buffer 16))))
   :config
