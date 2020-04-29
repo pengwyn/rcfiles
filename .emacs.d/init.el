@@ -1476,31 +1476,12 @@ you want to quit windows on all frames."
     (when (and (s-ends-with-p ".jl" (buffer-file-name))
                (not (string-equal "/home/pengwyn" (lsp--suggest-project-root))))
       (lsp)))
-
-  ;; optional if you want which-key integration
-  (use-package which-key
-    :config
-    (which-key-mode))
-
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Julia
 ;;----------------------------
-(define-hostmode poly-julia-hostmode
-  :mode 'julia-mode)
-
-(define-innermode poly-julia-docstring-innermode
-  :mode 'markdown-mode
-  :head-matcher "\n[ \t\n]*\n\"\"\"\n"
-  :tail-matcher "^\"\"\"[ \t]*\n"
-  :head-mode 'host
-  :tail-mode 'host
-  :adjust-face 10)
-(define-polymode poly-julia-mode
-  :hostmode 'poly-julia-hostmode
-  :innermodes '(poly-julia-docstring-innermode))
-(add-to-list 'auto-mode-alist '("\\.jl\\'" . poly-julia-mode))
+(setq-default julia-mode-use-poly t)
 
 (defvar my/org-src-block-override-map (make-sparse-keymap "Just for running src blocks"))
 
