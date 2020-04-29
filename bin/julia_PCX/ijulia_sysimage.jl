@@ -14,6 +14,8 @@ packages = [:OhMyREPL, :Debugger, :MacroTools,
 			:Constants,
             :DanUtils,
 
+            :LanguageServer,
+
 # Revise should come last to not cause problems loading new packages
 			:Revise, 
 			]

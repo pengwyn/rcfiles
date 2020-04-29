@@ -495,6 +495,9 @@
                                                           (list (funcall separator-right face2 face1)
                                                                 (powerline-raw evil-mode-line-tag face1 'l)
                                                                 (powerline-raw " " face1)
+                                                                (if current-input-method
+                                                                    (powerline-raw current-input-method face1 'l)
+                                                                    (powerline-raw " " face1))
                                                                 (funcall separator-left face1 face2)))
                                                       (list (powerline-minor-modes face2 'l)
                                                             (powerline-raw " " face2)
@@ -511,7 +514,7 @@
 
 (use-package magit
   :bind (("<f6>" . magit-status)
-         ("<c-f6>" . my/magit-add-current-buffer)
+         ("<C-f6>" . my/magit-add-current-buffer)
          :map magit-mode-map
          ("q" . (lambda () (interactive) (magit-mode-bury-buffer 16))))
   :config
@@ -1395,6 +1398,7 @@ you want to quit windows on all frames."
 ;;------------------------------------------------
 (use-package which-key
   :diminish which-key-mode
+  :custom (which-key-idle-delay 0.2)
   :config
   (which-key-mode)
   (which-key-setup-side-window-right-bottom)
@@ -1443,6 +1447,9 @@ you want to quit windows on all frames."
   (set-slot-value poly-org-innermode 'adjust-face 10)
   )
 
+(add-hook 'markdown-mode-hook #'auto-fill-mode)
+(add-hook 'markdown-mode-hook (lambda () (setq-local auto-fill-function #'markdown-fill-paragraph)))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * LSP
@@ -1458,7 +1465,17 @@ you want to quit windows on all frames."
   :hook ((julia-mode . my/check-julia-lsp)
          (lsp-mode . lsp-enable-which-key-integration)
          (lsp-mode . lsp-ui-mode))
-  ;; :custom ((lsp-auto-guess-root t))
+
+  :custom ((lsp-ui-doc-position 'top)
+           (lsp-ui-sideline-show-hover t)
+           (lsp-ui-sideline-ignore-duplicate t)
+           (lsp-ui-doc-max-height 10))
+
+  :custom-face
+  (markdown-code-face ((t (:inherit default))))
+  (lsp-ui-sideline-global ((t (:background "navy"))))
+
+
   :config
   (use-package lsp-ui :commands lsp-ui-mode)
   (use-package company-lsp :commands company-lsp)
