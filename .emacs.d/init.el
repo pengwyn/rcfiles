@@ -700,12 +700,13 @@
 (use-package switch-window)
 (use-package csv-mode)
 (use-package all-the-icons)
-(use-package indent-guide
-  :diminish indent-guide-mode
-  :config
-  (indent-guide-global-mode)
-  (setq indent-guide-recursive t)
-  (add-to-list 'indent-guide-inhibit-modes 'org-agenda-mode))
+;; Unfortunately, can't use this with lsp-ui-sideline
+;; (use-package indent-guide
+;;   :diminish indent-guide-mode
+;;   :config
+;;   (indent-guide-global-mode)
+;;   (setq indent-guide-recursive t)
+;;   (add-to-list 'indent-guide-inhibit-modes 'org-agenda-mode))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1466,10 +1467,11 @@ you want to quit windows on all frames."
          (lsp-mode . lsp-enable-which-key-integration)
          (lsp-mode . lsp-ui-mode))
 
-  :custom ((lsp-ui-doc-position 'top)
+  :custom ((lsp-ui-doc-position 'bottom)
            (lsp-ui-sideline-show-hover t)
            (lsp-ui-sideline-ignore-duplicate t)
-           (lsp-ui-doc-max-height 10))
+           (lsp-ui-doc-max-height 10)
+           (lsp-ui-sideline-update-mode 'line))
 
   :custom-face
   (markdown-code-face ((t (:inherit default))))
