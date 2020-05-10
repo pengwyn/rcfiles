@@ -29,6 +29,7 @@ try
 	@time using DanUtils
     @time using Debugger
     @time using Plots
+	@time using UnitfulRecipes
 catch exc
 	@error "Exception loading modules" exc
 end
