@@ -1787,11 +1787,17 @@ you want to quit windows on all frames."
     (when (= 0 (length (get-buffer-window-list buf nil t)))
       (kill-buffer buf))))
 
-(defun my/open-file-maybe (&optional path)
-  (if path (let ((buf (find-file-noselect path))
-                 (pop-up-frame-alist `((window-system . x)
-                                       (display . ,(getenv "DISPLAY")))))
-             (display-buffer buf))
+(defun my/open-file-maybe (&optional path-in)
+  ;; Bit of a weird thing - need to create a frame early so that it appears for
+  ;; some of the startup modules like LSP asking questions.
+  (if path-in (let* ((path (file-truename path-in))
+                    (pop-up-frame-alist `((window-system . x)
+                                          (display . ,(getenv "DISPLAY"))))
+                    (buf (get-file-buffer path)))
+                (if buf
+                    (display-buffer buf)
+                  (make-frame)
+                  (display-buffer-same-window (find-file-noselect path) nil)))
     (make-frame)
     (funcall initial-buffer-choice)))
 
