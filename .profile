@@ -4,6 +4,7 @@ export EDITOR="vim"
 if [[ $(hostname) != "mixologist" ]] ; then
 	export VISUAL="emacsclient -c -n"
 fi
+export GIT_EDITOR="vim"
 
 export TERMCMD="xfce4-terminal"
 
