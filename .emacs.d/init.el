@@ -1725,7 +1725,9 @@ you want to quit windows on all frames."
               ("C-w" . evil-window-map)
               ("C-d" . term-send-eof)
               ("C-x C-c" . save-buffers-kill-terminal)
-              ("C-c" . term-interrupt-subjob))
+              ("C-c" . term-interrupt-subjob)
+              ("<up>" . my/term-send-up)
+              ("<down>" . my/term-send-down))
 
   :config
   (defvar my-term-mode-map (make-sparse-keymap))
@@ -1733,6 +1735,10 @@ you want to quit windows on all frames."
     :init nil
     :keymap my-term-mode-map)
   (add-hook 'term-exec-hook (lambda () (set-buffer-process-coding-system 'utf-8-unix 'utf-8-unix)))
+
+  ;; Redefine the basic up and down because it doesn't work well with REPLs and history
+  (defun my/term-send-up    () (interactive) (term-send-raw-string "\e[A"))
+  (defun my/term-send-down  () (interactive) (term-send-raw-string "\e[B"))
 
   (use-package eterm-256color)
 
