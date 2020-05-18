@@ -25,4 +25,5 @@ Format 4
 \bind "M-Left" "math-insert \\leftarrow"
 \bind "C-M-z" "command-sequence note-insert Greyedout; self-insert ================================; paragraph-break; self-insert COMMENT:; paragraph-break; paragraph-break; self-insert ================================; inset-begin-select ; font-bold; font-noun ; escape; down; down"
 \bind "C-S-n" "note-insert"
+\bind "C-M-S-s" "menu-open"
 

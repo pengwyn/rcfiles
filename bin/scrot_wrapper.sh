@@ -9,6 +9,9 @@ case "$1" in
      window)
          opt="--focused"
          ;;
+     "")
+         opt=""
+         ;;
      *)
          echo "Unknown option $1"
          exit 1

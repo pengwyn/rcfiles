@@ -547,7 +547,9 @@
     "Adds (with force) the file from the current buffer to the git repo"
     (interactive)
     (shell-command (concat "git add -f "
-                           (shell-quote-argument buffer-file-name))))
+                           (shell-quote-argument buffer-file-name)))
+    (message "Added %s to git" buffer-file-name)
+    )
 
   )
 
@@ -1463,7 +1465,8 @@ you want to quit windows on all frames."
 (require 'lsp-julia)
 
 (use-package lsp-mode
-  :hook ((julia-mode . my/check-julia-lsp)
+  :hook (
+         ;;(julia-mode . my/check-julia-lsp)
          (lsp-mode . lsp-enable-which-key-integration)
          (lsp-mode . lsp-ui-mode))
 
