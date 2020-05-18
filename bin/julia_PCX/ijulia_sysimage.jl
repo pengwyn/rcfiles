@@ -20,6 +20,11 @@ packages = [:OhMyREPL, :Debugger, :MacroTools,
 			:Revise, 
 			]
 
+if gethostname() == "mixologist"
+	println("Adding in extra mixologist packages")
+	pushfirst!(packages, :SwarmMC)
+end
+
 
 for package in packages
 	@eval import $package
