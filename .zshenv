@@ -17,9 +17,11 @@ alias ipython='ipython --pylab --profile math'
 alias ipython2='ipython2 --pylab --profile math'
 alias ipython2noplot='"ipython2" --profile noplot'
 alias ipython2r='MPLCONFIGDIR=$HOME/.config/matplotlib/nodisplay ipython2'
-#alias pacman='pacman-color'
-#alias netstat='netstat --numeric-hosts --inet -a'
 alias ..='cd ..'
+
+alias s="sudo -E"
+alias d="disown %%"
+
 if [[ $(pgrep -lx i3) ]] ; then
 	function replacei3() {
 		i3-msg 'split vertical ; layout tabbed' >/dev/null
@@ -33,18 +35,41 @@ if [[ $(pgrep -lx i3) ]] ; then
     }
 fi
 
-# alias e='emacsclient -c -n'
-#alias e='emacsclient -e "(my/open-file-maybe)"'
+# Quickfind
+function qfind {
+	find -iname "*$1*"
+}
+
+
+function ssht () {
+	#gpg-connect-agent updatestartuptty /bye
+	ssh -t $@ "tmux new -A -s main"
+}
+compdef _ssh ssht=ssh
+compdef _pacman aurman=pacman
+
+############################
+# * Emacs
+
 alias et='emacsclient -c -t'
 
 function e() {
     emacsclient -e "(my/open-file-maybe \"$1\")"
 }
 
-if [[ $(hostname) != "mixologist" ]]
-then
-	#alias julia='julia -J /home/pengwyn/.julia/dev/PackageCompiler/sysimg/sys.so'
-fi
+function ediff() {
+	if [[ -z "${2}" ]]; then
+		echo "USAGE: ediff <FILE 1> <FILE 2>"
+	else
+		# The --eval flag takes lisp code and evaluates it with EMACS
+		emacs --eval "(ediff-files \"$1\" \"$2\")"
+	fi
+}
+
+
+
+############################
+# * Git
 
 function gitpullall() {
 	gpg-connect-agent updatestartuptty /bye
@@ -96,7 +121,6 @@ alias gb="git branch"
 alias gf="git fetch"
 alias g="git"
 
-# alias grs="gr status"
 alias grf="gr git fetch ; gr status"
 function grpl() {
     gpg-connect-agent updatestartuptty /bye
@@ -112,48 +136,23 @@ function grs() {
     gr status
 }
 
-# Quickfind
-function qfind {
-	find -iname "*$1*"
-}
+############################
+# * Julia stuff
 
-function ediff() {
-	if [[ -z "${2}" ]]; then
-		echo "USAGE: ediff <FILE 1> <FILE 2>"
-	else
-		# The --eval flag takes lisp code and evaluates it with EMACS
-		emacs --eval "(ediff-files \"$1\" \"$2\")"
-	fi
-}
-
-function ssht () {
-	#gpg-connect-agent updatestartuptty /bye
-	ssh -t $@ "tmux new -A -s main"
-}
-compdef _ssh ssht=ssh
-compdef _pacman aurman=pacman
-
-alias s="sudo -E"
-alias d="disown %%"
-
-#alias jupy="jupyter notebook --notebook-dir=${HOME}/Dropbox/Physics/MyCalcs/JupyterNotebooks"
-#alias jupy="tmux new -s Jupy -d jupyter notebook --notebook-dir=${HOME}/Dropbox/Physics/MyCalcs/JupyterNotebooks"
 alias jupy="tmux new -s Jupy -d env JUPYTER_CONFIG_DIR=${HOME}/Dropbox/Physics/MyCalcs/JupyterNotebooks/.jupyter jupyter notebook --notebook-dir=${HOME}/Dropbox/Physics/MyCalcs/JupyterNotebooks"
 alias jupyat="tmux attach -t Jupy"
 
-#export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/home/pengwyn/.julia/artifacts/b3e6e77906cabeabfc0295792186e01f33613385/lib"
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/home/pengwyn/.julia/artifacts/e1bc7d06ffa3fc6dc77112d1bec9f3ffe0d0dfd5/lib"
 
-# sysimage="ROPD_sysimage.so"
 sysimage="ijulia_sysimage.so"
-# alias jul="julia --startup-file=no"
-alias j="'julia' --startup-file=no --load ${HOME}/.julia/config/reduced_startup.jl"
-alias jl="'julia' --startup-file=no"
+alias j="'julia' --startup-file=no"
+alias jl="'julia' --startup-file=no --load ${HOME}/.julia/config/reduced_startup.jl"
 alias jul="julia --startup-file=no --sysimage ${HOME}/.julia/config/$sysimage"
 alias juli="julia --startup-file=no --sysimage ${HOME}/.julia/config/$sysimage --load ${HOME}/.julia/config/reduced_startup.jl"
 alias julia="julia --sysimage ${HOME}/.julia/config/$sysimage"
 
-alias pacupdatekernel="s pacman -Syu --needed linux linux-firmware"
+############################
+# * Ranger
 
 function ranger-cd {
     tempfile="$(mktemp -t tmp.XXXXXX)"
@@ -169,10 +168,9 @@ function ranger-cd {
 alias r="ranger-cd"
 
 ############################
-# * Common ENV vars
-
-############################
 # * Full updates
+
+alias pacupdatekernel="s pacman -Syu --needed linux linux-firmware"
 
 function pacfull()
 {
