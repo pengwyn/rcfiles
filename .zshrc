@@ -112,6 +112,10 @@ eval "`dircolors -b`"
 # Stop coredumps
 ulimit -c 0
 
+
+unalias run-help
+autoload run-help
+
 ############################
 # * History keys
 
@@ -185,9 +189,6 @@ export PROMPT='$(retlprompt)'
 export RPROMPT='$(retrprompt)'
 
 
-unalias run-help
-autoload run-help
-
 ############################
 # * Highlighting
 
@@ -229,14 +230,9 @@ if [[ ( $gpgret == 0 || $gpgret == 2 ) && -f ~/.gnupg/evalstr ]]
 then
 	eval $(cat ~/.gnupg/evalstr)
 fi
-#eval $(cat ~/.gnupg/evalstr)
-#export SSH_AUTH_SOCK="$HOME/.gnupg/S.gpg-agent.ssh"
 
 export GPG_TTY=$(tty)
 #echo "UPDATESTARTUPTTY" | gpg-connect-agent
-
-# Force an update for every ssh command
-#alias ssh='gpg-connect-agent updatestartuptty /bye;ssh'
 
 #alias rs="gpg-connect-agent updatestartuptty /bye;rsync -avzziu --info=progress2"
 alias rs="rsync -avzziu --info=progress2"
@@ -248,7 +244,7 @@ function _gpg-agent-update-tty {
 add-zsh-hook preexec _gpg-agent-update-tty
 
 ############################
-# * Utils
+# * Helpers
 
 function prompt_confirm() {
   while true; do
@@ -260,12 +256,6 @@ function prompt_confirm() {
     esac 
   done  
 }
-
-
-#if [[ -f ~/.local/lib/python2.7/site-packages/Jug-1.2.2-py2.7.egg/EGG-INFO/scripts/jug ]]
-#then
-#	PATH="$PATH:$HOME/.local/lib/python2.7/site-packages/Jug-1.2.2-py2.7.egg/EGG-INFO/scripts"
-#fi
 
 ############################
 # * SUDO key
@@ -284,6 +274,9 @@ WORDCHARS=${WORDCHARS/\//}
 zle -N add-sudo-in-front
 bindkey "\C-o" add-sudo-in-front
 
+
+############################
+# * Quote word
 function quote-word-on-cursor()
 {
 	zle set-mark-command
