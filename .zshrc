@@ -147,7 +147,7 @@ _git_repo_name() {
 _git_branch_name() {    
     #git branch 2>/dev/null | awk '/^\*/ { print $2 }'
     #git branch 2>/dev/null | awk '/^\*/ { print }' | cut -d' ' -f2-
-    git symbolic-ref --short HEAD
+    git symbolic-ref --short HEAD 2>/dev/null
 }    
  _git_is_dirty() { 
    git diff --quiet 2> /dev/null || echo '*'
