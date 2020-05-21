@@ -147,8 +147,8 @@ export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/home/pengwyn/.julia/artifacts/e1bc7d06
 sysimage="ijulia_sysimage.so"
 alias j="'julia' --startup-file=no"
 alias jl="'julia' --startup-file=no --load ${HOME}/.julia/config/reduced_startup.jl"
-alias jul="julia --startup-file=no --sysimage ${HOME}/.julia/config/$sysimage"
-alias juli="julia --startup-file=no --sysimage ${HOME}/.julia/config/$sysimage --load ${HOME}/.julia/config/reduced_startup.jl"
+alias jul="'julia' --startup-file=no --sysimage ${HOME}/.julia/config/$sysimage"
+alias juli="'julia' --startup-file=no --sysimage ${HOME}/.julia/config/$sysimage --load ${HOME}/.julia/config/reduced_startup.jl"
 alias julia="julia --sysimage ${HOME}/.julia/config/$sysimage"
 
 ############################
