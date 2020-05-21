@@ -216,7 +216,16 @@
          :map evil-normal-state-map
          )
 
+  :init
+  (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+  (setq evil-want-keybinding nil)
+  
   :config
+  (evil-mode 1)
+
+  (use-package evil-collection
+    :config
+    (evil-collection-init))
 
   (evil-global-set-key 'insert (kbd "<C-n>") nil)
   (evil-global-set-key 'insert (kbd "<C-p>") nil)
