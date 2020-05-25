@@ -38,11 +38,10 @@ compdef _pacman aurman=pacman
 ############################
 # * i3 things
 
-function dannytest() {
-    pwd
+function _danny-pwd-term {
+  echo -ne "\033]0;$(pwd)\007"
 }
-PREPROMPT='echo -ne "\033]0;$(pwd)\007";'
-PREPROMPT='$(dannytest)'
+add-zsh-hook chpwd _danny-pwd-term
 
 if [[ $(pgrep -lx i3) ]] ; then
 	function replacei3() {
