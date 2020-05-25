@@ -168,6 +168,8 @@ function retrprompt() {
 	echo -n "[$RET] %{$fg[yellow]%}%T%{$reset_color%}"
 }
 function retlprompt() {
+    echo -ne "\033]0;pwd: $(pwd)\007"
+
 	dirty=$(_git_is_dirty)
 	if [[ "$dirty" == "*" ]] ; then
 		gitcolour="%{$fg[magenta]%}"

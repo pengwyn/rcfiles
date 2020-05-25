@@ -22,6 +22,28 @@ alias ..='cd ..'
 alias s="sudo -E"
 alias d="disown %%"
 
+# Quickfind
+function qfind {
+	find -iname "*$1*"
+}
+
+
+function ssht () {
+	#gpg-connect-agent updatestartuptty /bye
+	ssh -t $@ "tmux new -A -s main"
+}
+compdef _ssh ssht=ssh
+compdef _pacman aurman=pacman
+
+############################
+# * i3 things
+
+function dannytest() {
+    pwd
+}
+PREPROMPT='echo -ne "\033]0;$(pwd)\007";'
+PREPROMPT='$(dannytest)'
+
 if [[ $(pgrep -lx i3) ]] ; then
 	function replacei3() {
 		i3-msg 'split vertical ; layout tabbed' >/dev/null
@@ -35,18 +57,8 @@ if [[ $(pgrep -lx i3) ]] ; then
     }
 fi
 
-# Quickfind
-function qfind {
-	find -iname "*$1*"
-}
 
 
-function ssht () {
-	#gpg-connect-agent updatestartuptty /bye
-	ssh -t $@ "tmux new -A -s main"
-}
-compdef _ssh ssht=ssh
-compdef _pacman aurman=pacman
 
 ############################
 # * Emacs

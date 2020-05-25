@@ -81,8 +81,8 @@ floating_modifier $mod
 
 # start a terminal
 #bindsym $mod+Return exec i3-sensible-terminal
-bindsym $mod+Return exec xfce4-terminal
-# bindsym $mod+Return exec /home/pengwyn/bin/danny_i3_open_terminal.sh
+# bindsym $mod+Return exec xfce4-terminal
+bindsym $mod+Return exec /home/pengwyn/bin/danny_i3_open_terminal.sh
 
 # kill focused window
 bindsym $mod+q kill
