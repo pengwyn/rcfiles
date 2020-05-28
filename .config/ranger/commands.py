@@ -43,9 +43,13 @@ class fasd_select(Command):
 
         fzf = self.fm.execute_command(command, universal_newlines=True, stdout=subprocess.PIPE)
         stdout, stderr = fzf.communicate()
+        self.fm.notify("asdf")
+        self.fm.notify("{}".format(fzf.returncode))
         if fzf.returncode == 0:
             fzf_file = os.path.abspath(stdout.rstrip('\n'))
+            self.fm.notify(fzf_file)
             if os.path.isdir(fzf_file):
+                self.fm.notify("About to cd")
                 self.fm.cd(fzf_file)
             else:
                 self.fm.select_file(fzf_file)

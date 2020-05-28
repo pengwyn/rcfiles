@@ -296,3 +296,13 @@ autoload -U url-quote-magic
 #zstyle -e :urlglobber url-other-schema '[[ $__remote_commands[(i)$words[1]] -le ${#__remote_commands} ]] && reply=("*") || reply=(http https ftp)'
 
 
+
+############################
+# * i3 things
+
+function _danny-pwd-term {
+  echo -ne "\033]0;pwd: $(pwd)\007"
+}
+add-zsh-hook chpwd _danny-pwd-term
+
+_danny-pwd-term

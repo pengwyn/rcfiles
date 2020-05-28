@@ -38,10 +38,13 @@ compdef _pacman aurman=pacman
 ############################
 # * i3 things
 
-function _danny-pwd-term {
-  echo -ne "\033]0;$(pwd)\007"
-}
-add-zsh-hook chpwd _danny-pwd-term
+# This has to go into the rc
+# function _danny-pwd-term {
+#   echo -ne "\033]0;pwd: $(pwd)\007"
+# }
+# add-zsh-hook chpwd _danny-pwd-term
+
+# _danny-pwd-term
 
 if [[ $(pgrep -lx i3) ]] ; then
 	function replacei3() {
