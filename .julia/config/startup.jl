@@ -33,3 +33,12 @@ try
 catch exc
 	@error "Exception loading modules" exc
 end
+
+try
+    using PkgTemplates
+    pkg_template = Template(dir="~/work5/julia_packages",
+                            plugins=[Git(ssh=true), TravisCI(), Documenter{TravisCI}()])
+
+catch exc
+    @error "Error in PkgTemplates"
+end
