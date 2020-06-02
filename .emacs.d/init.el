@@ -85,71 +85,10 @@
 (global-set-key (kbd "C-x c") 'delete-frame)
 (global-set-key (kbd "M-w") 'ace-window)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; ** Util functions
-;;----------------------------
-
-;; Stolen from somewhere.
-(defmacro define-key-with-fallback (keymap key def condition &optional mode)
-  "Define key with fallback. Binds KEY to definition DEF in keymap KEYMAP, 
-   the binding is active when the CONDITION is true. Otherwise turns MODE off 
-   and re-enables previous definition for KEY. If MODE is nil, tries to recover 
-   it by stripping off \"-map\" from KEYMAP name."
-  `(define-key ,keymap ,key
-     (lambda () (interactive)
-       (if ,condition ,def
-         (let* ((,(if mode mode
-                    (let* ((keymap-str (symbol-name keymap))
-                           (mode-name-end (- (string-width keymap-str) 4)))
-                      (if (string= "-map" (substring keymap-str mode-name-end))
-                          (intern (substring keymap-str 0 mode-name-end))
-                        (error "Could not deduce mode name from keymap name (\"-map\" missing?)")))) 
-                 nil)
-                (original-func (key-binding ,key)))
-           (message "About to call %s" original-func)
-           (call-interactively original-func))))))
-
-
-(defun my/evil-add-bindings (map)
-  "Adds the usual evil hjkl and some other things I like"
-  (evil-add-hjkl-bindings map 'emacs
-    (kbd "/") 'evil-search-forward
-    (kbd "n") 'evil-search-next
-    (kbd "N") 'evil-search-previous
-    (kbd "^") 'evil-first-non-blank
-    (kbd "^") 'evil-end-of-line
-    (kbd "C-f") 'evil-scroll-page-down
-    (kbd "C-b") 'evil-scroll-page-up))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; ** Switch back to minibuffer
-;;------------------------------------------------
-
-;; Emergency switch back to minibuffer
-;; Stolen from http://superuser.com/questions/132225/how-to-get-back-to-an-active-minibuffer-prompt-in-emacs-without-the-mouse
-(defun switch-to-minibuffer-window ()
-  "switch to minibuffer window (if active)"
-  (interactive)
-  (when (active-minibuffer-window)
-    (select-frame-set-input-focus (window-frame (active-minibuffer-window)))
-    (select-window (active-minibuffer-window))))
-(global-set-key (kbd "<f12>") 'switch-to-minibuffer-window)
+(load "~/.emacs.d/utils.el")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; ** Align func
-;;----------------------------
-(defun my/simple-align (beg end)
-     "Align using any 2+ space with 4 spaces"
-     (interactive "r")
-     (align-regexp beg end (rx (group (or
-                                       (>= 2 (syntax whitespace))
-                                       (group (* (syntax whitespace)) (1+ "\t") (* (syntax whitespace))))
-                                      )) 1 4 t))
-
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; * Evil stuff
+;; * Evil
 ;;----------------------------
 
 
@@ -372,8 +311,9 @@
 
     ;; (evil-define-key '(normal visual) evil-mc-key-map (kbd "g r") 'hydra-evil-mc-keys/body)
     (evil-define-key '(normal visual) evil-mc-key-map (kbd "M-m") 'hydra-evil-mc-keys/body)
+    (evil-define-key '(normal visual) 'evil-mc-mode (kbd "M-m") 'hydra-evil-mc-keys/body)
 
-    (defun danny-make-evil-mc-cursor-on-click (event)
+    (defun my/make-evil-mc-cursor-on-click (event)
       "Stolen partially from the multiple cursor version code"
       (interactive "e")
       (mouse-minibuffer-check event)
@@ -389,7 +329,7 @@
               (save-excursion
                 (goto-char pt)
                 (evil-mc-make-cursor-here))))))
-    (global-set-key (kbd "C-S-<mouse-1>") 'danny-make-evil-mc-cursor-on-click)
+    (global-set-key (kbd "C-S-<mouse-1>") 'my/make-evil-mc-cursor-on-click)
     (global-set-key (kbd "C-S-<mouse-3>") 'evil-mc-undo-all-cursors)
 
     (defun col-at-point (point)
@@ -457,7 +397,8 @@
   (setq-default mode-line-format
                 '("%e"
                   (:eval
-                   (let* ((active (powerline-selected-window-active))
+                   (let* (
+                          (active (powerline-selected-window-active))
                           (mode-line-buffer-id (if active 'mode-line-buffer-id 'mode-line-buffer-id-inactive))
                           (mode-line (if active 'mode-line 'mode-line-inactive))
                           (face0 (if active 'powerline-active0 'powerline-inactive0))
@@ -482,15 +423,15 @@
                                      ))
                           (rhs (list (powerline-raw global-mode-string face1 'r)
                                      ;;
-                                     ;; (powerline-raw "%4l" face1 'r)
-                                     ;; (powerline-raw ":" face1)
-                                     ;; (powerline-raw "%3c" face1 'r)
+                                     (powerline-raw "%4l" face1 'r)
+                                     (powerline-raw ":" face1)
+                                     (powerline-raw "%3c" face1 'r)
                                      (funcall separator-right face1 face0)
                                      (powerline-raw " " face0)
                                      (powerline-raw "%3p" face0 'r)
                                      ;;
-                                     ;; (when powerline-display-hud
-                                     ;;   (powerline-hud face2 face1))
+                                     (when powerline-display-hud
+                                       (powerline-hud face2 face1))
                                      ))
                           (center (append (list (powerline-raw " " face1)
                                                 (funcall separator-left face1 face2)
@@ -512,13 +453,21 @@
                                                             (powerline-raw " " face2)
                                                             (funcall separator-right face2 face1)))
                                             (list (powerline-raw evil-mode-line-tag face2)
-                                                  (funcall separator-right face2 face1))))))
-                     (concat (powerline-render lhs)
-                             (powerline-fill-center face1 (/ (powerline-width center) 2.0))
-                             (powerline-render center)
-                             (powerline-fill face1 (powerline-width rhs))
-                             (powerline-render rhs)
-                             )))))
+                                                  (funcall separator-right face2 face1)))))
+                          )
+                     (concat
+                      (powerline-render lhs)
+                      (powerline-fill-center face1 (/ (powerline-width center) 2.0))
+                      (powerline-render center)
+                      ;; (powerline-render "mode-line-buffer-identification")
+                      (powerline-fill face1 (powerline-width rhs))
+                      (powerline-render rhs)
+                      )))))
+  ;; This is for my sanity
+  (cl-loop for buf in (buffer-list)
+           do (with-current-buffer buf
+                (setq-local mode-line-format (default-value 'mode-line-format))
+                (force-mode-line-update)))
   )
 
 (use-package magit
@@ -595,12 +544,21 @@
   (use-package company-php))
 
 (use-package flycheck
+  :custom ((flycheck-display-errors-delay 0.3))
   :config
+  (global-flycheck-mode)
+
+  (flycheck-add-mode 'javascript-eslint 'web-mode)
+
   (use-package helm-flycheck)
   ;; TODO: Fix the Lint.jl package
   (use-package flycheck-julia
     :config
-    (flycheck-julia-setup)))
+    (flycheck-julia-setup))
+  (use-package flycheck-pos-tip
+    :config
+    (flycheck-pos-tip-mode))
+  )
 
 (use-package dashboard
   :custom
@@ -1670,7 +1628,7 @@ you want to quit windows on all frames."
   :mode (("\\.html\\'" . web-mode)
          ("\\.js\\'" . web-mode))
   :config
-  (add-hook 'web-mode-hook 'flymake-eslint-enable)
+  ;; (add-hook 'web-mode-hook 'flymake-eslint-enable)
   ;; (add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
   (setq web-mode-content-types-alist '(("jsx" . "\\.js[x]?\\'")))
 
