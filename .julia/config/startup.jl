@@ -36,8 +36,9 @@ end
 
 try
     using PkgTemplates
-    pkg_template = Template(dir="~/work5/julia_packages",
-                            plugins=[Git(ssh=true), TravisCI(), Documenter{TravisCI}()])
+    global pkg_template = Template(dir="~/work5/julia_packages",
+                            # plugins=[Git(ssh=true), TravisCI(), Documenter{TravisCI}()])
+                                   plugins=[Git(ssh=true), TravisCI()])
 
 catch exc
     @error "Error in PkgTemplates"
