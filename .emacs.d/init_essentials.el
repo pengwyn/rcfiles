@@ -64,9 +64,10 @@
       (evil-shift-right (mark) (point))
       (evil-shift-left (mark) (point)))
 	(evil-visual-restore))
+
     (defun my/evil-block-shift-right ()
     (interactive)
-    (call-interactive my/evil-block-shift t))
+    (call-interactively 'my/evil-block-shift t))
 
 
   (use-package evil-collection

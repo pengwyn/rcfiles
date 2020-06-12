@@ -59,7 +59,7 @@
          ("p" . #'julia-profile-add-all-deferred)))
 
 (use-package julia-funcobs
-  :load-path "~/work5/julia_packages/FunctionObserving/src"
+  :load-path (lambda () (concat mypackages-path "julia-funcobs"))
   :bind (:map my/julia-ext-map
          ("o" . #'julia-function-observe)))
 

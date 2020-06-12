@@ -27,6 +27,6 @@
 
 (use-package hydra-posframe
   ;; :after hydra posframe
-  :load-path "~/.emacs.d.rem/mypackages/hydra-posframe"
+  :load-path "~/.emacs.d/mypackages/hydra-posframe"
   :config
   (hydra-posframe-mode))
