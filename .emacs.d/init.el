@@ -1,11 +1,4 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; * Emacs customize
-;;----------------------------
-(setq custom-file "~/.emacs.d/custom.el")
-(when (file-exists-p custom-file)
-  (load custom-file))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Packages
 ;;----------------------------
 
@@ -20,23 +13,17 @@
 
 (package-initialize)
 
-(global-set-key (kbd "<f2>") 'package-list-packages)
-(global-set-key (kbd "<f3>") (lambda () (interactive) (find-file "~/.emacs.d/init.el")))
-(global-set-key (kbd "<f4>") 'save-buffers-kill-emacs)
-
-;; * First time setup
+;; ** First time setup
 ;; When starting from an empty config, install use-package.
 (unless (locate-library "use-package")
   (package-refresh-contents)
-  (package-install 'use-package)
-  (require 'use-package))
+  (package-install 'use-package))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * use-package
 ;;----------------------------
 
-(eval-when-compile
-  (require 'use-package))
+(require 'use-package)
 
 (require 'use-package-ensure)
 (setq use-package-always-ensure t)
@@ -70,25 +57,32 @@
               dired-auto-revert-buffer t
               sentence-end-double-space nil)
 
-(global-set-key (kbd "<S-down-mouse-1>") 'mouse-save-then-kill)
-
-;; (scroll-bar-mode -1)
-;; (tool-bar-mode -1)
-;; (menu-bar-mode -1)
+(scroll-bar-mode t)
+(tool-bar-mode t)
+(menu-bar-mode t)
 
 (load "~/.emacs.d/utils.el")
 
+(global-set-key (kbd "<S-down-mouse-1>") 'mouse-save-then-kill)
 (global-set-key (kbd "<f12>") 'switch-to-minibuffer-window)
+(global-set-key (kbd "<f2>") 'package-list-packages)
+(global-set-key (kbd "<f3>") (lambda () (interactive) (find-file "~/.emacs.d/init.el")))
+(global-set-key (kbd "<f4>") 'save-buffers-kill-emacs)
 
 (load "~/.emacs.d/init_essentials.el")
 
-;; (load "~/.emacs.d/init_frames.el")
+(load "~/.emacs.d/init_frames.el")
 
-;; (load "~/.emacs.d/init_extras.el")
+(load "~/.emacs.d/init_extras.el")
 
 ;; (load "~/.emacs.d/init_extras_julia.el")
 
-;; (load "~/.emacs.d/init_danny.el")
+(load "~/.emacs.d/init_danny.el")
 
 
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; * Emacs customize
+;;----------------------------
+(setq custom-file "~/.emacs.d/custom.el")
+(when (file-exists-p custom-file)
+  (load custom-file))

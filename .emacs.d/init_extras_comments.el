@@ -33,5 +33,6 @@ See `comment-region' for behavior of a prefix arg."
   (copy-and-comment-region (line-beginning-position) (line-end-position)))
 
 (with-eval-after-load "evil" 
-  (evil-define-key '(visual normal) 'global (kbd "C-y") 'copy-and-comment-region))
+  (evil-define-key 'visual 'global (kbd "C-y") 'copy-and-comment-region)
+  (evil-define-key 'normal 'global (kbd "C-y") 'copy-and-comment-line))
 

@@ -1,4 +1,6 @@
 
+# Random TODO: for emacs testing
+
 source ~/.profile
 
 autoload -Uz compinit

@@ -20,10 +20,10 @@
   (which-key-posframe-mode))
 
 ;; TODO: Need to make this pop up a new minibuffer in the posframe to allow for recursive editing
-(use-package helm-posframe
-  ;; :after helm posframe
-  :config
-  (helm-posframe-enable))
+;; (use-package helm-posframe
+;;   ;; :after helm posframe
+;;   :config
+;;   (helm-posframe-enable))
 
 (use-package hydra-posframe
   ;; :after hydra posframe

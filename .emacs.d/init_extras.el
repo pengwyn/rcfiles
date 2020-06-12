@@ -61,9 +61,9 @@
 (use-package flycheck
   :config
   (use-package helm-flycheck)
-  ;; (use-package flycheck-pos-tip
-  ;;   :config
-  ;;   (flycheck-pos-tip-mode))
+  (use-package flycheck-pos-tip
+    :config
+    (flycheck-pos-tip-mode))
   )
 
 (use-package flyspell)
@@ -123,12 +123,12 @@
 
   (defhydra hydra-evil-mc-keys ()
     "evilmckeys"
-    ("\C-n" evil-MC-MAKE-AND-GOTO-NEXT-MATCH "make + next")
-    ("\C-p" evil-MC-MAKE-AND-GOTO-PREV-MATCH "make + prev")
-    ("M-n" evil-MC-SKIP-AND-GOTO-NEXT-MATCH "skip + next")
-    ("M-p" evil-MC-SKIP-AND-GOTO-PREV-MATCH "skip + prev")
-    ("q" evil-MC-UNDO-ALL-CURSORS "undo all" :exit t)
-    ("n" evil-MC-MAKE-AND-GOTO-NEXT-CURSOR "make + next cursor")
+    ("\C-n" evil-mc-make-and-goto-next-match "make + next")
+    ("\C-p" evil-mc-make-and-goto-prev-match "make + prev")
+    ("M-n" evil-mc-skip-and-goto-next-match "skip + next")
+    ("M-p" evil-mc-skip-and-goto-prev-match "skip + prev")
+    ("q" evil-mc-undo-all-cursors "undo all" :exit t)
+    ("n" evil-mc-make-and-goto-next-cursor "make + next cursor")
     ("p" evil-mc-make-and-goto-prev-cursor "make + prev cursor")
     ("N" evil-mc-skip-and-goto-next-cursor "skip + next cursor")
     ("P" evil-mc-skip-and-goto-prev-cursor "skip + prev cursor")
@@ -183,6 +183,9 @@
   (use-package magit-popup)
   (use-package magit-todos)
   (use-package evil-magit)
+  (use-package magit-todos
+    :config
+    (magit-todos-mode))
 
   ;; Stolen from https://stackoverflow.com/questions/40091077/equivalent-of-git-add-force-to-add-ignored-files-in-emacs-magit
   (defun my/magit-add-current-buffer ()
@@ -193,11 +196,6 @@
     (message "Added %s to git" buffer-file-name)
     )
   )
-
-(use-package magit-todos
-  :after magit
-  :after hl-todo
-  (magit-todos-mode))
 
 ;; ** Helpful
 
@@ -215,40 +213,6 @@
       (add-to-list 'helm-completing-read-handlers-alist
                    (cons func 'helm-completing-read-symbols)))))
 
-;; ** Markdown
-
-(use-package markdown-mode
-  :hook ((markdown-mode-hook . auto-fill-mode)
-         (markdown-mode-hook . (lambda () (setq-local auto-fill-function #'markdown-fill-paragraph))))
-
-  (use-package poly-markdown))
-
-;; ** Dashboard
-
-(use-package dashboard
-  :custom
-  ((dashboard-items '((recents . 10)
-                     (bookmarks . 10)
-                     ;;(project . 5)
-                     ;; (agenda . 15)
-                     (registers . 5)
-    				 ))
-   (show-week-agenda-p t))
-  :config
-  (my/evil-add-bindings dashboard-mode-map)
-  (evil-set-initial-state 'dashboard-mode 'emacs)
-   
-  (defun my/select-dashboard ()
-    (if (get-buffer dashboard-buffer-name)
-        (dashboard-refresh-buffer)
-      (dashboard-insert-startupify-lists)
-      (switch-to-buffer dashboard-buffer-name nil t)))
-    
-  (setq initial-buffer-choice (lambda () (or (my/select-dashboard)
-                                             (get-buffer "*scratch*"))))
-  (setq inhibit-startup-screen t)
-  )
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Completion
 
@@ -259,7 +223,6 @@
 ;; ** Company
 
 (use-package company
-  :hook (after-init . global-company-mode)
   :custom ((company-global-modes '(not shell-mode))
            (company-minimum-prefix-length 2)
            (company-idle-delay 0.2)
@@ -271,6 +234,7 @@
   :bind (:map company-mode-map
         ("C-<tab>" . company-other-backend))
   :config
+  (global-company-mode)
   ;; Stolen from https://emacs.stackexchange.com/questions/13286/how-can-i-stop-the-enter-key-from-triggering-a-completion-in-company-mode
   ;;; Prevent suggestions from being triggered automatically. In particular,
   ;;; this makes it so that:
@@ -318,26 +282,64 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; * ggtags
+;; * Projectile
 ;;----------------------------
-(use-package ggtags
-  :demand t
-  :hook (c-mode-common . (lambda () (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
-                            (ggtags-mode 1)
-                            (evil-define-key 'normal (current-local-map) (kbd "M-.") 'ggtags-find-tag-dwim))
-                          ))
-  :bind (:map ggtags-mode-map
-              ("C-c g s" . ggtags-find-other-symbol)
-              ("C-c g h" . ggtags-view-tag-history)
-              ("C-c g r" . ggtags-find-reference)
-              ("C-c g f" . ggtags-find-file)
-              ("C-c g c" . ggtags-create-tags)
-              ("C-c g u" . ggtags-update-tags)
+(use-package projectile
+  :demand
+  :bind (("<f9>" . danny-projectile)
+         :map danny-projectile
+         ("<f9>" . 'helm-projectile-switch-project)
+         ("f" . 'helm-projectile-find-file-dwim)
+         ;; ("p" . 'org-publish-current-project)
+         ;; ("p" . 'projectile-compile-project)
+         ("p" . 'my/projectile-compile)
+         ("a" . 'helm-projectile-ag)
+         ("d" . 'projectile-dired)
+         ("x" . 'my/open-projectile-or-current-directory))
 
-              ("M-," . pop-tag-mark)
-              ("C-M-," . ggtags-find-tag-continue))
+  :custom
+  ((projectile-mode-line-prefix " ")
+   (projectile-switch-project-action #'helm-projectile-find-file))
+  :config
+  (define-prefix-command 'danny-projectile)
+
+  (projectile-mode)
+  (use-package helm-projectile)
+  (use-package projectile-direnv
+    :hook (projectile-mode . projectile-direnv-export-variables))
+  (use-package projectile-variable)
+
+  (defun my/open-projectile-or-current-directory ()
+    (interactive)
+    (let ((directory (or (projectile-project-root)
+                        (file-name-directory buffer-file-name))))
+      (browse-url-xdg-open (file-truename directory))))
+  
+  (defun my/projectile-compile (arg)
+    (interactive "P")
+    (projectile-save-project-buffers)
+    (let ((compilation-save-buffers-predicate 'ignore)
+          (compilation-read-command nil))
+      (projectile-compile-project arg)))
+
+  (use-package ibuffer-projectile
+    :config  
+    (add-hook 'ibuffer-mode-hook
+              (lambda () (ibuffer-projectile-set-filter-groups)
+                (unless (eq ibuffer-sorting-mode 'alphabetic)
+                  (ibuffer-do-sort-by-alphabetic))))
+    (setq ibuffer-formats
+          '((mark modified read-only " "
+                  (name 18 18 :left :elide)
+                  " "
+                  (size 9 -1 :right)
+                  " "
+                  (mode 16 16 :left :elide)
+                  " "
+                  project-relative-file)
+            (mark modified " "
+                  (name)))))
   )
-
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -359,11 +361,9 @@
   )
 
 ;; I think this is techinically separate
-(use-package treemacs-icons-dired)
+(use-package treemacs-icons-dired
+  :config (treemacs-icons-dired-mode))
 
-(defvar sometemp (lambda () (interactive) (ibuffer-sidebar-toggle-sidebar)
-                         (if (ibuffer-sidebar-showing-sidebar-p)
-                             (call-interactively 'ibuffer-update))))
 (use-package ibuffer-sidebar
   :after ibuffer treemacs
   :bind (("<C-f8>" . (lambda () (interactive)
@@ -409,45 +409,26 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; * Projectile
+;; * ggtags
 ;;----------------------------
-(use-package projectile
-  :demand
-  :custom
-  ((projectile-mode-line-prefix " ")
-   (projectile-switch-project-action #'helm-projectile-find-file))
-  :config
-  (projectile-mode)
-  (use-package helm-projectile)
-  (use-package projectile-direnv
-    :hook (projectile-mode . projectile-direnv-export-variables))
-  (use-package projectile-variable)
+(use-package ggtags
+  :demand t
+  :hook (c-mode-common . (lambda () (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
+                            (ggtags-mode 1)
+                            (evil-define-key 'normal (current-local-map) (kbd "M-.") 'ggtags-find-tag-dwim))
+                          ))
+  :bind (:map ggtags-mode-map
+              ("C-c g s" . ggtags-find-other-symbol)
+              ("C-c g h" . ggtags-view-tag-history)
+              ("C-c g r" . ggtags-find-reference)
+              ("C-c g f" . ggtags-find-file)
+              ("C-c g c" . ggtags-create-tags)
+              ("C-c g u" . ggtags-update-tags)
 
-  (defun my/open-projectile-or-current-directory ()
-    (interactive)
-    (let ((directory (or (projectile-project-root)
-                        (file-name-directory buffer-file-name))))
-      (browse-url-xdg-open (file-truename directory))))
-  
-  (define-prefix-command 'danny-projectile)
+              ("M-," . pop-tag-mark)
+              ("C-M-," . ggtags-find-tag-continue))
+  )
 
-  (defun my/projectile-compile (arg)
-    (interactive "P")
-    (projectile-save-project-buffers)
-    (let ((compilation-save-buffers-predicate 'ignore)
-          (compilation-read-command nil))
-      (projectile-compile-project arg)))
-
-  :bind (("<f9>" . danny-projectile)
-         :map danny-projectile
-         ("<f9>" . 'helm-projectile-switch-project)
-         ("f" . 'helm-projectile-find-file-dwim)
-         ;; ("p" . 'org-publish-current-project)
-         ;; ("p" . 'projectile-compile-project)
-         ("p" . 'my/projectile-compile)
-         ("a" . 'helm-projectile-ag)
-         ("d" . 'projectile-dired)
-         ("x" . 'my/open-projectile-or-current-directory)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * THEME
@@ -476,9 +457,41 @@
 ;;----------------------------
 
 ;; ** Good to have these major modes
-(use-package pkgbuild-mode)
+;; (use-package pkgbuild-mode)
 (use-package yaml-mode)
 (use-package csv-mode)
+
+(use-package markdown-mode
+  :hook ((markdown-mode-hook . auto-fill-mode)
+         (markdown-mode-hook . (lambda () (setq-local auto-fill-function #'markdown-fill-paragraph))))
+  :config
+  (use-package poly-markdown))
+
+;; *** Dashboard
+
+(use-package dashboard
+  :custom
+  ((dashboard-items '((recents . 10)
+                     (bookmarks . 10)
+                     ;;(project . 5)
+                     ;; (agenda . 15)
+                     (registers . 5)
+    				 ))
+   (show-week-agenda-p t))
+  :config
+  (my/evil-add-bindings dashboard-mode-map)
+  (evil-set-initial-state 'dashboard-mode 'emacs)
+   
+  (defun my/select-dashboard ()
+    (if (get-buffer dashboard-buffer-name)
+        (dashboard-refresh-buffer)
+      (dashboard-insert-startupify-lists)
+      (switch-to-buffer dashboard-buffer-name nil t)))
+    
+  (setq initial-buffer-choice (lambda () (or (my/select-dashboard)
+                                             (get-buffer "*scratch*"))))
+  (setq inhibit-startup-screen t)
+  )
 
 ;; *** Term mode
 
@@ -527,24 +540,6 @@
 
 (use-package all-the-icons)
 
-(use-package ibuffer-projectile
-  :after ibuffer projectile
-  :config  
-  (add-hook 'ibuffer-mode-hook
-            (lambda () (ibuffer-projectile-set-filter-groups)
-               (unless (eq ibuffer-sorting-mode 'alphabetic)
-                 (ibuffer-do-sort-by-alphabetic))))
-  (setq ibuffer-formats
-        '((mark modified read-only " "
-                (name 18 18 :left :elide)
-                " "
-                (size 9 -1 :right)
-                " "
-                (mode 16 16 :left :elide)
-                " "
-                project-relative-file)
-          (mark modified " "
-                (name)))))
 
 ;; *** sudo saving
 (use-package sudo-edit

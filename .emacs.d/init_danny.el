@@ -33,3 +33,42 @@
 (add-hook 'emacs-lisp-mode-hook 'enable-autoreload-for-dir-locals)
 
 
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; * Better pasting 
+;;
+
+;; Redefine M-y to copy to clipboard and M-p to paste from clipboard
+(evil-define-operator danny-evil-clip-yank (beg end type register yank-handler)
+  (evil-yank beg end type ?+ yank-handler))
+(evil-define-operator danny-evil-clip-paste (count &optional register yank-handler)
+  (interactive "P<x>")
+  (evil-paste-after 1 ?+ yank-handler))
+(evil-define-key '(normal visual) 'global (kbd "C-M-y") 'danny-evil-clip-yank)
+;; (evil-define-key '(normal insert) 'global (kbd "C-M-p") 'danny-evil-clip-paste)
+(evil-define-key 'normal 'global (kbd "C-M-p") 'danny-evil-clip-paste)
+(evil-define-key 'insert 'global (kbd "C-M-p") (lambda () (interactive) (evil-paste-from-register ?+)))
+(evil-define-key '(normal insert) 'global (kbd "C-p") 'evil-paste-after)
+(evil-define-key '(normal insert) 'global (kbd "M-P") 'evil-paste-pop)
+
+;; * Killing interactively
+;; Enable M-x kill-process (to kill the current buffer's process).
+(put 'kill-process 'interactive-form
+     '(interactive
+       (let ((proc (get-buffer-process (current-buffer))))
+         (if (process-live-p proc)
+             (unless (yes-or-no-p (format "Kill %S? " proc))
+               (error "Process not killed"))
+           (error (format "Buffer %s has no process" (buffer-name))))
+         nil)))
+
+
+;; * Minibuffer stuff
+;;----------------------------
+(defvar my/evil-minibuffer-mode-map (make-sparse-keymap))
+(define-minor-mode my/evil-minibuffer-mode
+  :init-value nil
+  :keymap my/evil-minibuffer-mode-map)
+(add-hook 'minibuffer-setup-hook 'my/evil-minibuffer-mode)
+(define-key my/evil-minibuffer-mode-map (kbd "C-r") 'evil-paste-from-register)

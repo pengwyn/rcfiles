@@ -38,6 +38,11 @@
          ("C-j" . evil-window-down)
          ("C-w" . evil-window-mru)
 
+         ("<right>" . evil-window-right)
+         ("<left>" . evil-window-left)
+         ("<up>" . evil-window-up)
+         ("<down>" . evil-window-down)
+
          :map evil-visual-state-map
          (">" . my/evil-block-shift-right)
          ("<" . my/evil-block-shift))
@@ -77,6 +82,9 @@
   :demand t
   ;; :diminish helm-mode
   :init
+  ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
+  ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
+  ;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
   (global-set-key (kbd "C-c h") 'helm-command-prefix)
   :config
   (helm-mode 1)
@@ -95,14 +103,15 @@
            (helm-semantic-fuzzy-match t)
            (helm-imenu-fuzzy-match t))
 
-  ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
-  ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
-  ;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
-  :bind (("C-x c" . nil)
-         ("M-x" . helm-M-x)
-         ("C-x f" . helm-find-files)
-         ("C-x C-f" . helm-multi-files)
-         ("C-x b" . helm-buffers-list)
+  :bind (("M-x" . helm-M-x)
+
+         :map ctl-x-map
+         ("c" . nil)
+         ("f" . helm-find-files)
+         ("C-f" . helm-multi-files)
+         ("b" . helm-buffers-list)
+         ("d" . dired)
+         ("C-d" . dired)
 
          :map helm-map
          ("<tab>" . helm-execute-persistent-action) ; rebind tab to run persistent action
