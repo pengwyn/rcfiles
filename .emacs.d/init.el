@@ -57,9 +57,9 @@
               dired-auto-revert-buffer t
               sentence-end-double-space nil)
 
-(scroll-bar-mode t)
-(tool-bar-mode t)
-(menu-bar-mode t)
+(scroll-bar-mode -1)
+(tool-bar-mode -1)
+(menu-bar-mode -1)
 
 (load "~/.emacs.d/utils.el")
 
@@ -68,6 +68,7 @@
 (global-set-key (kbd "<f2>") 'package-list-packages)
 (global-set-key (kbd "<f3>") (lambda () (interactive) (find-file "~/.emacs.d/init.el")))
 (global-set-key (kbd "<f4>") 'save-buffers-kill-emacs)
+(define-key help-map (kbd "C-c") 'customize-group) 
 
 (load "~/.emacs.d/init_essentials.el")
 
