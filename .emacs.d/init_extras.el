@@ -205,8 +205,8 @@
          ("C-h v" . helpful-variable)
          ("C-h k" . helpful-key))
   :config
-  (when (boundp 'frames-over-windows)
-    (evil-define-key 'normal helpful-mode-map "q" 'my/delete-window-or-frame))
+  ;; (when (boundp 'frames-over-windows)
+  ;;   (evil-define-key 'normal helpful-mode-map "q" 'my/delete-window-or-frame))
 
   (with-eval-after-load 'helm-mode
     (dolist (func '(helpful-callable helpful-variable helpful-key)) 
@@ -230,7 +230,8 @@
            ;; Note that company-yasnippet is bad and never returns nil so the other
            ;; backends can never be used.  It's better to use the yas fallback options.
            (company-backends '( company-clang company-semantic company-gtags company-capf company-keywords company-dabbrev-code company-dabbrev))
-           (company-dabbrev-time-limit 1.0))
+           (company-dabbrev-time-limit 1.0)
+           )
   :bind (:map company-mode-map
         ("C-<tab>" . company-other-backend))
   :config
@@ -277,6 +278,8 @@
   (use-package company-box
     :hook (company-mode . company-box-mode)
     :diminish company-box-mode
+    :custom ((company-box-show-single-candidate t))
+    :custom-face (company-box-scrollbar ((t (:background "bisque"))))
     )
   )
 
