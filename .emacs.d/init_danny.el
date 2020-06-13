@@ -72,3 +72,19 @@
   :keymap my/evil-minibuffer-mode-map)
 (add-hook 'minibuffer-setup-hook 'my/evil-minibuffer-mode)
 (define-key my/evil-minibuffer-mode-map (kbd "C-r") 'evil-paste-from-register)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; * Cur-dir grepping
+;;----------------------------
+
+(defun my/helm-do-grep-ag-cwd ()
+  (interactive)
+  ;; TODO: This should really be inserted into the options instead of hardcoded.
+  (let ((helm-grep-ag-command "ag --line-numbers -S --hidden --color --nogroup --depth=0 %s %s %s"))
+    (call-interactively 'helm-do-grep-ag)))
+
+(define-key danny-completions (kbd "C-a") (lambda () (interactive)
+                                            (if current-prefix-arg
+                                                (let ((current-prefix-arg nil))
+                                                  (call-interactively 'my/helm-do-grep-ag-cwd))
+                                              (call-interactively 'helm-do-grep-ag))))
