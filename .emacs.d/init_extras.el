@@ -447,10 +447,9 @@
 (use-package moe-theme
   :config
   (load-theme 'moe-dark t nil)
-  (custom-theme-set-faces 'moe-dark '(default ((t (:background "#000000" :foreground "#c6c6c6")))))
+  (custom-theme-set-faces 'moe-dark '(default ((t (:background "#000000" :foreground "#c6c6c6" :family "mononoki Nerd Font" :height 100)))))
   (custom-theme-set-faces 'moe-dark '(compilation-error ((t (:foreground "#333" :background "#faa" :weight bold))))))
 
-(set-frame-font "Mononoki Nerd Font-10" nil t)
 
 
 
