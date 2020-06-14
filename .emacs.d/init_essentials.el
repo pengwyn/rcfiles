@@ -29,6 +29,12 @@
            (evil-visual-x-select-timeout 999)
            (evil-symbol-word-search 'symbol)
            ;; (evil-want-fine-undo t)
+           (evil-emacs-state-cursor '("blue" box))
+           (evil-insert-state-cursor '("green" bar))
+           (evil-normal-state-cursor '("green" box))
+           (evil-operator-state-cursor '("orange" hollow))
+           (evil-replace-state-cursor '("red" box))
+           (evil-visual-state-cursor '("orange" box))
            )
 
   :bind (:map evil-window-map
@@ -73,6 +79,7 @@
   (use-package evil-collection
     :config
     (evil-collection-init))
+
   )
 
 
