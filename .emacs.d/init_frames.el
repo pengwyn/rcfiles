@@ -26,13 +26,17 @@
           ("\\*helm.*\\*" . ((display-buffer-pop-up-window)))
 
           ;; Earmuffs
-          (,(rx (or (seq "*" (* nonl) "*")
-                    (seq string-start "magit" (* (not (any ":"))) ":")
-                    (seq string-start "COMMIT"))
-                ;; ) . ((display-buffer-reuse-window display-buffer-below-selected)
-                ;;      (reuseable-frames . t))
-                ) . ,display-buffer-fallback-action
-                    )
+          ;; (,(rx (or (seq "*" (* nonl) "*")
+          ;;           (seq string-start "magit" (* (not (any ":"))) ":")
+          ;;           (seq string-start "COMMIT"))
+          ;;       ;; ) . ((display-buffer-reuse-window display-buffer-below-selected)
+          ;;       ;;      (reuseable-frames . t))
+          ;;       ) . ,display-buffer-fallback-action
+          ;;           )
+          (,(rx (or "*Help*"
+                    (seq string-start "COMMIT")
+                    (seq string-start "magit" (not (any ":")))))
+           . ,display-buffer-fallback-action)
 
           ;; ("\\*minibuffer\\*" (display-buffer-reuse-window))
           ))
