@@ -174,6 +174,14 @@
 ;; * Useful major modes
 ;;----------------------------
 
+;; ** Web mode
+
+(use-package web-mode
+  :custom ((web-mode-enable-engine-detect t))
+  :config
+  (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+  )
+
 ;; ** Magit
 
 (use-package magit
