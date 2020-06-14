@@ -322,7 +322,7 @@ bindsym --whole-window $mod+button2 floating toggle
 
 # Need to store original window 
 bindsym $mod+g [title="Chromium$"] focus
-bindsym $mod+Ctrl+e exec --no-startup-id emacsclient -c
+bindsym $mod+Ctrl+e exec --no-startup-id emacsclient -c -n -a emacs
 bindsym $mod+Ctrl+r exec --no-startup-id "xfce4-terminal -x zsh -c 'r ; zsh -i'"
 
 

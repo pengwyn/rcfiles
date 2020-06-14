@@ -69,9 +69,10 @@ fi
 
 alias et='emacsclient -c -t'
 
-function e() {
-    emacsclient -e "(my/open-file-maybe \"$1\")"
-}
+# function e() {
+#     emacsclient -e "(my/open-file-maybe \"$1\")"
+# }
+alias e='emacsclient -c'
 
 function ediff() {
 	if [[ -z "${2}" ]]; then
