@@ -67,7 +67,7 @@
 
     (defun my/evil-block-shift-right ()
     (interactive)
-    (call-interactively 'my/evil-block-shift t))
+    (my/evil-block-shift t))
 
 
   (use-package evil-collection
