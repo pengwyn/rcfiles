@@ -6,6 +6,7 @@ packages = [:OhMyREPL, :Debugger, :MacroTools,
             # :GR,
             # :PyPlot,
 			# :Atom,
+            :JLD2,
 
 # All of my util packages
             :AndExport,
