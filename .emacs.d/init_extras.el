@@ -376,7 +376,7 @@
     (string= "?" (ht-get git-info file)))
 
   (add-to-list 'treemacs-pre-file-insert-predicates #'treemacs-is-file-git-ignored?)
-  (add-to-list 'treemacs-pre-file-insert-predicates #'treemacs-is-file-tracked?)
+  (add-to-list 'treemacs-pre-file-insert-predicates #'my/treemacs-is-file-tracked?)
 
   (defun my/treemacs-toggle-show-tracked-files (&optional force)
     "Toggle ignoring tracked files in treemacs"
