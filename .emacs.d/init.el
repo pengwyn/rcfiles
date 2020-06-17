@@ -80,6 +80,7 @@
 
 (load "~/.emacs.d/init_danny.el")
 
+(server-start)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; * Emacs customize
