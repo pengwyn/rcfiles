@@ -360,15 +360,37 @@
   :bind (("<f8>" . treemacs-select-window)
          ("<M-f8>" . treemacs-add-and-display-current-project)
          :map treemacs-mode-map
-         ([mouse-1] . treemacs-single-click-expand-action))
+         ([mouse-1] . treemacs-single-click-expand-action)
+         ;; This should delete the treemacs window, but relies on (treemacs) behaviour.
+         ("<return>" . (lambda (arg)
+                         (interactive "P")
+                         (call-interactively 'treemacs-RET-action)
+                         (unless arg (treemacs)))))
   :config
   (use-package treemacs-evil)
   (use-package treemacs-projectile)
   (use-package treemacs-magit)
 
-  (add-to-list 'treemacs-pre-file-insert-predicates #'treemacs-is-file-git-ignored?)
+  (defun my/treemacs-is-file-tracked? (file git-info)
+    (declare (side-effect-free t))
+    (string= "?" (ht-get git-info file)))
 
-  ;; (treemacs-tag-follow-mode t)
+  (add-to-list 'treemacs-pre-file-insert-predicates #'treemacs-is-file-git-ignored?)
+  (add-to-list 'treemacs-pre-file-insert-predicates #'treemacs-is-file-tracked?)
+
+  (defun my/treemacs-toggle-show-tracked-files (&optional force)
+    "Toggle ignoring tracked files in treemacs"
+    (interactive)
+    (if (or (eq force -1)
+            (and (not force) (member #'my/treemacs-is-file-tracked? treemacs-pre-file-insert-predicates)))
+        (setq treemacs-pre-file-insert-predicates (delq #'my/treemacs-is-file-tracked? treemacs-pre-file-insert-predicates))
+      (add-to-list 'treemacs-pre-file-insert-predicates #'my/treemacs-is-file-tracked?)
+      (message "Added file-tracked to list")
+      ))
+  (define-key treemacs-toggle-map "t" #'my/treemacs-toggle-show-tracked-files)
+  (define-key evil-treemacs-state-map "tt" #'my/treemacs-toggle-show-tracked-files)
+
+  (treemacs-tag-follow-mode t)
   )
 
 ;; I think this is techinically separate
