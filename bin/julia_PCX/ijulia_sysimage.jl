@@ -1,6 +1,7 @@
 packages = [:OhMyREPL, :Debugger, :MacroTools,
             :IJulia,
             :Plots,
+	    :UnitfulRecipes,
             :PyCall,
             # :UnicodePlots,
             # :GR,
