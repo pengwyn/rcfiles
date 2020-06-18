@@ -59,6 +59,7 @@
               ("C-M-y" . 'yas-expand)))
 
 (use-package flycheck
+  :hook (prog-mode . flycheck-mode)
   :config
   (use-package helm-flycheck)
   (use-package flycheck-pos-tip
