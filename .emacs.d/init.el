@@ -69,6 +69,8 @@
 (global-set-key (kbd "<f3>") (lambda () (interactive) (find-file "~/.emacs.d/init.el")))
 (global-set-key (kbd "<f4>") 'save-buffers-kill-emacs)
 (define-key help-map (kbd "C-c") 'customize-group) 
+;; Get rid of accidental mouse pastes.
+(global-set-key (kbd "<mouse-2>") nil)
 
 (load "~/.emacs.d/init_essentials.el")
 

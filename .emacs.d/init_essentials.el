@@ -51,7 +51,14 @@
 
          :map evil-visual-state-map
          (">" . my/evil-block-shift-right)
-         ("<" . my/evil-block-shift))
+         ("<" . my/evil-block-shift)
+
+         ;; Get rid of accidental mouse pastes.
+         :map evil-insert-state-map
+         ("<mouse-2>" . nil)
+         :map evil-normal-state-map
+         ("<mouse-2>" . nil)
+         )
 
   :config
   (evil-mode 1)
