@@ -30,6 +30,7 @@ try
     @time using Debugger
     @time using Plots
 	@time using UnitfulRecipes
+	@time using JLD2
 catch exc
 	@error "Exception loading modules" exc
 end
