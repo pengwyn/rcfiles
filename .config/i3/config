@@ -306,6 +306,9 @@ bindsym $mod+x mark "jumping" ; [con_mark="last"] focus ; [con_mark="jumping"] m
 
 # Need a jump back
 
+# This is a fallback
+exec --no-startup-id alttab 
+
 
 # bindsym $mod+x [urgent=latest] focus
 bindsym $mod+o exec --no-startup-id i3_open_empty.py
