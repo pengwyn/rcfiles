@@ -100,6 +100,11 @@
   (define-key evil-window-map (kbd "C-f") #'tear-off-window)
 
   (global-set-key (kbd "C-x c") 'delete-frame)
+
+
+  ;; make magit use a different frame
+  (define-key magit-file-section-map [remap magit-visit-thing]      'magit-diff-visit-file-other-frame)
+  (define-key magit-hunk-section-map [remap magit-visit-thing]      'magit-diff-visit-file-other-frame)
   )
 
 
