@@ -2,7 +2,7 @@ export PATH="$PATH:$HOME/bin:$HOME/.local/bin"
 
 export EDITOR="vim"
 if [[ $(hostname) != "mixologist" ]] ; then
-    export ALTERNATE_EDITOR="emacs"
+    # export ALTERNATE_EDITOR="emacs"
 	export VISUAL="emacsclient -c -n"
 fi
 export GIT_EDITOR="vim"
