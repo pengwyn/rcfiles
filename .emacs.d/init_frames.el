@@ -295,3 +295,11 @@ element is BUFFER."
     (set-window-parameter
      window 'quit-restore
      (list 'frame 'frame (selected-window) buffer prev-quit-restore))))))
+
+
+
+;; And by default, kill these windows instead of burying them
+;; (This will kicked off by magit-todos leaving rg processes stealing most of my CPU)
+(defun advice/quit-window-kill (orig-func &rest args)
+  (apply orig-func '(t)))
+(advice-add 'quit-window :around 'advice/quit-window-kill)
