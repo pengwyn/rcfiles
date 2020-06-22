@@ -181,6 +181,7 @@
   :custom ((web-mode-enable-engine-detect t))
   :config
   (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.js?\\'" . web-mode))
   )
 
 ;; ** Magit
